@@ -10,6 +10,7 @@ namespace brawler {
 class PhysicsSystem : public System
 {
 public:
+    static bool s_UseGravity;
     static float s_Gravity;
     static float s_RunSpeed;
     static float s_JumpSpeed;

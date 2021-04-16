@@ -8,6 +8,7 @@
 using namespace dagger;
 using namespace brawler;
 
+bool PhysicsSystem::s_UseGravity = true;
 float PhysicsSystem::s_Gravity = 500.0f;
 float PhysicsSystem::s_RunSpeed = 150.0f;
 float PhysicsSystem::s_JumpSpeed = 500.0f;
@@ -38,7 +39,8 @@ void PhysicsSystem::Run()
         }
 
         // Gravity
-        m.speed.y -= PhysicsSystem::s_Gravity * Engine::DeltaTime();
+        if(s_UseGravity)
+            m.speed.y -= PhysicsSystem::s_Gravity * Engine::DeltaTime();
 
         // Clamp speed
         if(m.speed.y > s_TerminalVelocity)

@@ -26,6 +26,7 @@ void DebugGui::WindDown()
 
 void DebugGui::RenderToolMenu()
 {
+    // Menu
     if (ImGui::BeginMenu("Brawler"))
     {
         if (ImGui::MenuItem("Reset Position"))
@@ -36,8 +37,13 @@ void DebugGui::RenderToolMenu()
         ImGui::EndMenu();
     }
 
+    // Window
     ImGui::Begin("Brawler Debug", &debugActive);
 
+    if (ImGui::Button("Reposition Players", ImVec2(ImGui::GetWindowSize().x, 0.0f)))
+    {
+        resetPosition = true;
+    }
     Engine::Registry().view<Transform, Movable, Player>().each([&](Transform& t, Movable& m, Player& p)
         {
             ImGui::Text("Position: %f, %f", t.position.x, t.position.y);
@@ -46,8 +52,10 @@ void DebugGui::RenderToolMenu()
         });
 
     ImGui::Text("Physics");
+    ImGui::Checkbox("Use Gravity", &PhysicsSystem::s_UseGravity);
     ImGui::SliderFloat("Gravity", &PhysicsSystem::s_Gravity, 0.0f, 1000.0f);
     ImGui::SliderFloat("Drag Speed", &PhysicsSystem::s_DragSpeed, 0.0f, 200.0f);
+
     ImGui::Separator();
 
     ImGui::Text("Movement");
