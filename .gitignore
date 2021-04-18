@@ -2,6 +2,12 @@
 source/**/external/
 bin/
 
+# example projects
+source/dagger/gameplay/ping_pong/
+source/dagger/gameplay/platformer/
+source/dagger/gameplay/racing/
+source/dagger/gameplay/tiles_example/
+
 # Compiled Object files
 *.slo
 *.lo
