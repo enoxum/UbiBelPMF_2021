@@ -26,6 +26,16 @@ void CharControllerFSM::Idle::Run(CharControllerFSM::StateComponent& state_)
 	{
 		GoTo(ECharStates::Walking, state_);
 	}
+
+	if (EPSILON_NOT_ZERO(input.Get("jump")))
+	{
+		GoTo(ECharStates::Jumping, state_);
+	}
+
+	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	{
+		GoTo(ECharStates::Dashing, state_);
+	}
 }
 
 
@@ -45,16 +55,26 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, platformer::PlatformerCharacter>(state_.entity);
 
-	Float32 run = input.Get("run");
+	Float32 walk = input.Get("walk");
 
-	if (EPSILON_ZERO(run))
+	if (EPSILON_ZERO(walk))
 	{
 		GoTo(ECharStates::Idle, state_);
 	}
 	else
 	{
-		sprite.scale.x = run;
+		sprite.scale.x = walk;
 		sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+	}
+
+	if (EPSILON_NOT_ZERO(input.Get("jump")))
+	{
+		GoTo(ECharStates::Jumping, state_);
+	}
+
+	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	{
+		GoTo(ECharStates::Dashing, state_);
 	}
 }
 
@@ -70,7 +90,15 @@ DEFAULT_EXIT(CharControllerFSM, Jumping);
 
 void CharControllerFSM::Jumping::Run(CharControllerFSM::StateComponent& state_)
 {
+	auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
+
 	// TODO
+
+	
+	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	{
+		GoTo(ECharStates::Dashing, state_);
+	}
 }
 
 // Dashing
