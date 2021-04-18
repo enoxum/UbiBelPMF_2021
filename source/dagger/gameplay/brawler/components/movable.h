@@ -15,10 +15,6 @@ struct Movable
 	Vector2 speed{ 0, 0 };
 	Vector2 prevSpeed{ 0, 0 };
 
-	Vector2 envSpeed{ 0, 0 };
-
-	float fallSpeed{ 0 };
-
 	Bool isOnGround{ true };
 	Bool wasOnGround{ true };
 };
