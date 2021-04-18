@@ -8,6 +8,13 @@ using namespace dagger;
 namespace brawler
 {
 
+static const int recoil = 50;
+
+// class Movable;
+// class Sprite;
+
+// inline void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Sprite& sprite, Movable& movable);
+
 enum struct ECharacterStates
 {
 	Idle,

@@ -9,6 +9,6 @@
 		{ "command-name": "jump", "trigger": "KeyW" },
 		{ "command-name": "down", "trigger": "KeyS" },
 		{ "command-name": "use", "trigger": "KeyE" },
-		{ "command-name": "attack", "trigger": "KeyX" }
+		{ "command-name": "attack", "trigger": "KeyX" , "event": "Released"}
 	]
 }

@@ -15,12 +15,19 @@
 using namespace dagger;
 using namespace brawler;
 
+inline void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Sprite& sprite, Movable& movable)
+{
+	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	AnimatorPlay(animator, "Gunner_Green:SHOOT");
+	movable.speed.x -= sprite.scale.x * recoil;
+}
+
 // Idle
 
 void BrawlerCharacterFSM::Idle::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "souls_like_knight_character:IDLE");
+	AnimatorPlay(animator, "Gunner_Green:IDLE");
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Idle);
@@ -49,8 +56,7 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 
 	if (EPSILON_NOT_ZERO(input.Get("attack")))
 	{
-		auto& animator = Engine::Registry().get<Animator>(state_.entity);
-		AnimatorPlay(animator, "souls_like_knight_character:ATTACK");
+		playShootAnimation(state_, sprite, movable);
 	}
 }
 
@@ -59,7 +65,7 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 void BrawlerCharacterFSM::Running::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "souls_like_knight_character:RUN");
+	AnimatorPlay(animator, "Gunner_Green:RUN");
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Running);
@@ -85,8 +91,7 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 
 	if (EPSILON_NOT_ZERO(input.Get("attack")))
 	{
-		auto& animator = Engine::Registry().get<Animator>(state_.entity);
-		AnimatorPlay(animator, "souls_like_knight_character:ATTACK");
+		playShootAnimation(state_, sprite, movable);
 	}
 
 	if (EPSILON_ZERO(run))
@@ -108,7 +113,7 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 void BrawlerCharacterFSM::Jumping::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "souls_like_knight_character:JUMP");
+	AnimatorPlay(animator, "Gunner_Green:JUMP");
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Jumping);
@@ -150,7 +155,6 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 
 	if(EPSILON_NOT_ZERO(attack))
 	{
-		auto& animator = Engine::Registry().get<Animator>(state_.entity);
-		AnimatorPlay(animator, "souls_like_knight_character:ATTACK");
+		playShootAnimation(state_, sprite, movable);
 	}
 }
