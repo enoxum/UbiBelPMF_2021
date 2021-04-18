@@ -70,12 +70,7 @@ DEFAULT_EXIT(CharControllerFSM, Jumping);
 
 void CharControllerFSM::Jumping::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
-
-	if (EPSILON_NOT_ZERO(input.Get("jump")))
-	{
-		GoTo(ECharStates::Jumping, state_);
-	}
+	// TODO
 }
 
 // Dashing
@@ -90,10 +85,5 @@ DEFAULT_EXIT(CharControllerFSM, Dashing);
 
 void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
-
-	if (EPSILON_NOT_ZERO(input.Get("dash")))
-	{
-		GoTo(ECharStates::Dashing, state_);
-	}
+	// TODO
 }
