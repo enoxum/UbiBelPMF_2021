@@ -11,7 +11,7 @@
 #include "gameplay/brawler/brawler_character_fsm.h"
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
-
+#include "gameplay/common/simple_collisions.h"
 using namespace dagger;
 
 namespace brawler
@@ -26,6 +26,7 @@ namespace brawler
         Player& character;
         Transform& transform;
         Movable& movable;
+        SimpleCollision& col;
 
         static BrawlerCharacter Get(Entity entity)
         {
@@ -36,8 +37,9 @@ namespace brawler
             auto& character = reg.get_or_emplace<Player>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& movable = reg.get_or_emplace<Movable>(entity);
+            auto& col = reg.get_or_emplace<SimpleCollision>(entity);
 
-            return BrawlerCharacter{ entity, sprite, anim, input, character, transform, movable };
+            return BrawlerCharacter{ entity, sprite, anim, input, character, transform, movable, col };
         }
 
         static BrawlerCharacter Create(

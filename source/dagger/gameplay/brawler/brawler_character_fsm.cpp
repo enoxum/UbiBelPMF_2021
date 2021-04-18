@@ -9,6 +9,8 @@
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/systems/physics.h"
+#include "gameplay/common/simple_collisions.h"
+#include "core/graphics/animations.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -25,7 +27,7 @@ DEFAULT_EXIT(BrawlerCharacterFSM, Idle);
 
 void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, player, transform, movable] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable>(state_.entity);
+	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
 
 	if (!movable.isOnGround)
 	{
@@ -45,11 +47,10 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 		return;
 	}
 
-	// Push the player, just for testing drag
-	if (EPSILON_NOT_ZERO(input.Get("light")))
+	if (EPSILON_NOT_ZERO(input.Get("attack")))
 	{
-		movable.speed.x += sprite.scale.x * 100.0f;
-		movable.speed.y += 200.0f;
+		auto& animator = Engine::Registry().get<Animator>(state_.entity);
+		AnimatorPlay(animator, "souls_like_knight_character:ATTACK");
 	}
 }
 
@@ -80,6 +81,12 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 		movable.speed.y += PhysicsSystem::s_JumpSpeed;
 		GoTo(ECharacterStates::Jumping, state_);
 		return;
+	}
+
+	if (EPSILON_NOT_ZERO(input.Get("attack")))
+	{
+		auto& animator = Engine::Registry().get<Animator>(state_.entity);
+		AnimatorPlay(animator, "souls_like_knight_character:ATTACK");
 	}
 
 	if (EPSILON_ZERO(run))
@@ -137,5 +144,13 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 	{
 		sprite.scale.x = run;
 		transform.position.x += run * PhysicsSystem::s_AirMobility * PhysicsSystem::s_RunSpeed * Engine::DeltaTime();
+	}
+
+	auto attack = input.Get("attack");
+
+	if(EPSILON_NOT_ZERO(attack))
+	{
+		auto& animator = Engine::Registry().get<Animator>(state_.entity);
+		AnimatorPlay(animator, "souls_like_knight_character:ATTACK");
 	}
 }

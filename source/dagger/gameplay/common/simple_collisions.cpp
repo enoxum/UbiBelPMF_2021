@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "simple_collisions.h"
 
 #include "core/engine.h"
@@ -25,6 +27,7 @@ void SimpleCollisionsSystem::Run()
             // processing one collision per frame for each colider
             if (collision.IsCollided(transform.position, col, tr.position))
             {
+                std::cout << "Sudarise se" << std::endl;
                 collision.colided = true;
                 collision.colidedWith = *it2;
 

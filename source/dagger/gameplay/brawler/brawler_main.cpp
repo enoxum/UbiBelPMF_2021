@@ -21,6 +21,7 @@
 #include "gameplay/brawler/systems/character_controller.h"
 #include "gameplay/brawler/systems/debug_gui.h"
 #include "gameplay/brawler/systems/physics.h"
+#include "gameplay/common/simple_collisions.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -29,6 +30,7 @@ void Brawler::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<CharacterControllerSystem>();
     engine_.AddPausableSystem<PhysicsSystem>();
+    engine_.AddSystem<SimpleCollisionsSystem>();
     //engine_.AddSystem<ParallaxSystem>();
     //engine_.AddSystem<CameraFollowSystem>();
     engine_.AddSystem<DebugGui>();
@@ -103,7 +105,7 @@ void Brawler::WorldSetup(Engine& engine_)
     SetCamera();
     // CreateBackdrop();
 
-    auto player1 = BrawlerCharacter::Create("ASDW", { 1, 1, 1 }, { 0, 0 });
+    auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
 
     // auto player2 = BrawlerCharacter::Create("Arrows", { 1, 0, 0 }, { 100, 0 });
