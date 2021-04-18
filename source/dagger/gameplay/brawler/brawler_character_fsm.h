@@ -8,7 +8,7 @@ using namespace dagger;
 namespace brawler
 {
 
-static const int recoil = 50;
+static const int recoil = 25;
 
 // class Movable;
 // class Sprite;
