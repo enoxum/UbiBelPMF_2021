@@ -6,6 +6,7 @@
 #include "gameplay/brawler/brawler_character.h"
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/systems/physics.h"
+#include "gameplay/brawler/systems/bullet_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -64,6 +65,23 @@ void DebugGui::RenderToolMenu()
     ImGui::SliderFloat("Terminal Velocity", &PhysicsSystem::s_TerminalVelocity, 0.0f, 1000.0f);
     ImGui::SliderFloat("Air Mobility", &PhysicsSystem::s_AirMobility, 0.0f, 1.0f);
 
+    ImGui::Separator();
+
+    std::stringstream ss;
+    ImGui::Text("Active bullets: %d", BulletSystem::activeBullets);
+    ImGui::SliderFloat("Bullet speed", &BulletSystem::bulletSpeed, 0.0f, 800.0f);
+
+    ImGui::Separator();
+    ImGui::Text("Cam bound left: %f", BulletSystem::cameraBoundLeft);
+    ImGui::Text("Cam bound right: %f", BulletSystem::cameraBoundRight);
+    ImGui::Text("Cam bound up: %f", BulletSystem::cameraBoundUp);
+    ImGui::Text("Cam bound down: %f", BulletSystem::cameraBoundDown);
+    
+
+
+    
+    
+     
     ImGui::End();
 }
 

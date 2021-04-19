@@ -11,6 +11,8 @@
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/common/simple_collisions.h"
 #include "core/graphics/animations.h"
+#include <gameplay/brawler/components/bullet.h>
+#include "gameplay/brawler/systems/bullet_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -20,14 +22,36 @@ inline void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Spri
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
 	AnimatorPlay(animator, "Gunner_Green:SHOOT");
 	movable.speed.x -= sprite.scale.x * recoil;
+	
+	
+	// TODO: Refactor into `createBullet` or sth
+	auto& reg = Engine::Registry();
+
+	auto bulletEntity = reg.create();
+	auto& bulletTransform = reg.emplace<Transform>(bulletEntity);
+	auto& bulletSprite = reg.emplace<Sprite>(bulletEntity);
+	bulletTransform.position = { sprite.position.x, sprite.position.y, 1 };
+	AssignSprite(bulletSprite, "EmptyWhitePixel");
+	bulletSprite.size = { 1, 1 };
+	bulletSprite.scale = { 10, 10 };
+	auto& bulletBullet = reg.emplace<Bullet>(bulletEntity);
+	bulletBullet.direction = sprite.scale.x;
+
+	BulletSystem::activeBullets++;
+	// ----
+
+
 }
 
 // Idle
 
 void BrawlerCharacterFSM::Idle::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	// TODO: cleanup
+	auto&& [sprite, input, animator] = Engine::Registry().get<Sprite, InputReceiver, Animator>(state_.entity);
 	AnimatorPlay(animator, "Gunner_Green:IDLE");
+
+	
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Idle);
@@ -35,6 +59,11 @@ DEFAULT_EXIT(BrawlerCharacterFSM, Idle);
 void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
+
+
+	if (EPSILON_NOT_ZERO(input.Get("fire_test"))) {
+
+	}
 
 	if (!movable.isOnGround)
 	{
