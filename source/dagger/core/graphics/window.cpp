@@ -182,7 +182,7 @@ void WindowSystem::SpinUp()
 	glfwMakeContextCurrent(window);
 	if (m_Config.vsync)
 	{
-    	glfwSwapInterval(1);
+		glfwSwapInterval(1);
 	}
 	else
 	{
