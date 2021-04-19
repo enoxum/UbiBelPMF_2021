@@ -148,3 +148,19 @@ void DeserializeComponent(JSON::json input_, SimpleCollision& fill_)
     DeserializeComponent(input_["size"], fill_.size);
     DeserializeComponent(input_["pivot"], fill_.pivot);
 }
+
+template<>
+JSON::json SerializeComponent(Camera& camera_)
+{
+    JSON::json save{};
+    save["position"] = SerializeComponent(camera_.position);
+    save["zoom"] = camera_.zoom;
+    return save;
+}
+
+template<>
+void DeserializeComponent(JSON::json input_, Camera& fill_)
+{
+    DeserializeComponent(input_["position"], fill_.position);
+    input_["zoom"] = fill_.zoom;
+}

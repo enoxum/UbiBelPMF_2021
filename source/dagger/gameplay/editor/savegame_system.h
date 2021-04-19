@@ -52,6 +52,14 @@ struct SaveGameSystem : public dagger::System
 
         JSON::json save{};
 
+        /* Camera */ {
+            JSON::json item;
+
+            item["camera"] = SerializeComponent<Camera>(*Engine::GetDefaultResource<Camera>());
+            item["metadata"] = (SInt32)ECommonSaveArchetype::Camera;
+            save.push_back(item);
+        }
+
         registry.view<SaveGame<Archetype>>().each([&](Entity entity_, SaveGame<Archetype>& save_)
             {
                 JSON::json item{};
