@@ -91,6 +91,7 @@ namespace editor
 
         void GUIExecuteCreateEntity();
         void GUIDrawSpriteEditor();
+        void GUIDrawTransformEditor();
         void GUIDrawAnimationEditor();
         void GUIDrawPhysicsEditor();
         bool GUIDrawEntityFocusSelection(int& selectedItem);

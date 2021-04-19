@@ -273,6 +273,30 @@ void EditorToolSystem::GUIDrawSpriteEditor()
     }
 }
 
+void EditorToolSystem::GUIDrawTransformEditor()
+{
+    auto& reg = Engine::Registry();
+
+    if (reg.has<Transform>(m_Selected.entity) && ImGui::CollapsingHeader("Transform"))
+    {
+        Transform& compTransform = reg.get<Transform>(m_Selected.entity);
+        /* Transform position value */ {
+            float pos[]{ compTransform.position.x, compTransform.position.y, compTransform.position.z };
+            ImGui::InputFloat3("Position", pos, "%f", 1);
+            compTransform.position.x = pos[0];
+            compTransform.position.y = pos[1];
+            compTransform.position.z = pos[2];
+        }
+    }
+    else if (!reg.has<Transform>(m_Selected.entity))
+    {
+        if (ImGui::Button("Attach Transform"))
+        {
+            reg.emplace<Transform>(m_Selected.entity);
+        }
+    }
+}
+
 void EditorToolSystem::GUIDrawAnimationEditor()
 {
     auto& reg = Engine::Registry();
@@ -410,6 +434,7 @@ void EditorToolSystem::OnRenderGUI()
         {
             GUIDrawSpriteEditor();
             GUIDrawAnimationEditor();
+            GUIDrawTransformEditor();
             GUIDrawPhysicsEditor();
 
             // to add more components, replicate the above functions carefully
