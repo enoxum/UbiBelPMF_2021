@@ -153,9 +153,18 @@ void EditorToolSystem::Run()
             auto& reg = Engine::Registry();
             if (reg.valid(m_Selected.entity))
             {
-                auto& sprite = reg.get<Sprite>(m_Selected.entity);
-                knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
-                sprite.position = knob.position;
+                if (reg.has<Transform>(m_Selected.entity))
+                {
+                    auto& transform = reg.get<Transform>(m_Selected.entity);
+                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
+                    transform.position = knob.position;
+                }
+                else if (reg.has<Sprite>(m_Selected.entity))
+                {
+                    auto& sprite = reg.get<Sprite>(m_Selected.entity);
+                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
+                    sprite.position = knob.position;
+                }
             }
         }
 
@@ -197,6 +206,7 @@ void EditorToolSystem::GUIExecuteCreateEntity()
     auto newEntity = reg.create();
     auto& newSprite = reg.emplace<Sprite>(newEntity);
     AssignSprite(newSprite, "tools:knob2");
+    reg.emplace<Transform>(newEntity);
     newSprite.UseAsUI();
     auto& newSavegame = reg.emplace<SaveGame<ECommonSaveArchetype>>(newEntity);
 }
@@ -480,8 +490,8 @@ void EditorToolSystem::OnRenderGUI()
         if (GUIDrawEntityFocusSelection(selectedItem))
         {
             GUIDrawSpriteEditor();
-            GUIDrawAnimationEditor();
             GUIDrawTransformEditor();
+            GUIDrawAnimationEditor();
             GUIDrawPhysicsEditor();
 
             // to add more components, replicate the above functions carefully
