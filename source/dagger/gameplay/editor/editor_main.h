@@ -19,6 +19,7 @@ namespace editor
         Transform   = 0b00000010,
         Animator    = 0b00000100,
         Physics     = 0b00001000,
+        Camera      = 0b00010000,
         // todo: add new values here
     };
 
@@ -70,6 +71,7 @@ namespace editor
                 m_Registry.emplace<EditorFocus>(m_Focus);
                 auto& sprite = m_Registry.emplace<Sprite>(m_Focus);
                 AssignSprite(sprite, "tools:knob1");
+                sprite.UseAsUI();
                 sprite.position = Vector3{ 0, 0, 0 };
             }
 
@@ -89,8 +91,10 @@ namespace editor
         void OnToolMenuRender();
         void OnRenderGUI();
 
+        void GUIDrawCameraEditor();
         void GUIExecuteCreateEntity();
         void GUIDrawSpriteEditor();
+        void GUIDrawTransformEditor();
         void GUIDrawAnimationEditor();
         void GUIDrawPhysicsEditor();
         bool GUIDrawEntityFocusSelection(int& selectedItem);
