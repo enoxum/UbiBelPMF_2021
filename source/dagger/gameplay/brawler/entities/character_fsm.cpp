@@ -1,4 +1,4 @@
-#include "brawler_character_fsm.h"
+#include "character_fsm.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -6,13 +6,14 @@
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
+#include "core/graphics/animations.h"
+
+#include "gameplay/common/simple_collisions.h"
+#include "gameplay/brawler/components/bullet.h"
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
-#include "gameplay/brawler/systems/physics.h"
-#include "gameplay/common/simple_collisions.h"
-#include "core/graphics/animations.h"
-#include <gameplay/brawler/components/bullet.h>
 #include "gameplay/brawler/systems/bullet_system.h"
+#include "gameplay/brawler/systems/physics.h"
 
 using namespace dagger;
 using namespace brawler;

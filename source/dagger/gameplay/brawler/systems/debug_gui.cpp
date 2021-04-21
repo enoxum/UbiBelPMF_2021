@@ -3,8 +3,8 @@
 #include "core/engine.h"
 #include "core/game/transforms.h"
 
-#include "gameplay/brawler/brawler_character.h"
 #include "gameplay/brawler/components/movable.h"
+#include "gameplay/brawler/entities/character.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 
@@ -52,6 +52,7 @@ void DebugGui::RenderToolMenu()
             ImGui::Separator();
         });
 
+    // Physics
     ImGui::Text("Physics");
     ImGui::Checkbox("Use Gravity", &PhysicsSystem::s_UseGravity);
     ImGui::SliderFloat("Gravity", &PhysicsSystem::s_Gravity, 0.0f, 1000.0f);
@@ -59,6 +60,7 @@ void DebugGui::RenderToolMenu()
 
     ImGui::Separator();
 
+    // Movement
     ImGui::Text("Movement");
     ImGui::SliderFloat("Run Speed", &PhysicsSystem::s_RunSpeed, 0.0f, 400.0f);
     ImGui::SliderFloat("Jump Speed", &PhysicsSystem::s_JumpSpeed, 0.0f, 800.0f);
@@ -67,7 +69,8 @@ void DebugGui::RenderToolMenu()
 
     ImGui::Separator();
 
-    std::stringstream ss;
+    // Shooting
+    // std::stringstream ss;
     ImGui::Text("Active bullets: %d", BulletSystem::activeBullets);
     ImGui::SliderFloat("Bullet speed", &BulletSystem::bulletSpeed, 0.0f, 800.0f);
 
@@ -76,11 +79,6 @@ void DebugGui::RenderToolMenu()
     ImGui::Text("Cam bound right: %f", BulletSystem::cameraBoundRight);
     ImGui::Text("Cam bound up: %f", BulletSystem::cameraBoundUp);
     ImGui::Text("Cam bound down: %f", BulletSystem::cameraBoundDown);
-    
-
-
-    
-    
      
     ImGui::End();
 }
@@ -92,7 +90,6 @@ void DebugGui::Run()
 void DebugGui::OnEndOfFrame()
 {
     if(resetPosition) {
-        //TODO reposition player
         Engine::Registry().view<Transform, Movable, Player>().each([&](Transform& t, Movable& m, Player& p)
             {
                 t.position.x = 0.0f;

@@ -8,10 +8,11 @@
 #include "core/input/inputs.h"
 #include "core/game/transforms.h"
 
-#include "gameplay/brawler/brawler_character_fsm.h"
+#include "gameplay/common/simple_collisions.h"
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
-#include "gameplay/common/simple_collisions.h"
+#include "gameplay/brawler/entities/character_fsm.h"
+
 using namespace dagger;
 
 namespace brawler

@@ -1,11 +1,11 @@
 #include "bullet_system.h"
 
-
 #include "core/engine.h"
 #include "core/game/transforms.h"
-#include "../components/bullet.h"
 #include "core/graphics/sprite.h"
-#include <core/graphics/window.h>
+#include "core/graphics/window.h"
+
+#include "gameplay/brawler/components/bullet.h"
 
 using namespace brawler;
 using namespace dagger;
@@ -42,7 +42,6 @@ void BulletSystem::Run()
 			BulletSystem::activeBullets--;
 		}
 
-		
 	}
 
 }

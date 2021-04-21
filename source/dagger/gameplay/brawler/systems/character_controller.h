@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 #include "core/system.h"
-#include "gameplay/brawler/brawler_character_fsm.h"
+#include "gameplay/brawler/entities/character_fsm.h"
 
 using namespace dagger;
 

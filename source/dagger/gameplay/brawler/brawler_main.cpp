@@ -17,12 +17,12 @@
 
 #include "tools/diagnostics.h"
 
-#include "gameplay/brawler/brawler_character.h"
+#include "gameplay/common/simple_collisions.h"
+#include "gameplay/brawler/entities/character.h"
+#include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/character_controller.h"
 #include "gameplay/brawler/systems/debug_gui.h"
 #include "gameplay/brawler/systems/physics.h"
-#include "gameplay/common/simple_collisions.h"
-#include <gameplay/brawler/systems/bullet_system.h>
 
 using namespace dagger;
 using namespace brawler;
@@ -31,11 +31,11 @@ void Brawler::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<CharacterControllerSystem>();
     engine_.AddPausableSystem<PhysicsSystem>();
+    engine_.AddPausableSystem<BulletSystem>();
     engine_.AddSystem<SimpleCollisionsSystem>();
     //engine_.AddSystem<ParallaxSystem>();
     //engine_.AddSystem<CameraFollowSystem>();
     engine_.AddSystem<DebugGui>();
-    engine_.AddSystem<BulletSystem>();
 }
 
 void Brawler::SetCamera()

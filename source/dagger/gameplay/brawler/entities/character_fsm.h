@@ -10,11 +10,6 @@ namespace brawler
 
 static const int recoil = 25;
 
-// class Movable;
-// class Sprite;
-
-// inline void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Sprite& sprite, Movable& movable);
-
 enum struct ECharacterStates
 {
 	Idle,
