@@ -53,25 +53,29 @@ void DebugGui::RenderToolMenu()
         });
 
     // Physics
-    ImGui::Text("Physics");
-    ImGui::Checkbox("Use Gravity", &PhysicsSystem::s_UseGravity);
-    ImGui::SliderFloat("Gravity", &PhysicsSystem::s_Gravity, 0.0f, 1000.0f);
-    ImGui::SliderFloat("Drag Speed", &PhysicsSystem::s_DragSpeed, 0.0f, 200.0f);
-
-    ImGui::Separator();
+    if(ImGui::CollapsingHeader("Physics"))
+    {
+        ImGui::Checkbox("Use Gravity", &PhysicsSystem::s_UseGravity);
+        ImGui::SliderFloat("Gravity", &PhysicsSystem::s_Gravity, 0.0f, 1000.0f);
+        ImGui::SliderFloat("Drag Speed", &PhysicsSystem::s_DragSpeed, 0.0f, 200.0f);
+    }
 
     // Movement
-    ImGui::Text("Movement");
-    ImGui::SliderFloat("Run Speed", &PhysicsSystem::s_RunSpeed, 0.0f, 400.0f);
-    ImGui::SliderFloat("Jump Speed", &PhysicsSystem::s_JumpSpeed, 0.0f, 800.0f);
-    ImGui::SliderFloat("Terminal Velocity", &PhysicsSystem::s_TerminalVelocity, 0.0f, 1000.0f);
-    ImGui::SliderFloat("Air Mobility", &PhysicsSystem::s_AirMobility, 0.0f, 1.0f);
-
-    ImGui::Separator();
+    if(ImGui::CollapsingHeader("Movement"))
+    {
+        ImGui::SliderFloat("Run Speed", &PhysicsSystem::s_RunSpeed, 0.0f, 400.0f);
+        ImGui::SliderFloat("Jump Speed", &PhysicsSystem::s_JumpSpeed, 0.0f, 800.0f);
+        ImGui::SliderFloat("Terminal Velocity", &PhysicsSystem::s_TerminalVelocity, 0.0f, 1000.0f);
+        ImGui::SliderFloat("Air Mobility", &PhysicsSystem::s_AirMobility, 0.0f, 1.0f);
+    }
 
     // Shooting
-    ImGui::Text("Active bullets: %d", BulletSystem::s_ActiveBullets);
-    ImGui::SliderFloat("Bullet speed", &BulletSystem::s_BulletSpeed, 0.0f, 800.0f);
+    if(ImGui::CollapsingHeader("Shooting"))
+    {
+        ImGui::Text("Active bullets: %d", BulletSystem::s_ActiveBullets);
+        ImGui::SliderFloat("Bullet Speed", &BulletSystem::s_BulletSpeed, 0.0f, 800.0f);
+        ImGui::SliderFloat("Recoil Speed", &BulletSystem::s_PlayerRecoil, 0.0f, 100.0f);
+    }
 
     ImGui::Separator();
     ImGui::Text("Cam bound left: %f", BulletSystem::s_CameraBoundLeft);
