@@ -3,7 +3,6 @@
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/input/inputs.h"
-#include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 #include "core/graphics/animations.h"
@@ -19,13 +18,13 @@
 using namespace dagger;
 using namespace brawler;
 
-void BrawlerCharacterFSM::playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Sprite& sprite, Movable& movable)
+void BrawlerCharacterFSM::playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Transform& transform, Sprite& sprite, Movable& movable)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
 	AnimatorPlay(animator, "Gunner_Green:SHOOT");
 	movable.speed.x -= sprite.scale.x * BulletSystem::s_PlayerRecoil;
 	
-	BulletEntity::Create(sprite.position, sprite.scale.x>=0.0f? 1 : -1);
+	BulletEntity::Create(transform.position, sprite.scale.x>=0.0f? 1 : -1);
 }
 
 // Idle
@@ -66,7 +65,7 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 
 	if (EPSILON_NOT_ZERO(input.Get("attack")))
 	{
-		playShootAnimation(state_, sprite, movable);
+		playShootAnimation(state_, transform, sprite, movable);
 	}
 }
 
@@ -101,7 +100,7 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 
 	if (EPSILON_NOT_ZERO(input.Get("attack")))
 	{
-		playShootAnimation(state_, sprite, movable);
+		playShootAnimation(state_, transform, sprite, movable);
 	}
 
 	if (EPSILON_ZERO(run))
@@ -165,6 +164,6 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 
 	if(EPSILON_NOT_ZERO(attack))
 	{
-		playShootAnimation(state_, sprite, movable);
+		playShootAnimation(state_, transform, sprite, movable);
 	}
 }

@@ -45,6 +45,7 @@ namespace brawler
 
             bullet.transform.position = { position_, 0.0f };
 
+            bullet.sprite.position = { position_, 0.0f };
             bullet.sprite.size = { 1, 1 };
             bullet.sprite.scale = { 10, 3 };
 

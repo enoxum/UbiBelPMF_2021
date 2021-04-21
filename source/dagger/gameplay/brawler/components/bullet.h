@@ -2,6 +2,5 @@
 
 struct Bullet
 {
-	bool placeholder{ true };
 	int direction;
 };

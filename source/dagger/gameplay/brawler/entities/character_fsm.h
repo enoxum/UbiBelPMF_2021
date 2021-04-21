@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "core/game/finite_state_machine.h"
+#include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 
 #include "gameplay/brawler/components/movable.h"
@@ -33,7 +34,7 @@ struct BrawlerCharacterFSM : public FSM<ECharacterStates>
 	}
 
 private:
-	static void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Sprite& sprite, Movable& movable);
+	static void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Transform& transform, Sprite& sprite, Movable& movable);
 };
 
 }
