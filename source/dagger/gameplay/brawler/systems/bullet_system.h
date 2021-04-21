@@ -11,14 +11,15 @@ namespace brawler {
 class BulletSystem : public System
 {
 public:
-    static float bulletSpeed;
-    static int activeBullets;
+    static int s_ActiveBullets;
+    static float s_BulletSpeed;
+    static float s_PlayerRecoil;
 
+    static float s_CameraBoundLeft;
+    static float s_CameraBoundRight;
+    static float s_CameraBoundUp;
+    static float s_CameraBoundDown;
 
-    static float cameraBoundLeft;
-    static float cameraBoundRight;
-    static float cameraBoundUp;
-    static float cameraBoundDown;
     String SystemName() override {
         return "Bullet System";
     }

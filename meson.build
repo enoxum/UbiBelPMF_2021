@@ -50,6 +50,7 @@ sources = [
     'source/dagger/gameplay/brawler/components/movable.cpp',
     'source/dagger/gameplay/brawler/components/player.cpp',
     'source/dagger/gameplay/brawler/components/bullet.cpp',
+    'source/dagger/gameplay/brawler/entities/bullet.cpp',
     'source/dagger/gameplay/brawler/entities/character.cpp',
     'source/dagger/gameplay/brawler/entities/character_fsm.cpp',
     'source/dagger/gameplay/brawler/systems/character_controller.cpp',

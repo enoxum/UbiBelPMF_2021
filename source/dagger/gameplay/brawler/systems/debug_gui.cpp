@@ -70,15 +70,14 @@ void DebugGui::RenderToolMenu()
     ImGui::Separator();
 
     // Shooting
-    // std::stringstream ss;
-    ImGui::Text("Active bullets: %d", BulletSystem::activeBullets);
-    ImGui::SliderFloat("Bullet speed", &BulletSystem::bulletSpeed, 0.0f, 800.0f);
+    ImGui::Text("Active bullets: %d", BulletSystem::s_ActiveBullets);
+    ImGui::SliderFloat("Bullet speed", &BulletSystem::s_BulletSpeed, 0.0f, 800.0f);
 
     ImGui::Separator();
-    ImGui::Text("Cam bound left: %f", BulletSystem::cameraBoundLeft);
-    ImGui::Text("Cam bound right: %f", BulletSystem::cameraBoundRight);
-    ImGui::Text("Cam bound up: %f", BulletSystem::cameraBoundUp);
-    ImGui::Text("Cam bound down: %f", BulletSystem::cameraBoundDown);
+    ImGui::Text("Cam bound left: %f", BulletSystem::s_CameraBoundLeft);
+    ImGui::Text("Cam bound right: %f", BulletSystem::s_CameraBoundRight);
+    ImGui::Text("Cam bound up: %f", BulletSystem::s_CameraBoundUp);
+    ImGui::Text("Cam bound down: %f", BulletSystem::s_CameraBoundDown);
      
     ImGui::End();
 }

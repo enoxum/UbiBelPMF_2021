@@ -2,13 +2,14 @@
 
 #include "core/core.h"
 #include "core/game/finite_state_machine.h"
+#include "core/graphics/sprite.h"
+
+#include "gameplay/brawler/components/movable.h"
 
 using namespace dagger;
 
 namespace brawler
 {
-
-static const int recoil = 25;
 
 enum struct ECharacterStates
 {
@@ -30,6 +31,9 @@ struct BrawlerCharacterFSM : public FSM<ECharacterStates>
 		CONNECT_STATE(ECharacterStates, Running);
 		CONNECT_STATE(ECharacterStates, Jumping);
 	}
+
+private:
+	static void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Sprite& sprite, Movable& movable);
 };
 
 }

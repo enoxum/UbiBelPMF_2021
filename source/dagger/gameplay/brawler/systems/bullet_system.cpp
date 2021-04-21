@@ -10,13 +10,14 @@
 using namespace brawler;
 using namespace dagger;
 
-float BulletSystem::bulletSpeed = 50.0f;
-int BulletSystem::activeBullets = 0;
+int BulletSystem::s_ActiveBullets = 0;
+float BulletSystem::s_BulletSpeed = 500.0f;
+float BulletSystem::s_PlayerRecoil = 20.0f;
 
-float BulletSystem::cameraBoundLeft = 0;
-float BulletSystem::cameraBoundRight = 0;
-float BulletSystem::cameraBoundUp = 0;
-float BulletSystem::cameraBoundDown = 0;
+float BulletSystem::s_CameraBoundLeft = 0;
+float BulletSystem::s_CameraBoundRight = 0;
+float BulletSystem::s_CameraBoundUp = 0;
+float BulletSystem::s_CameraBoundDown = 0;
 
 void BulletSystem::Run()
 {
@@ -24,22 +25,24 @@ void BulletSystem::Run()
 	auto  objects = Engine::Registry().view<Sprite, Transform, Bullet>();
 	auto* camera = Engine::GetDefaultResource<Camera>();
 	
-	BulletSystem::cameraBoundLeft = camera->position.x - camera->size.x / 2;
-	BulletSystem::cameraBoundRight = camera->position.x + camera->size.x / 2;
-	BulletSystem::cameraBoundUp = camera->position.y - camera->size.y / 2;
-	BulletSystem::cameraBoundDown = camera->position.y + camera->size.y / 2;
+	BulletSystem::s_CameraBoundLeft = camera->position.x - camera->size.x / 2;
+	BulletSystem::s_CameraBoundRight = camera->position.x + camera->size.x / 2;
+	BulletSystem::s_CameraBoundUp = camera->position.y - camera->size.y / 2;
+	BulletSystem::s_CameraBoundDown = camera->position.y + camera->size.y / 2;
+
 	auto& reg = Engine::Registry();
 	for (auto obj : objects) {
+
 		auto& t = objects.get<Transform>(obj);
 		auto& b = objects.get<Bullet>(obj);
 
-		Vector3 dp = { b.direction*BulletSystem::bulletSpeed, 0, 0 };
+		Vector3 dp = { b.direction*BulletSystem::s_BulletSpeed, 0, 0 };
 		t.position += dp * Engine::DeltaTime();
 
-		if (t.position.x < BulletSystem::cameraBoundLeft || t.position.x > BulletSystem::cameraBoundRight) {
+		if (t.position.x < BulletSystem::s_CameraBoundLeft || t.position.x > BulletSystem::s_CameraBoundRight) {
 			reg.destroy(obj);
 			
-			BulletSystem::activeBullets--;
+			BulletSystem::s_ActiveBullets--;
 		}
 
 	}
