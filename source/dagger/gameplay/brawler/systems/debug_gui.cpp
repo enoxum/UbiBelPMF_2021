@@ -16,6 +16,7 @@ void DebugGui::SpinUp()
     Engine::Dispatcher().sink<NextFrame>().connect<&DebugGui::OnEndOfFrame>(this);
 
     Engine::Dispatcher().sink<ToolMenuRender>().connect<&DebugGui::RenderToolMenu>(this);
+    Engine::Dispatcher().sink<GUIRender>().connect<&DebugGui::RenderDebugWindow>(this);
 }
 
 void DebugGui::WindDown()
@@ -23,11 +24,11 @@ void DebugGui::WindDown()
     Engine::Dispatcher().sink<NextFrame>().disconnect<&DebugGui::OnEndOfFrame>(this);
 
     Engine::Dispatcher().sink<ToolMenuRender>().disconnect<&DebugGui::RenderToolMenu>(this);
+    Engine::Dispatcher().sink<GUIRender>().disconnect<&DebugGui::RenderDebugWindow>(this);
 }
 
 void DebugGui::RenderToolMenu()
 {
-    // Menu
     if (ImGui::BeginMenu("Brawler"))
     {
         if (ImGui::MenuItem("Reset Position"))
@@ -37,8 +38,10 @@ void DebugGui::RenderToolMenu()
 
         ImGui::EndMenu();
     }
+}
 
-    // Window
+void DebugGui::RenderDebugWindow()
+{
     ImGui::Begin("Brawler Debug", &debugActive);
 
     if (ImGui::Button("Reposition Players", ImVec2(ImGui::GetWindowSize().x, 0.0f)))

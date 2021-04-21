@@ -23,6 +23,7 @@ class DebugGui
 
     protected:
         void RenderToolMenu();
+        void RenderDebugWindow();
         void OnEndOfFrame();
 
     private:
