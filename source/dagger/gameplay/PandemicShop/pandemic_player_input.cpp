@@ -48,7 +48,7 @@ void PandemicShopPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
         {
             ctrl_.input.x = 1;
         }
-        else if (kEvent_.key == ctrl_.right_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.y > 0)
+        else if (kEvent_.key == ctrl_.right_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.x > 0)
         {
             ctrl_.input.x = 0;
         }
@@ -56,7 +56,7 @@ void PandemicShopPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
         {
             ctrl_.input.x = -1;
         }
-        else if (kEvent_.key == ctrl_.left_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.y < 0)
+        else if (kEvent_.key == ctrl_.left_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.x < 0)
         {
             ctrl_.input.x = 0;
         }
