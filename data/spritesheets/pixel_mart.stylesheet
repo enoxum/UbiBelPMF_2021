@@ -1,0 +1,163 @@
+
+american_cheese_p -5 -5 32 32
+aluminum_foil -47 -5 32 32
+bacon -89 -5
+baking_powder -131 -5 32 32
+ball_pen -173 -5 32 32
+banana -215 -5 32 32
+bandage_box -257 -5 32 32
+barbeque_sauce -299 -5 32 32
+basket_metal -341 -5 32 32
+basket_yellow -383 -5 32 32
+bathroom_cleaner -425 -5 32 32
+batteries -467 -5 32 32
+
+bell_pepper -5 -47 32 32
+bell_pepper_p -47 -47 32 32
+body_lotion -89 -47 32 32
+bowl -131 -47 32 32
+bubble_gum -173 -47 32 32
+butter -215 -47 32 32
+butter2 -257 -47 32 32
+cabbage -299 -47 32 32
+cabbage_p -341 -47 32 32
+candy_bar -383 -47 32 32
+cereal1 -425 -47 32 32
+cereal2 -467 -47 32 32
+    
+chopping-board -5 -89 32 32
+cleaning_brush -47 -89 32 32
+cleaning_gloves -89 -89 32 32
+cleaning_gloves_p -131 -89 32 32
+coffee_bag -173 -89 32 32
+cookies -215 -89 32 32
+cooking_oil -257 -89 32 32
+credit_card_1 -299 -89 32 32
+credit_card_2 -341 -89 32 32
+credit_card_3 -383 -89 32 32
+detergent -425 -89 32 32
+dry_dog_food  -467 -89 32 32
+
+egg_box -5 -131 32 32
+egg_brown -47 -131 32 32
+egg_brown_p -89 -131 32 32
+egg_white -131 -131 32 32
+egg_white_p -173 -131 32 32
+energy_bar -215 -131 32 32
+eraser -257 -131 32 32
+eraser_p -299 -131 32 32
+fish -341 -131 32 32
+fish_p -383 -131 32 32
+flour -425 -131 32 32
+fruit_cocktail_can -467 -131 32 32
+
+frying-pan -5 -173 32 32
+frying-pan_p -47 -173 32 32
+glue -89 -173 32 32
+glue_p -131 -173 32 32
+glue_stick -173 -173 32 32
+grape_soda -215 -173 32 32
+green_apple -257 -173 32 32
+green_apple_p -299 -173 32 32
+green_grape -341 -173 32 32
+green_grape_p -383 -173 32 32
+hand_sanitiser -425 -173 32 32
+hot_cocoa_mix -467 -173 32 32
+
+jam_strawberry -5 -215 32 32
+ketchup -47 -215 32 32
+kitchen_knife_set -89 -215 32 32
+kitchen_knife_set_p -131 -215 32 32
+kitchen_soap -173 -215 32 32
+light_bulb -215 -215 32 32
+light_bulb_box -257 -215 32 32
+marshmallows -299 -215 32 32
+meat1 -341 -215 32 32
+meat1_p -383 -215 32 32
+meat2 -425 -215 32 32
+meat2_p -467 -215 32 32
+
+milk_bottle -5 -257 32 32
+milk_chocolate -47 -257 32 32
+milk_gallon -89 -257 32 32
+milk_pack -131 -257 32 32
+milk_plastic -173 -257 32 32
+mushroom_white -215 -257 32 32
+mushroom_white_p -257 -257 32 32
+mustard -299 -257 32 32
+olive_oil -341 -257 32 32
+orange_juice -383 -257 32 32
+paper_bag -425 -257 32 32
+peanut_butter -467 -257 32 32
+
+pencil_box -5 -299 32 32
+plain_yogurt -47 -299 32 32
+potato -89 -299 32 32
+potato_p -131 -299 32 32
+potatochip_blue -173 -299 32 32
+potatochip_green -215 -299 32 32
+potatochip_yellow -257 -299 32 32
+power_strip_typeA -299 -299 32 32
+power_strip_typeF -341 -299 32 32
+receipt -383 -299 32 32
+red_apple -425 -299 32 32
+red_apple_p -467 -299 32 32
+
+red_grape -5 -341 32 32
+red_grape_p -47 -341 32 32
+rolling-pin -89 -341 32 32
+rubber_duck -131 -341 32 32
+rubber_ducktopus -173 -341 32 32
+salmon -215 -341 32 32
+salmon_p -257 -341 32 32
+salt -299 -341 32 32
+sausage_p -341 -341 32 32
+scissors -383 -341 32 32
+scissors_p -425 -341 32 32
+scrub_brush -467 -341 32 32
+
+scrub_sponge -5 -383 32 32
+shampoo -47 -383 32 32
+sliced_bread_p -89 -383 32 32
+snack1 -131 -383 32 32
+snack2 -173 -383 32 32
+soap -215 -383 32 32
+soap_box -257 -383 32 32
+soft_drink_blue -299 -383 32 32
+soft_drink_green -341 -383 32 32
+soft_drink_red -383 -383 32 32
+soft_drink_yellow -425 -383 32 32
+spatula -467 -383 32 32
+
+spatula_p -5  425 32 32
+strawberry -47 -425 32 32
+strawberry_ice_cream -89 -425 32 32
+strawberry_jam -131 -425 32 32
+strawberry_p -173 -425 32 32
+sugar -215 -425 32 32
+sun_cream_tube -257 -425 32 32
+teakettle -299 -425 32 32
+toilet_paper -341 -425 32 32
+toothbrush -383 -425 32 32
+toothbrush_set -425 -425 32 32
+toothpaste -467 -425 32 32
+
+toothpaste_box -5 -467 32 32
+tuna_can -47 -467 32 32
+vanilla_or_lemon_ice_cream -89 -467 32 32
+water -131 -467 32 32
+watermelon1 -173 -467 32 32
+watermelon2 -215 -467 32 32
+wax -257 -467 32 32
+wet_wipe -299 -467 32 32
+whisk -341 -467 32 32
+whisk_p -383 -467 32 32
+white_cheese -425 -467 32 32
+white_cheese_p -467 -467 32 32
+
+white_cheese_piece -5 -509 32 32
+white_cheese_piece_p -47 -509 32 32
+wine_red -89 -509 32 32
+wine_white -131 -509 32 32
+wine_white2 -173-509 32 32
+wine_white3 -215 -509 32 32
