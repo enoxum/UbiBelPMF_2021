@@ -107,9 +107,9 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 sprite.color.g = 0.0f;
                 sprite.color.b = 0.0f;
 
-                //auto& col = reg.emplace<SimpleCollision>(entity);
-                //col.size.x = TileSize;
-                //col.size.y = TileSize;
+                auto& col = reg.emplace<SimpleCollision>(entity);
+                col.size.x = tileSize;
+                col.size.y = tileSize;
             }
 
             auto& transform = reg.emplace<Transform>(entity);
@@ -182,10 +182,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     
     // player controller setup
     const Float32 playerSize = tileSize;
-    PandemicShopPlayerInputSystem::SetupPlayerBoarders((height - 2)* (tileSize + Space) / 2.f , 
-                                                        -(height - 2)* (tileSize + Space) / 2.f, 
-                                                        (width - 2)* (tileSize + Space) / 2.f,
-                                                        -(width - 2)* (tileSize + Space) / 2.f);
+    PandemicShopPlayerInputSystem::SetupPlayerBoarders((height - 2)* (tileSize + Space + 5) / 2.f , 
+                                                        -(height - 2)* (tileSize + Space + 5) / 2.f, 
+                                                        (width - 2)* (tileSize + Space + 5) / 2.f,
+                                                        -(width - 2)* (tileSize + Space + 5) / 2.f);
     PandemicShopPlayerInputSystem::s_PlayerSpeed = tileSize * 14.f;
     //1st player
     {

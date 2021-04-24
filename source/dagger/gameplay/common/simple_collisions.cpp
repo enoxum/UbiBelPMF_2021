@@ -27,9 +27,31 @@ void SimpleCollisionsSystem::Run()
             {
                 collision.colided = true;
                 collision.colidedWith = *it2;
-
+                
                 col.colided = true;
                 col.colidedWith = *it;
+                
+                if (collision.GetCollisionSides(transform.position, col, tr.position).x == 1){
+                    transform.position.x = transform.position.x - collision.size.x/10.f;
+                    collision.colided = false;
+                    col.colided = false;
+                }
+                else if(collision.GetCollisionSides(transform.position, col, tr.position).x == -1){
+                    transform.position.x = transform.position.x + collision.size.x/10.f;
+                    collision.colided = false;
+                    col.colided = false;
+                }
+                else if(collision.GetCollisionSides(transform.position, col, tr.position).y == 1){
+                    transform.position.y = transform.position.y - collision.size.y/10.f;
+                    collision.colided = false;
+                    col.colided = false;
+                }
+                else if(collision.GetCollisionSides(transform.position, col, tr.position).y == -1){
+                    transform.position.y = transform.position.y + collision.size.y/10.f;
+                    collision.colided = false;
+                    col.colided = false;
+                }
+                
             }
             it2++;
         }
