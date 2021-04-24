@@ -18,7 +18,7 @@
 #include "gameplay/ping_pong/pingpong_ball.h"
 #include "gameplay/ping_pong/player_scores.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
-#include "gameplay/ping_pong/pingpong_tools.h"
+#include "gameplay/PandemicShop/pandemic_tools.h"
 
 
 using namespace dagger;
@@ -36,6 +36,7 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
     engine_.AddSystem<DiagnosticSystem>();
+    engine_.AddSystem<CollisionDetectionSystem>();
     engine_.AddSystem<GUISystem>();
     engine_.AddSystem<ToolMenuSystem>();
 #endif //!defined(NDEBUG)
@@ -81,6 +82,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     constexpr float Space = 0.1f;
     for (int i = 0; i < height; i++)
     {
+        
         for (int j = 0; j < width; j++)
         {
             auto entity = reg.create();
@@ -99,6 +101,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 sprite.color.r = 0.6f;
                 sprite.color.g = 0.6f;
                 sprite.color.b = 0.6f;
+                
             }
 
             if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
@@ -107,9 +110,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 sprite.color.g = 0.0f;
                 sprite.color.b = 0.0f;
 
-                auto& col = reg.emplace<SimpleCollision>(entity);
+                auto &col = reg.emplace<SimpleCollision>(entity);
                 col.size.x = tileSize;
                 col.size.y = tileSize;
+                
             }
 
             auto& transform = reg.emplace<Transform>(entity);
