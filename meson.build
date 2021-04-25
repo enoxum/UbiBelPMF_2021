@@ -62,6 +62,7 @@ sources = [
     'source/dagger/gameplay/racing/racing_player_car.cpp',
     'source/dagger/gameplay/team_game/team_game_main.cpp',
     'source/dagger/gameplay/tiles_example/tiles_example_main.cpp',
+    'source/dagger/gameplay/tanks/tanks_main.cpp',
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',
