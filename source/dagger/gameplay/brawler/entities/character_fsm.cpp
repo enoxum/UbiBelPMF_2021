@@ -11,21 +11,11 @@
 #include "gameplay/brawler/components/bullet.h"
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
-#include "gameplay/brawler/entities/bullet.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/physics.h"
 
 using namespace dagger;
 using namespace brawler;
-
-void BrawlerCharacterFSM::playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Transform& transform, Sprite& sprite, Movable& movable)
-{
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "Gunner_Green:SHOOT");
-	movable.speed.x -= sprite.scale.x * BulletSystem::s_PlayerRecoil;
-	
-	BulletEntity::Create(transform.position, sprite.scale.x>=0.0f? 1 : -1);
-}
 
 // Idle
 
@@ -40,10 +30,6 @@ DEFAULT_EXIT(BrawlerCharacterFSM, Idle);
 void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
-
-	// if (EPSILON_NOT_ZERO(input.Get("fire_test"))) {
-
-	// }
 
 	if (!movable.isOnGround)
 	{
@@ -61,11 +47,6 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 	{
 		GoTo(ECharacterStates::Running, state_);
 		return;
-	}
-
-	if (EPSILON_NOT_ZERO(input.Get("attack")))
-	{
-		playShootAnimation(state_, transform, sprite, movable);
 	}
 }
 
@@ -96,11 +77,6 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 		movable.speed.y += PhysicsSystem::s_JumpSpeed;
 		GoTo(ECharacterStates::Jumping, state_);
 		return;
-	}
-
-	if (EPSILON_NOT_ZERO(input.Get("attack")))
-	{
-		playShootAnimation(state_, transform, sprite, movable);
 	}
 
 	if (EPSILON_ZERO(run))
@@ -160,10 +136,4 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 		transform.position.x += run * PhysicsSystem::s_AirMobility * PhysicsSystem::s_RunSpeed * Engine::DeltaTime();
 	}
 
-	auto attack = input.Get("attack");
-
-	if(EPSILON_NOT_ZERO(attack))
-	{
-		playShootAnimation(state_, transform, sprite, movable);
-	}
 }

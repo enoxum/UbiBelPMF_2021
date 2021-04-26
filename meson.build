@@ -57,6 +57,7 @@ sources = [
     'source/dagger/gameplay/brawler/systems/debug_gui.cpp',
     'source/dagger/gameplay/brawler/systems/physics.cpp',
     'source/dagger/gameplay/brawler/systems/bullet_system.cpp',
+    'source/dagger/gameplay/brawler/systems/shooting_system.cpp',
     'source/dagger/gameplay/brawler/brawler_main.cpp',
     'source/dagger/gameplay/ping_pong/ping_pong_main.cpp',
     'source/dagger/gameplay/ping_pong/pingpong_ball.cpp',

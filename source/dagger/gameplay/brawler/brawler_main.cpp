@@ -23,6 +23,7 @@
 #include "gameplay/brawler/systems/character_controller.h"
 #include "gameplay/brawler/systems/debug_gui.h"
 #include "gameplay/brawler/systems/physics.h"
+#include "gameplay/brawler/systems/shooting_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -30,6 +31,7 @@ using namespace brawler;
 void Brawler::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<CharacterControllerSystem>();
+    engine_.AddPausableSystem<ShootingSystem>();
     engine_.AddPausableSystem<PhysicsSystem>();
     engine_.AddPausableSystem<BulletSystem>();
     engine_.AddSystem<SimpleCollisionsSystem>();

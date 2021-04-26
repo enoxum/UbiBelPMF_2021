@@ -33,8 +33,6 @@ struct BrawlerCharacterFSM : public FSM<ECharacterStates>
 		CONNECT_STATE(ECharacterStates, Jumping);
 	}
 
-private:
-	static void playShootAnimation(BrawlerCharacterFSM::StateComponent& state_, Transform& transform, Sprite& sprite, Movable& movable);
 };
 
 }
