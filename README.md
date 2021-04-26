@@ -1,6 +1,6 @@
 # Tanks game
 
-This branch features implementation of 2 player tanks game. Player one controls his tank with <code>W A S D</code> keys, and other one uses arrow keys. Winner is the one who manages to destroy opponent's tank. 
+This branch features implementation of 2 player tanks game. Player one controls his tank with <code>W A S D</code> keys, and other one uses <code>Arrow keys</code>. Winner is the one who manages to destroy opponent's tank. 
 
 ## Implementation
 Game is implemented in dagger engine, described bellow.
