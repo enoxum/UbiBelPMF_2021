@@ -17,6 +17,7 @@
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/ping_pong/pingpong_ball.h"
 #include "gameplay/ping_pong/player_scores.h"
+#include "gameplay/ping_pong/pingpong_tools.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
 
@@ -47,7 +48,7 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
     engine_.AddPausableSystem<PandemicShopPlayerInputSystem>();
 #if defined(DAGGER_DEBUG)
-    engine_.AddPausableSystem<PingPongTools>();
+    engine_.AddPausableSystem<ping_pong::PingPongTools>();
 #endif //defined(DAGGER_DEBUG)
 }
 

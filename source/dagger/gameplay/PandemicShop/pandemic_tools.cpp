@@ -1,12 +1,12 @@
 
-#include "source/dagger/gameplay/PandemicShop/pandemic_tools.h"
+#include "gameplay/PandemicShop/pandemic_tools.h"
 #include "tools/plotvar.h"
 #include "core/engine.h"
-#include "source/dagger/gameplay/common/simple_collisions.h"
+#include "gameplay/common/simple_collisions.h"
 #include "core/game/transforms.h"
 #include "core/input/inputs.h"
 #include "core/graphics/window.h"
-#include "source/dagger/gameplay/PandemicShop/pandemic_player_input.h"
+#include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "core/graphics/sprite.h"
 
 #include <imgui/imgui.h>
