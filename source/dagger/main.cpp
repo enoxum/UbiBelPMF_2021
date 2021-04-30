@@ -6,6 +6,9 @@
 #include "gameplay/team_game/team_game_main.h"
 #include "gameplay/tiles_example/tiles_example_main.h"
 #include "gameplay/tanks/tanks_main.h"
+
+#include "gameplay/tanks/tilemap.h"
+
 int main(int argc_, char** argv_)
 {
 	dagger::Engine engine;
