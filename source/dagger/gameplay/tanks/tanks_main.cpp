@@ -14,6 +14,7 @@
 
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/tanks/tanks_main.h"
+#include "gameplay/tanks/tank_movement.h"
 #include "tilemap.h"
 
 using namespace dagger;
@@ -42,6 +43,7 @@ void TanksGame::GameplaySystemsSetup(Engine& engine_)
 
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
     engine_.AddSystem<TilemapSystem>();
+    engine_.AddPausableSystem<TankMovement>();
     
 #if defined(DAGGER_DEBUG)
     
@@ -114,4 +116,39 @@ void tanks::SetupWorld(Engine& engine_)
     legend['$'] = &CreateInnerWall;
     Engine::Dispatcher().trigger<TilemapLoadRequest>(TilemapLoadRequest{ "my-file.map.txt", &legend });
 
+	auto& reg = engine_.Registry();
+	
+    // player 1
+    {
+        auto entity = reg.create();
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "tank1");
+        
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position = { 1 * BLOCK_SIZE, 9 * BLOCK_SIZE, 0 };
+        sprite.size = { BLOCK_SIZE, BLOCK_SIZE};
+        
+        auto& controller = reg.emplace<ControllerMapping>(entity);
+        TankMovement::SetupPlayerOneMovement(controller);
+        
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size = sprite.size;
+    }
+    
+    // player 2
+    {
+        auto entity = reg.create();
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "tank2");
+        
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position = { 19 * BLOCK_SIZE, 9 * BLOCK_SIZE, 0 };
+        sprite.size = { BLOCK_SIZE, BLOCK_SIZE};
+        
+        auto& controller = reg.emplace<ControllerMapping>(entity);
+        TankMovement::SetupPlayerTwoMovement(controller);
+        
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size = sprite.size;
+    }
 }
