@@ -112,6 +112,6 @@ void tanks::SetupWorld(Engine& engine_)
     legend['.'] = &CreateFloor;
     legend['*'] = &CreateWallFlower;
     legend['$'] = &CreateInnerWall;
-    Engine::Dispatcher().trigger<TilemapLoadRequest>(TilemapLoadRequest{ "textures\\my-file.map.txt", &legend });
+    Engine::Dispatcher().trigger<TilemapLoadRequest>(TilemapLoadRequest{ "my-file.map.txt", &legend });
 
 }
