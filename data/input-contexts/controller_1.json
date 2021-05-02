@@ -1,0 +1,18 @@
+{
+	"context-name": "controller_1",
+	"commands": [
+		{ "command-name": "run", 
+		  "actions": [
+			{ "trigger": "KeyA", "value": -1 },
+			{ "trigger": "KeyD", "value": 1 } 
+		] }, 
+		{ "command-name": "jump", "trigger": "KeyW" },
+		{ "command-name": "down", "trigger": "KeyS" },
+		{ "command-name": "use", "trigger": "KeyE" },
+		{ "command-name": "attack", "trigger": "KeyX" , "event": "Released"},
+		{ "command-name": "fire_test", "trigger": "KeyC" , "event": "Released"}
+		
+		
+		
+	]
+}
