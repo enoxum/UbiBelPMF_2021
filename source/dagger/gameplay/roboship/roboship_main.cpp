@@ -60,10 +60,10 @@ struct RCharacter
 
         chr.sprite.scale = { 1, 1 };
         chr.sprite.position = { position_, 0.0f };
-        chr.sprite.color = { color_, 1.0f };
+        //chr.sprite.color = { color_, 1.0f };
 
-        AssignSprite(chr.sprite, "souls_like_knight_character:IDLE:idle1");
-        AnimatorPlay(chr.animator, "souls_like_knight_character:IDLE");
+        AssignSprite(chr.sprite, "robot:ROBOT1:robot1_1");
+//        AnimatorPlay(chr.animator, "robot:ROBOT1");
 
         if (input_ != "")
             chr.input.contexts.push_back(input_);
