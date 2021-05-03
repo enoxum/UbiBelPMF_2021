@@ -1,0 +1,15 @@
+{
+	"animation-name": "robot:RUN",
+	"animation-length-ms": 500,
+	"animation-frames": 
+	[
+		{ "texture-name": "robot:RUN:Run (1)", "relative-length": 1 },
+		{ "texture-name": "robot:RUN:Run (2)", "relative-length": 1 },
+		{ "texture-name": "robot:RUN:Run (3)", "relative-length": 2 },
+		{ "texture-name": "robot:RUN:Run (4)", "relative-length": 2 },
+		{ "texture-name": "robot:RUN:Run (5)", "relative-length": 1 },
+		{ "texture-name": "robot:RUN:Run (6)", "relative-length": 1 },
+		{ "texture-name": "robot:RUN:Run (7)", "relative-length": 2 },
+		{ "texture-name": "robot:RUN:Run (8)", "relative-length": 2 }
+	]
+}

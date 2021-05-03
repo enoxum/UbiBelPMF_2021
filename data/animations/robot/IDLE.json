@@ -1,0 +1,16 @@
+{
+	"animation-name": "robot:IDLE",
+	"animation-length-ms": 600,
+	"animation-frames": [
+		{ "texture-name": "robot:IDLE:Idle (1)" },
+		{ "texture-name": "robot:IDLE:Idle (2)" },
+		{ "texture-name": "robot:IDLE:Idle (3)" },
+		{ "texture-name": "robot:IDLE:Idle (4)" },
+		{ "texture-name": "robot:IDLE:Idle (5)" },
+		{ "texture-name": "robot:IDLE:Idle (6)" },
+		{ "texture-name": "robot:IDLE:Idle (7)" },
+		{ "texture-name": "robot:IDLE:Idle (8)" },
+		{ "texture-name": "robot:IDLE:Idle (9)" },
+		{ "texture-name": "robot:IDLE:Idle (10)" }
+	]
+}

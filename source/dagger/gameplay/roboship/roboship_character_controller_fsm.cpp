@@ -4,8 +4,7 @@
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
-//#include "gameplay/roboship/roboship_controller.h"
-#include "gameplay/platformer/platformer_controller.h"
+#include "gameplay/roboship/roboship_controller.h"
 
 using namespace dagger;
 
@@ -15,7 +14,7 @@ using namespace dagger;
 void RoboshipCharacterControllerFSM::Idle::Enter(RoboshipCharacterControllerFSM::StateComponent& state_)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "souls_like_knight_character:IDLE");
+	AnimatorPlay(animator, "robot:IDLE");
 }
 
 DEFAULT_EXIT(RoboshipCharacterControllerFSM, Idle);
@@ -36,7 +35,7 @@ void RoboshipCharacterControllerFSM::Idle::Run(RoboshipCharacterControllerFSM::S
 void RoboshipCharacterControllerFSM::Running::Enter(RoboshipCharacterControllerFSM::StateComponent& state_)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "souls_like_knight_character:RUN");
+	AnimatorPlay(animator, "robot:RUN");
 }
 
 // same as: DEFAULT_EXIT(CharacterControllerFSM, Running);
@@ -45,7 +44,7 @@ void RoboshipCharacterControllerFSM::Running::Exit(RoboshipCharacterControllerFS
 
 void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, platformer::PlatformerCharacter>(state_.entity);
+	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, roboship::RoboshipCharacter>(state_.entity);
 
 	Float32 run = input.Get("run");
 
@@ -55,7 +54,7 @@ void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM
 	}
 	else
 	{
-		sprite.scale.x = run;
-		sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+		sprite.scale.x = run*0.1f;
+		sprite.position.x += character.speed * run * Engine::DeltaTime();
 	}
 }
