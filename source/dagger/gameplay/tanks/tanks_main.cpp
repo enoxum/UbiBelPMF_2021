@@ -71,7 +71,7 @@ Entity CreateFloor(Registry& reg_, UInt32 x_, UInt32 y_)
     auto& sprite = reg_.emplace<Sprite>(entity);
     sprite.position = { x_ * BLOCK_SIZE, y_ * BLOCK_SIZE, 90 };
    
-    AssignSprite(sprite, "blk3");
+    AssignSprite(sprite, "floor");
     sprite.size = { BLOCK_SIZE, BLOCK_SIZE };
     return entity;
 }
@@ -84,7 +84,7 @@ Entity CreateOuterWall(Registry& reg_, UInt32 x_, UInt32 y_)
     auto& transform = reg_.emplace<Transform>(entity);
     transform.position = { x_ * BLOCK_SIZE, y_ * BLOCK_SIZE, 90 };
     
-    AssignSprite(sprite, "blk1");
+    AssignSprite(sprite, "outerWall");
     sprite.size = { BLOCK_SIZE, BLOCK_SIZE };
     
     auto& col = reg_.emplace<SimpleCollision>(entity);
@@ -101,7 +101,7 @@ Entity CreateInnerWall(Registry& reg_, UInt32 x_, UInt32 y_)
     auto& transform = reg_.emplace<Transform>(entity);
     transform.position = { x_ * BLOCK_SIZE, y_ * BLOCK_SIZE, 90 };
 
-    AssignSprite(sprite, "blk5");
+    AssignSprite(sprite, "innerWall");
     sprite.size = { BLOCK_SIZE, BLOCK_SIZE };
     
     auto& col = reg_.emplace<SimpleCollision>(entity);
@@ -110,7 +110,7 @@ Entity CreateInnerWall(Registry& reg_, UInt32 x_, UInt32 y_)
     return entity;
 
 }
-Entity CreateWallFlower(Registry& reg_, UInt32 x_, UInt32 y_)
+Entity CreateStartPlatform(Registry& reg_, UInt32 x_, UInt32 y_)
 {
     Entity entity = reg_.create();
     auto& sprite = reg_.emplace<Sprite>(entity);
@@ -118,7 +118,7 @@ Entity CreateWallFlower(Registry& reg_, UInt32 x_, UInt32 y_)
     auto& transform = reg_.emplace<Transform>(entity);
     transform.position = { x_ * BLOCK_SIZE, y_ * BLOCK_SIZE, 90 };
 
-    AssignSprite(sprite, "blk4");
+    AssignSprite(sprite, "startPlatform");
     sprite.size = { BLOCK_SIZE, BLOCK_SIZE };
     
     return entity;
@@ -130,7 +130,7 @@ void tanks::SetupWorld(Engine& engine_)
     TilemapLegend legend;
     legend['#'] = &CreateOuterWall;
     legend['.'] = &CreateFloor;
-    legend['*'] = &CreateWallFlower;
+    legend['*'] = &CreateStartPlatform;
     legend['$'] = &CreateInnerWall;
     Engine::Dispatcher().trigger<TilemapLoadRequest>(TilemapLoadRequest{ "my-file.map.txt", &legend });
 
