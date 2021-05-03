@@ -3,6 +3,7 @@
 #include "core/engine.h"
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
+#include "gameplay/common/simple_collisions.h"
 #include "tanks_main.h"
 
 #include <cmath>
@@ -63,18 +64,29 @@ void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
 
 void TankMovement::Run()
 {
-    auto view = Engine::Registry().view<Transform, ControllerMapping, Tank, Sprite>();
+    auto view = Engine::Registry().view<Transform, ControllerMapping, Tank, Sprite, SimpleCollision>();
     for (auto entity : view)
     {
         auto &t = view.get<Transform>(entity);
         auto &ctrl = view.get<ControllerMapping>(entity);
         auto &tank = view.get<Tank>(entity);
         auto &s = view.get<Sprite>(entity);
+        auto &col = view.get<SimpleCollision>(entity);
         
         tank.angle += ctrl.rotation * Engine::DeltaTime() * 30.0;
         s.rotation = {-90.0f + tank.angle};
         
-		t.position.x += cos(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
-        t.position.y += sin(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
+        if (col.colided)
+        {
+        	// kad se dodaju metkovi ovo vrv treba izmeniti
+        	t.position = tank.pos;
+            col.colided = false;
+        }
+        else 
+        {
+        	tank.pos = t.position;
+        	t.position.x += cos(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
+        	t.position.y += sin(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
+        }
     }
 }
