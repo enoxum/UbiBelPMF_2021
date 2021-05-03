@@ -47,8 +47,6 @@ void AtonementGame::GameplaySystemsSetup()
     auto& engine = Engine::Instance();
 
     engine.AddPausableSystem<SimpleCollisionsSystem>();
-
-    //engine.AddSystem<EditorToolSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
 
 
@@ -65,8 +63,9 @@ void AtonementGame::WorldSetup()
     camera->position = { 0, 0, 0 };
     camera->Update();
 
+    //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
-        SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "default_saved_scene.json" });
+        SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
 }
 
 
