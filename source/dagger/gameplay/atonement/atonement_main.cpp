@@ -16,8 +16,6 @@
 
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/editor/savegame_system.h"
-#include "gameplay/editor/editor_main.h"
-#include "gameplay/editor/editor_main.h"
 #include "core/savegame.h"
 #include <iostream>
 #include <cstring>
@@ -25,7 +23,6 @@
 
 using namespace dagger;
 using namespace atonement;
-using namespace editor;
 
 void AtonementGame::CoreSystemsSetup()
 {

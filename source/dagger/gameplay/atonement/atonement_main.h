@@ -6,11 +6,10 @@
 #include "core/engine.h"
 #include "tools/toolmenu.h"
 #include "gameplay/editor/savegame_system.h"
-#include "gameplay/editor/editor_main.h"
+#include "gameplay/editor/editor_defs.h"
 #include "core/graphics/tool_render.h"
 
 using namespace dagger;
-using namespace editor;
 
 namespace atonement
 {
