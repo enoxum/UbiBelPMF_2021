@@ -2,11 +2,11 @@
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
+#include "core/graphics/sprite.h"
+#include <cmath>
 
 using namespace dagger;
 using namespace tanks;
-
-Float32 TankMovement::s_PlayerSpeed = 60.f;
 
 void TankMovement::SpinUp()
 {
@@ -22,33 +22,57 @@ void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
     {
+        
+        if (kEvent_.key == ctrl_.left_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
+        {
+        	ctrl_.rotation = 1;
+        }
+        else if (kEvent_.key == ctrl_.left_key && kEvent_.action == EDaggerInputState::Released && ctrl_.rotation > 0)
+        {
+        	ctrl_.rotation = 0;
+        }
+        else if (kEvent_.key == ctrl_.right_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
+        {
+        	ctrl_.rotation = -1;
+        }
+        else if (kEvent_.key == ctrl_.right_key && kEvent_.action == EDaggerInputState::Released && ctrl_.rotation < 0)
+        {
+        	ctrl_.rotation = 0;
+        }
+        
         if (kEvent_.key == ctrl_.up_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
         {
-            ctrl_.input.y = 1;
+        	ctrl_.move = 1;
         }
-        else if (kEvent_.key == ctrl_.up_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.y > 0)
+        else if (kEvent_.key == ctrl_.up_key && kEvent_.action == EDaggerInputState::Released && ctrl_.move > 0)
         {
-            ctrl_.input.y = 0;
+        	ctrl_.move = 0;
         }
         else if (kEvent_.key == ctrl_.down_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
         {
-            ctrl_.input.y = -1;
+        	ctrl_.move = -1;
         }
-        else if (kEvent_.key == ctrl_.down_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.y < 0)
+        else if (kEvent_.key == ctrl_.down_key && kEvent_.action == EDaggerInputState::Released && ctrl_.move < 0)
         {
-            ctrl_.input.y = 0;
+        	ctrl_.move = 0;
         }
     });
 }
 
 void TankMovement::Run()
 {
-    auto view = Engine::Registry().view<Transform, ControllerMapping>();
+    auto view = Engine::Registry().view<Transform, ControllerMapping, Tank, Sprite>();
     for (auto entity : view)
     {
         auto &t = view.get<Transform>(entity);
         auto &ctrl = view.get<ControllerMapping>(entity);
-
-        t.position.y += ctrl.input.y * s_PlayerSpeed * Engine::DeltaTime();
+        auto &tank = view.get<Tank>(entity);
+        auto &s = view.get<Sprite>(entity);
+        
+        tank.angle += ctrl.rotation * Engine::DeltaTime() * 30.0;
+        s.rotation = {-90.0f + tank.angle};
+        
+		t.position.x += cos(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
+        t.position.y += sin(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
     }
 }

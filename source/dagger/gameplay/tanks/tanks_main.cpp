@@ -128,6 +128,10 @@ void tanks::SetupWorld(Engine& engine_)
         transform.position = { 1 * BLOCK_SIZE, 9 * BLOCK_SIZE, 0 };
         sprite.size = { BLOCK_SIZE, BLOCK_SIZE};
         
+        auto& tank = reg.emplace<Tank>(entity);
+        tank.speed = 60.0f;
+        tank.angle = 90.0f;
+        
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerOneMovement(controller);
         
@@ -144,6 +148,10 @@ void tanks::SetupWorld(Engine& engine_)
         auto& transform = reg.emplace<Transform>(entity);
         transform.position = { 19 * BLOCK_SIZE, 9 * BLOCK_SIZE, 0 };
         sprite.size = { BLOCK_SIZE, BLOCK_SIZE};
+        
+        auto& tank = reg.emplace<Tank>(entity);
+        tank.speed = 60.0f;
+        tank.angle = 90.0f;
         
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerTwoMovement(controller);
