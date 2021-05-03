@@ -17,6 +17,8 @@
 #include "gameplay/tanks/tank_movement.h"
 #include "tilemap.h"
 
+#define BLOCK_SIZE 42
+
 using namespace dagger;
 using namespace tanks;
 
@@ -62,7 +64,7 @@ void TanksGame::WorldSetup(Engine& engine_)
 
     SetupWorld(engine_);
 }
-#define BLOCK_SIZE 42
+
 Entity CreateFloor(Registry& reg_, UInt32 x_, UInt32 y_)
 {
     Entity entity = reg_.create();
@@ -119,9 +121,6 @@ Entity CreateWallFlower(Registry& reg_, UInt32 x_, UInt32 y_)
     AssignSprite(sprite, "blk4");
     sprite.size = { BLOCK_SIZE, BLOCK_SIZE };
     
-    auto& col = reg_.emplace<SimpleCollision>(entity);
-    col.size = sprite.size;
-    
     return entity;
 
 }
@@ -145,7 +144,7 @@ void tanks::SetupWorld(Engine& engine_)
         sprite.size = { BLOCK_SIZE, BLOCK_SIZE};
         
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position = { 1 * BLOCK_SIZE, 9 * BLOCK_SIZE, 0 };
+        transform.position = { 2 * BLOCK_SIZE, 3 * BLOCK_SIZE, 0 };
         
         auto& tank = reg.emplace<Tank>(entity);
         tank.speed = 60.0f;
@@ -166,11 +165,11 @@ void tanks::SetupWorld(Engine& engine_)
         sprite.size = { BLOCK_SIZE, BLOCK_SIZE};
         
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position = { 19 * BLOCK_SIZE, 9 * BLOCK_SIZE, 0 };
+        transform.position = { 18 * BLOCK_SIZE, 16 * BLOCK_SIZE, 0 };
         
         auto& tank = reg.emplace<Tank>(entity);
         tank.speed = 60.0f;
-        tank.angle = 90.0f;
+        tank.angle = -90.0f;
         
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerTwoMovement(controller);
