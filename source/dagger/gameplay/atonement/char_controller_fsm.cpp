@@ -4,9 +4,10 @@
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
-#include "gameplay/platformer/platformer_controller.h"
+#include <gameplay/atonement/atonement_controller.h>
 
 using namespace dagger;
+using namespace atonement;
 
 // Idle
 
@@ -53,7 +54,7 @@ void CharControllerFSM::Walking::Exit(CharControllerFSM::StateComponent& state_)
 
 void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, platformer::PlatformerCharacter>(state_.entity);
+	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
 	Float32 walk = input.Get("walk");
 
