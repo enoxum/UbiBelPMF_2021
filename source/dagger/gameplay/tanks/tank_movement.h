@@ -19,12 +19,6 @@ namespace tanks
         Float32 move{0};
         Float32 rotation{0};
     };
-    
-    struct Tank
-    {
-        Float32 speed;
-        Float32 angle;
-    };
 
     class TankMovement
         : public System

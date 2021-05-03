@@ -107,6 +107,7 @@ Entity CreateWallFlower(Registry& reg_, UInt32 x_, UInt32 y_)
     return entity;
 
 }
+    
 void tanks::SetupWorld(Engine& engine_)
 {
     TilemapLegend legend;

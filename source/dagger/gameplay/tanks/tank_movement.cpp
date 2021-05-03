@@ -3,6 +3,8 @@
 #include "core/engine.h"
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
+#include "tanks_main.h"
+
 #include <cmath>
 
 using namespace dagger;

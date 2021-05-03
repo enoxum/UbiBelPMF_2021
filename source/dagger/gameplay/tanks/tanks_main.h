@@ -9,6 +9,12 @@ using namespace dagger;
 
 namespace tanks
 {
+	struct Tank
+	{
+		Float32 speed;
+		Float32 angle;
+	};
+	
     void SetupWorld(Engine& engine_);
 
     class TanksGame : public Game
