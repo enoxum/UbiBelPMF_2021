@@ -17,6 +17,10 @@
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/editor/savegame_system.h"
 #include "gameplay/editor/editor_main.h"
+#include "gameplay/editor/editor_main.h"
+#include "core/savegame.h"
+#include <iostream>
+#include <cstring>
 
 
 using namespace dagger;
@@ -48,7 +52,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<SimpleCollisionsSystem>();
 
     //engine.AddSystem<EditorToolSystem>();
-    //engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
+    engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
 
 
 #if defined(DAGGER_DEBUG)
@@ -68,3 +72,58 @@ void AtonementGame::WorldSetup()
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "default_saved_scene.json" });
 }
 
+
+
+ECommonSaveArchetype AtonementGame::Save(Entity entity_, JSON::json& saveTo_)
+{
+    auto& registry = Engine::Registry();
+
+    ECommonSaveArchetype archetype = ECommonSaveArchetype::None;
+
+    if (registry.has<Sprite>(entity_))
+    {
+        saveTo_["sprite"] = SerializeComponent<Sprite>(registry.get<Sprite>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Sprite;
+    }
+
+    if (registry.has<Transform>(entity_))
+    {
+        saveTo_["transform"] = SerializeComponent<Transform>(registry.get<Transform>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Transform;
+    }
+
+    if (registry.has<Animator>(entity_))
+    {
+        saveTo_["animator"] = SerializeComponent<Animator>(registry.get<Animator>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Animator;
+    }
+
+    if (registry.has<SimpleCollision>(entity_))
+    {
+        saveTo_["simple_collision"] = SerializeComponent<SimpleCollision>(registry.get<SimpleCollision>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Physics;
+    }
+
+    // todo: add new if-block here and don't forget to change archetype
+
+    return archetype;
+}
+
+void AtonementGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::json& loadFrom_)
+{
+    auto& registry = Engine::Registry();
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Sprite))
+        DeserializeComponent<Sprite>(loadFrom_["sprite"], registry.emplace<Sprite>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Transform))
+        DeserializeComponent<Transform>(loadFrom_["transform"], registry.emplace<Transform>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Animator))
+        DeserializeComponent<Animator>(loadFrom_["animator"], registry.emplace<Animator>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Physics))
+        DeserializeComponent<SimpleCollision>(loadFrom_["simple_collision"], registry.emplace<SimpleCollision>(entity_));
+
+    // todo: add new if-block here and don't forget to change archetype
+}
