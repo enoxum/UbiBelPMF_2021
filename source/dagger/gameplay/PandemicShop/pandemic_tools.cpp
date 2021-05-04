@@ -33,18 +33,17 @@ void CollisionDetectionSystem::RenderGUI()
 	auto &reg = Engine::Registry();
 	auto moving_obj = reg.view<Sprite, ControllerMapping, Transform, SimpleCollision>();
 	auto static_obj = reg.view<Sprite, Transform, SimpleCollision>();
-	auto player = *(moving_obj.begin());
-	auto &tr = moving_obj.get<Transform>(player);
-	auto &col = moving_obj.get<SimpleCollision>(player);
 
-	auto &other = col.colidedWith;
-	auto &tr_other = static_obj.get<Transform>(other);
-	{
-		ImGui::Text("Player position: %f %f", tr.position.x, tr.position.y);
-		// ImGui::Text("Collided: %s", col.colided == true ? "true" : "false");
-		ImGui::Text("Colided with position: %f %f", tr_other.position.x, tr_other.position.y);
+	moving_obj.each([&](Sprite& sprite_, ControllerMapping& mapping_, Transform& transform_, SimpleCollision col_)
+		{
+			const auto& other = col_.colidedWith;
+			const auto& tr_other = static_obj.get<Transform>(other);
+			
+			ImGui::Text("Player position: %f %f", transform_.position.x, transform_.position.y);
+			// ImGui::Text("Collided: %s", col.colided == true ? "true" : "false");
+			ImGui::Text("Colided with position: %f %f", tr_other.position.x, tr_other.position.y);
+		});
 
-	}
 	ImGui::End();
 }
 
