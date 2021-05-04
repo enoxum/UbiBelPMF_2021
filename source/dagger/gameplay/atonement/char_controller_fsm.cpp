@@ -30,7 +30,7 @@ void CharControllerFSM::Idle::Run(CharControllerFSM::StateComponent& state_)
 
 	if (EPSILON_NOT_ZERO(input.Get("jump")))
 	{
-		GoTo(ECharStates::Jumping, state_);
+		GoTo(ECharStates::JumpWindup, state_);
 	}
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")))
@@ -70,12 +70,37 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 
 	if (EPSILON_NOT_ZERO(input.Get("jump")))
 	{
-		GoTo(ECharStates::Jumping, state_);
+		GoTo(ECharStates::JumpWindup, state_);
 	}
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")))
 	{
 		GoTo(ECharStates::Dashing, state_);
+	}
+}
+
+// Jump Windup
+
+void CharControllerFSM::JumpWindup::Enter(CharControllerFSM::StateComponent& state_)
+{
+	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	AnimatorPlay(animator, "BlueWizard:JUMP_WINDUP");
+}
+
+DEFAULT_EXIT(CharControllerFSM, JumpWindup);
+
+void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state_)
+{
+	auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
+	
+	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	{
+		GoTo(ECharStates::Dashing, state_);
+	}
+
+	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	if (animator.currentFrame == 3) {
+		GoTo(ECharStates::Jumping, state_);
 	}
 }
 
@@ -84,7 +109,7 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 void CharControllerFSM::Jumping::Enter(CharControllerFSM::StateComponent& state_)
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "BlueWizard:JUMP");
+	AnimatorPlay(animator, "BlueWizard:JUMPING");
 }
 
 DEFAULT_EXIT(CharControllerFSM, Jumping);
@@ -93,12 +118,37 @@ void CharControllerFSM::Jumping::Run(CharControllerFSM::StateComponent& state_)
 {
 	auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
 
-	// TODO
-
-	
 	if (EPSILON_NOT_ZERO(input.Get("dash")))
 	{
 		GoTo(ECharStates::Dashing, state_);
+	}
+
+
+	// TODO in case of collision transition to winddown
+}
+
+// Jump Winddown
+
+void CharControllerFSM::JumpWinddown::Enter(CharControllerFSM::StateComponent& state_)
+{
+	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	AnimatorPlay(animator, "BlueWizard:JUMP_WINDDOWN");
+}
+
+DEFAULT_EXIT(CharControllerFSM, JumpWinddown);
+
+void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& state_)
+{
+	auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
+
+	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	{
+		GoTo(ECharStates::Dashing, state_);
+	}
+
+	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	if (animator.currentFrame == 3) {
+		GoTo(ECharStates::Idle, state_);
 	}
 }
 

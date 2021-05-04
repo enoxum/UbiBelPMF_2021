@@ -8,7 +8,9 @@ namespace atonement {
 	{
 		Idle,
 		Walking,
+		JumpWindup,
 		Jumping,
+		JumpWinddown,
 		Dashing
 	};
 
@@ -16,14 +18,18 @@ namespace atonement {
 	{
 		DEFINE_STATE(CharControllerFSM, ECharStates, Idle);
 		DEFINE_STATE(CharControllerFSM, ECharStates, Walking);
+		DEFINE_STATE(CharControllerFSM, ECharStates, JumpWindup);
 		DEFINE_STATE(CharControllerFSM, ECharStates, Jumping);
+		DEFINE_STATE(CharControllerFSM, ECharStates, JumpWinddown);
 		DEFINE_STATE(CharControllerFSM, ECharStates, Dashing);
 
 		CharControllerFSM()
 		{
 			CONNECT_STATE(ECharStates, Idle);
 			CONNECT_STATE(ECharStates, Walking);
+			CONNECT_STATE(ECharStates, JumpWindup);
 			CONNECT_STATE(ECharStates, Jumping);
+			CONNECT_STATE(ECharStates, JumpWinddown);
 			CONNECT_STATE(ECharStates, Dashing);
 		}
 	};
