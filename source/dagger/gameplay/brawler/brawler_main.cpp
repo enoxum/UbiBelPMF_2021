@@ -18,10 +18,11 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/brawler/debug_tools/camera_control_system.h"
+#include "gameplay/brawler/debug_tools/debug_gui.h"
 #include "gameplay/brawler/entities/character.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/character_controller.h"
-#include "gameplay/brawler/systems/debug_gui.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 #include "gameplay/brawler/level.h"
@@ -37,8 +38,9 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<PhysicsSystem>();
     engine.AddPausableSystem<BulletSystem>();
     engine.AddSystem<SimpleCollisionsSystem>();
-    //engine.AddSystem<ParallaxSystem>();
-    //engine.AddSystem<CameraFollowSystem>();
+    
+    // Debug Systems
+    engine.AddSystem<CameraControlSystem>();
     engine.AddSystem<DebugGui>();
 }
 
