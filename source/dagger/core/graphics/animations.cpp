@@ -38,7 +38,9 @@ void AnimationSystem::Run()
                     animator_.currentFrame = (animator_.currentFrame + 1) % count;
                     if (animator_.currentFrame == 0)
                     {
-                        animator_.onAnimationEnded(currentAnimation);
+                        if (animator_.onAnimationEnded) {
+                            animator_.onAnimationEnded(currentAnimation);
+                        }
                         if (!animator_.isLooping)
                         {
                             animator_.animationPlaying = false;
