@@ -1,10 +1,12 @@
 #include "tank_movement.h"
+#include "tank_bullet.h"
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "gameplay/common/simple_collisions.h"
 #include "tanks_main.h"
+
 
 #include <cmath>
 
@@ -21,45 +23,77 @@ void TankMovement::WindDown()
     Engine::Dispatcher().sink<KeyboardEvent>().disconnect<&TankMovement::OnKeyboardEvent>(this);
 }
 
+void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3 pos_)
+{
+    auto& reg = Engine::Registry();
+    auto entity = reg.create();
+    auto& sprite = reg.emplace<Sprite>(entity);
+    AssignSprite(sprite, "PingPong:ball");
+    sprite.size = Vector2(1, 1) * tileSize_;
+
+    sprite.color = color_;
+
+    auto& transform = reg.emplace<Transform>(entity);
+    transform.position = pos_ * tileSize_;
+    transform.position.z = pos_.z;
+    auto& ball = reg.emplace<TankBullet>(entity);
+    ball.speed = speed_ * tileSize_;
+
+    auto& col = reg.emplace<SimpleCollision>(entity);
+    col.size.x = tileSize_;
+    col.size.y = tileSize_;
+}
+
+
+
 void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
-    {
-        
-        if (kEvent_.key == ctrl_.left_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
         {
-        	ctrl_.rotation = 1;
-        }
-        else if (kEvent_.key == ctrl_.left_key && kEvent_.action == EDaggerInputState::Released && ctrl_.rotation > 0)
-        {
-        	ctrl_.rotation = 0;
-        }
-        else if (kEvent_.key == ctrl_.right_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
-        {
-        	ctrl_.rotation = -1;
-        }
-        else if (kEvent_.key == ctrl_.right_key && kEvent_.action == EDaggerInputState::Released && ctrl_.rotation < 0)
-        {
-        	ctrl_.rotation = 0;
-        }
-        
-        if (kEvent_.key == ctrl_.up_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
-        {
-        	ctrl_.move = 1;
-        }
-        else if (kEvent_.key == ctrl_.up_key && kEvent_.action == EDaggerInputState::Released && ctrl_.move > 0)
-        {
-        	ctrl_.move = 0;
-        }
-        else if (kEvent_.key == ctrl_.down_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
-        {
-        	ctrl_.move = -1;
-        }
-        else if (kEvent_.key == ctrl_.down_key && kEvent_.action == EDaggerInputState::Released && ctrl_.move < 0)
-        {
-        	ctrl_.move = 0;
-        }
-    });
+
+            if (kEvent_.key == ctrl_.left_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
+            {
+                ctrl_.rotation = 1;
+            }
+            else if (kEvent_.key == ctrl_.left_key && kEvent_.action == EDaggerInputState::Released && ctrl_.rotation > 0)
+            {
+                ctrl_.rotation = 0;
+            }
+            else if (kEvent_.key == ctrl_.right_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
+            {
+                ctrl_.rotation = -1;
+            }
+            else if (kEvent_.key == ctrl_.right_key && kEvent_.action == EDaggerInputState::Released && ctrl_.rotation < 0)
+            {
+                ctrl_.rotation = 0;
+            }
+
+            else if (kEvent_.key == ctrl_.fire_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed)) {
+                CreateTankBullet(20, ColorRGBA(1, 1, 1, 1), 
+                    { 5,
+                      5,
+                      0 },
+                    { 15, 13, 0.f }
+                );
+            }
+
+            if (kEvent_.key == ctrl_.up_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
+            {
+                ctrl_.move = 1;
+            }
+            else if (kEvent_.key == ctrl_.up_key && kEvent_.action == EDaggerInputState::Released && ctrl_.move > 0)
+            {
+                ctrl_.move = 0;
+            }
+            else if (kEvent_.key == ctrl_.down_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
+            {
+                ctrl_.move = -1;
+            }
+            else if (kEvent_.key == ctrl_.down_key && kEvent_.action == EDaggerInputState::Released && ctrl_.move < 0)
+            {
+                ctrl_.move = 0;
+            }
+        });
 }
 
 void TankMovement::Run()
