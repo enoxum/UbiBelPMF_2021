@@ -20,9 +20,58 @@
 #include <iostream>
 #include <cstring>
 
+#include "gameplay/atonement/char_controller_fsm.h"
+#include "gameplay/atonement/atonement_controller.h"
 
 using namespace dagger;
 using namespace atonement;
+
+struct Character
+{
+    Entity entity;
+    Sprite& sprite;
+    Animator& animator;
+    InputReceiver& input;
+    AtonementController::AtonementCharacter& character;
+
+    static Character Get(Entity entity)
+    {
+        auto& reg = Engine::Registry();
+        auto& sprite = reg.get_or_emplace<Sprite>(entity);
+        auto& anim = reg.get_or_emplace<Animator>(entity);
+        auto& input = reg.get_or_emplace<InputReceiver>(entity);
+        auto& character = reg.get_or_emplace<AtonementController::AtonementCharacter>(entity);
+
+        return Character{ entity, sprite, anim, input, character };
+    }
+
+    static Character Create(
+        String input_ = "",
+        ColorRGB color_ = { 1, 1, 1 },
+        Vector2 position_ = { 0, 0 })
+    {
+        auto& reg = Engine::Registry();
+        auto entity = reg.create();
+
+        ATTACH_TO_FSM(CharControllerFSM, entity);
+
+        auto chr = Character::Get(entity);
+
+        chr.sprite.scale = { 1, 1 };
+        chr.sprite.position = { position_, 0.0f };
+        chr.sprite.color = { color_, 1.0f };
+
+        AssignSprite(chr.sprite, "BlueWizard:IDLE:idle1");
+        AnimatorPlay(chr.animator, "BlueWizard:IDLE");
+
+        if (input_ != "")
+            chr.input.contexts.push_back(input_);
+
+        chr.character.speed = 50;
+
+        return chr;
+    }
+};
 
 void AtonementGame::CoreSystemsSetup()
 {
@@ -48,11 +97,14 @@ void AtonementGame::GameplaySystemsSetup()
 
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
+    engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
 
 
 #if defined(DAGGER_DEBUG)
 #endif //defined(DAGGER_DEBUG)
 }
+
+
 
 void AtonementGame::WorldSetup()
 {
@@ -66,6 +118,9 @@ void AtonementGame::WorldSetup()
     //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
+
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 });
+    //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
 
 
