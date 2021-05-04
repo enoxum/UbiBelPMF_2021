@@ -16,6 +16,7 @@
 #include "gameplay/tanks/tanks_main.h"
 #include "gameplay/tanks/tank_movement.h"
 #include "tilemap.h"
+#include "tank_bullet.h"
 
 #define BLOCK_SIZE 42
 
@@ -46,6 +47,7 @@ void TanksGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
     engine_.AddSystem<TilemapSystem>();
     engine_.AddPausableSystem<TankMovement>();
+    engine_.AddPausableSystem<TankBulletSystem>();
     
 #if defined(DAGGER_DEBUG)
     
