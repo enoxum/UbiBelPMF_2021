@@ -65,6 +65,8 @@ sources = [
     'source/dagger/gameplay/PandemicShop/pandemic_shop_main.cpp',
     'source/dagger/gameplay/PandemicShop/pandemic_player_input.cpp',
     'source/dagger/gameplay/PandemicShop/pandemic_tools.cpp',
+    'source/dagger/gameplay/PandemicShop/character_controller_fsm.cpp',
+    'source/dagger/gameplay/PandemicShop/character_controller.cpp',
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',

@@ -43,7 +43,7 @@ void PandemicShopPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
         {
             ctrl_.input.y = 0;
         }
-
+        
         if (kEvent_.key == ctrl_.right_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
         {
             ctrl_.input.x = 1;

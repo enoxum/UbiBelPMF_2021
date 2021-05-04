@@ -20,10 +20,13 @@
 #include "gameplay/ping_pong/pingpong_tools.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
+#include "gameplay/PandemicShop/character_controller.h";
 
 
 using namespace dagger;
 using namespace pandemic_shop;
+//---------------------------
+using namespace pandemic;
 
 
 void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
@@ -63,6 +66,52 @@ void PandemicShopGame::WorldSetup(Engine& engine_)
 
     SetupWorld(engine_);
 }
+//---------------------------------------------------------
+struct Character {
+  Entity entity;
+  Sprite &sprite;
+  Animator &animator;
+  InputReceiver &input;
+  PandemicCharacter &character;
+
+  static Character Get(Entity entity) {
+    auto &reg = Engine::Registry();
+    auto &sprite = reg.get_or_emplace<Sprite>(entity);
+    auto &anim = reg.get_or_emplace<Animator>(entity);
+    auto &input = reg.get_or_emplace<InputReceiver>(entity);
+    auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
+
+    
+    //return Character{entity, sprite, anim, input};
+    return Character{entity, sprite, anim, input, character};
+  }
+
+  static Character Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
+                          Vector2 position_ = {0, 0}) {
+    auto &reg = Engine::Registry();
+    auto entity = reg.create();
+
+    ATTACH_TO_FSM(CharacterControllerFSM, entity);
+
+    auto chr = Character::Get(entity);
+
+    chr.sprite.scale = {1, 1};
+    chr.sprite.position = {position_, 0.0f};
+    chr.sprite.color = {color_, 1.0f};
+
+
+    AssignSprite(chr.sprite, "souls_like_knight_character:IDLE:idle1");
+    AnimatorPlay(chr.animator, "souls_like_knight_character:IDLE");
+
+    if (input_ != "")
+      chr.input.contexts.push_back(input_);
+
+    chr.character.speed = 50;
+
+    return chr;
+  }
+};
+//--------------------------------------------
 
 void pandemic_shop::SetupWorld(Engine& engine_)
 {
@@ -81,6 +130,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     float zPos = 1.f;
 
     constexpr float Space = 0.1f;
+
     for (int i = 0; i < height; i++)
     {
         
@@ -204,15 +254,19 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         transform.position.y = 0;
         transform.position.z = zPos;
 
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "EmptyWhitePixel");
-        sprite.size.x = playerSize;
-        sprite.size.y = playerSize;
-        sprite.color.r = 1.0f;
-        sprite.color.g = 0.0f;
-        sprite.color.b = 0.0f;
+         // player 
+        
+          auto &sprite = reg.emplace<Sprite>(entity);
+          AssignSprite(sprite, "PandemicShop:bob_front_front");
+          float ratio = sprite.size.y / sprite.size.x;
+          sprite.size = {2 * tileSize, 2 * tileSize * ratio};
 
-        auto& controller = reg.emplace<ControllerMapping>(entity);
+
+         auto mainChar = Character::Create("ASDW", {1, 1, 1}, {0, 0});
+
+      
+        //**OVDE NASTAJE GRESKA**
+        auto& controller = reg.emplace<ControllerMapping>(mainChar.entity);
         PandemicShopPlayerInputSystem::SetupPlayerInput(controller);
     }
 
