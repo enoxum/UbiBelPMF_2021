@@ -36,6 +36,16 @@ void AnimationSystem::Run()
                 {
                     UInt32 count = currentAnimation->frames.size();
                     animator_.currentFrame = (animator_.currentFrame + 1) % count;
+                    if (animator_.currentFrame == 0)
+                    {
+                        animator_.onAnimationEnded(currentAnimation);
+                        if (!animator_.isLooping)
+                        {
+                            animator_.animationPlaying = false;
+                            return;
+                        }
+                    }
+
                     animator_.currentFrameTime = 0.0;
                     
                     AssignSprite(sprite_, currentAnimation->frames[animator_.currentFrame].textureName);
