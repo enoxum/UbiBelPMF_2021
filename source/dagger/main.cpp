@@ -5,6 +5,6 @@
 int main(int argc_, char** argv_)
 {
 	dagger::Engine engine;
-//	return engine.Run<platformer::Platformer>();
-	return engine.Run<editor::EditorTestGame>();
+	return engine.Run<atonement::AtonementGame>();
+	//return engine.Run<editor::EditorTestGame>();
 }

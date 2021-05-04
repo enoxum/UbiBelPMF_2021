@@ -9,14 +9,14 @@
 #include "core/game/transforms.h"
 
 template<typename T>
-JSON::json SerializeComponent(T& input_)
+static JSON::json SerializeComponent(T& input_)
 {
     assert(("Serialization failed: no type specialization found!", false));
     return JSON::json{};
 }
 
 template<typename T>
-void DeserializeComponent(JSON::json input_, T& fill_)
+static void DeserializeComponent(JSON::json input_, T& fill_)
 {
     assert(("Deserialization failed: no type specialization found!", false));
 }
@@ -24,26 +24,26 @@ void DeserializeComponent(JSON::json input_, T& fill_)
 // Serialize vectors
 
 template<>
-JSON::json SerializeComponent(Vector2& input_)
+static JSON::json SerializeComponent(Vector2& input_)
 {
     return JSON::json{ { "x", input_.x }, { "y", input_.y } };
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, Vector2& fill_)
+static void DeserializeComponent(JSON::json input_, Vector2& fill_)
 {
     fill_.x = input_["x"];
     fill_.y = input_["y"];
 }
 
 template<>
-JSON::json SerializeComponent(Vector3& input_)
+static JSON::json SerializeComponent(Vector3& input_)
 {
     return JSON::json{ { "x", input_.x }, { "y", input_.y }, { "z", input_.z } };
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, Vector3& fill_)
+static void DeserializeComponent(JSON::json input_, Vector3& fill_)
 {
     fill_.x = input_["x"];
     fill_.y = input_["y"];
@@ -51,13 +51,13 @@ void DeserializeComponent(JSON::json input_, Vector3& fill_)
 }
 
 template<>
-JSON::json SerializeComponent(Vector4& input_)
+static JSON::json SerializeComponent(Vector4& input_)
 {
     return JSON::json{ { "x", input_.x }, { "y", input_.y }, { "z", input_.z }, { "w", input_.w } };
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, Vector4& fill_)
+static void DeserializeComponent(JSON::json input_, Vector4& fill_)
 {
     fill_.x = input_["x"];
     fill_.y = input_["y"];
@@ -68,7 +68,7 @@ void DeserializeComponent(JSON::json input_, Vector4& fill_)
 // Serialize sprites
 
 template<>
-JSON::json SerializeComponent(Sprite& input_)
+static JSON::json SerializeComponent(Sprite& input_)
 {
     JSON::json save{};
     save["subSize"] = SerializeComponent(input_.subSize);
@@ -86,7 +86,7 @@ JSON::json SerializeComponent(Sprite& input_)
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, Sprite& fill_)
+static void DeserializeComponent(JSON::json input_, Sprite& fill_)
 {
     AssignSpriteShader(fill_, input_["shader"]);
     AssignSprite(fill_, input_["image"]);
@@ -104,7 +104,7 @@ void DeserializeComponent(JSON::json input_, Sprite& fill_)
 // Serialize transforms
 
 template<>
-JSON::json SerializeComponent(Transform& input_)
+static JSON::json SerializeComponent(Transform& input_)
 {
     JSON::json save{};
     save["position"] = SerializeComponent(input_.position);
@@ -112,7 +112,7 @@ JSON::json SerializeComponent(Transform& input_)
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, Transform& fill_)
+static void DeserializeComponent(JSON::json input_, Transform& fill_)
 {
     DeserializeComponent(input_["position"], fill_.position);
 }
@@ -120,7 +120,7 @@ void DeserializeComponent(JSON::json input_, Transform& fill_)
 // Serialize animations
 
 template<>
-JSON::json SerializeComponent(Animator& input_)
+static JSON::json SerializeComponent(Animator& input_)
 {
     JSON::json save{};
     save["name"] = input_.currentAnimation.c_str();
@@ -128,13 +128,13 @@ JSON::json SerializeComponent(Animator& input_)
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, Animator& fill_)
+static void DeserializeComponent(JSON::json input_, Animator& fill_)
 {
     AnimatorPlay(fill_, input_["name"]);
 }
 
 template<>
-JSON::json SerializeComponent(SimpleCollision& collision_)
+static JSON::json SerializeComponent(SimpleCollision& collision_)
 {
     JSON::json save{};
     save["size"] = SerializeComponent(collision_.size);
@@ -143,7 +143,7 @@ JSON::json SerializeComponent(SimpleCollision& collision_)
 }
 
 template<>
-void DeserializeComponent(JSON::json input_, SimpleCollision& fill_)
+static void DeserializeComponent(JSON::json input_, SimpleCollision& fill_)
 {
     DeserializeComponent(input_["size"], fill_.size);
     DeserializeComponent(input_["pivot"], fill_.pivot);
