@@ -80,9 +80,12 @@ struct Character {
     auto &anim = reg.get_or_emplace<Animator>(entity);
     auto &input = reg.get_or_emplace<InputReceiver>(entity);
     auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
+    //-----------------------------------------------
+    auto &col = reg.emplace<SimpleCollision>(entity);
+    auto &transform = reg.emplace<Transform>(entity);
+    auto &controller = reg.emplace<ControllerMapping>(entity);
+    PandemicShopPlayerInputSystem::SetupPlayerInput(controller);
 
-    
-    //return Character{entity, sprite, anim, input};
     return Character{entity, sprite, anim, input, character};
   }
 
@@ -244,7 +247,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     PandemicShopPlayerInputSystem::s_PlayerSpeed = tileSize * 14.f;
     //1st player
     {
-        auto entity = reg.create();
+        /*auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
         col.size.x = playerSize;
         col.size.y = playerSize;
@@ -259,15 +262,13 @@ void pandemic_shop::SetupWorld(Engine& engine_)
           auto &sprite = reg.emplace<Sprite>(entity);
           AssignSprite(sprite, "PandemicShop:bob_front_front");
           float ratio = sprite.size.y / sprite.size.x;
-          sprite.size = {2 * tileSize, 2 * tileSize * ratio};
+          sprite.size = {2 * tileSize, 2 * tileSize * ratio};*/
 
 
          auto mainChar = Character::Create("ASDW", {1, 1, 1}, {0, 0});
 
-      
-        //**OVDE NASTAJE GRESKA**
-        auto& controller = reg.emplace<ControllerMapping>(mainChar.entity);
-        PandemicShopPlayerInputSystem::SetupPlayerInput(controller);
+       /* auto& controller = reg.emplace<ControllerMapping>(mainChar.entity);
+        PandemicShopPlayerInputSystem::SetupPlayerInput(controller);*/
     }
 
     // // add score system to count scores for left and right collisions
