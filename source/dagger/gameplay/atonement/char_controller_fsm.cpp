@@ -97,7 +97,7 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 	{
 		GoTo(ECharStates::Dashing, state_);
 	}
-
+	
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
 	if (animator.currentFrame == 3) {
 		GoTo(ECharStates::Jumping, state_);
