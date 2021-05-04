@@ -5,6 +5,7 @@
 #include "core/game.h"
 #include "core/engine.h"
 #include "tools/toolmenu.h"
+#include "gameplay/editor/editor_defs.h"
 #include "gameplay/editor/savegame_system.h"
 #include "core/graphics/tool_render.h"
 
@@ -12,39 +13,6 @@ using namespace dagger;
 
 namespace editor
 {
-    enum class ECommonSaveArchetype
-    {
-        None        = 0b00000000,
-        Sprite      = 0b00000001,
-        Transform   = 0b00000010,
-        Animator    = 0b00000100,
-        Physics     = 0b00001000,
-        // todo: add new values here
-    };
-
-    #define IS_ARCHETYPE_SET(in, test) ((in & test) == test)
-
-    inline ECommonSaveArchetype operator|(ECommonSaveArchetype a, ECommonSaveArchetype b)
-    {
-        return static_cast<ECommonSaveArchetype>(static_cast<int>(a) | static_cast<int>(b));
-    }
-
-    inline ECommonSaveArchetype operator&(ECommonSaveArchetype a, ECommonSaveArchetype b)
-    {
-        return static_cast<ECommonSaveArchetype>(static_cast<int>(a) & static_cast<int>(b));
-    }
-
-    struct EditorFocus
-    {
-        Bool dirty;
-    };
-
-    struct EditorFocusTarget
-    {
-        Entity entity;
-        String name;
-    };
-
     class EditorToolSystem : public System
     {
         static inline EditorFocusTarget ms_NoTarget{ entt::null, "" };
