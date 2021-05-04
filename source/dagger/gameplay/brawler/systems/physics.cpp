@@ -1,9 +1,10 @@
 #include "physics.h"
 
-#include "core/engine.h"
 #include "core/game/transforms.h"
-#include "../components/movable.h"
 #include "core/graphics/sprite.h"
+
+#include "gameplay/brawler/components/movable.h"
+#include "gameplay/brawler/level.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -52,17 +53,28 @@ void PhysicsSystem::Run()
         t.position.x += m.speed.x * Engine::DeltaTime();
         t.position.y += m.speed.y * Engine::DeltaTime();
 
-        // Simple y=0 platform collision
-        if (t.position.y < 0)
-        {
-            t.position.y = 0;
-            m.isOnGround = true;
-            if(m.speed.y < 0)
+        auto res = Level::getGround(BrawlerCharacter::Get(obj));
+        if(res) {
+            if(m.speed.y<0){ 
+                t.position.y = res.value();
                 m.speed.y = 0;
-        }
-        else
-        {
-            m.isOnGround = false;
+                m.isOnGround = true;
+            } else {
+                m.isOnGround = false;
+            } 
+        } else {
+            // Simple y=0 platform collision
+            if (t.position.y < 0)
+            {
+                t.position.y = 0;
+                m.isOnGround = true;
+                if(m.speed.y < 0)
+                    m.speed.y = 0;
+            }
+            else
+            {
+                m.isOnGround = false;
+            }
         }
 
     }
