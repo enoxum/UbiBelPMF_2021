@@ -21,6 +21,8 @@ namespace atonement
 			Float32 jumped{ 0 };
 			Float32 jumpHeight{ 100 };
 			Float32 dashSpeed{ 2000 };
+			Float32 fallSpeed{ 400 };
+			Bool grounded{ true };
 		};
 
 		class AtonementControllerSystem

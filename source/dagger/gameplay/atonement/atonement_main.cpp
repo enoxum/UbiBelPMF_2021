@@ -22,6 +22,7 @@
 
 #include "gameplay/atonement/char_controller_fsm.h"
 #include "gameplay/atonement/atonement_controller.h"
+#include "gameplay/atonement/groundedness_detection_system.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -98,6 +99,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
+    engine.AddPausableSystem<GroundednessDetectionSystem>();
 
 
 #if defined(DAGGER_DEBUG)

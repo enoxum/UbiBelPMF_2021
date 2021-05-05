@@ -41,7 +41,10 @@ void CharControllerFSM::Idle::Run(CharControllerFSM::StateComponent& state_)
 		GoTo(ECharStates::Dashing, state_);
 	}
 
-	// TODO transition to JumpWinddown if not grounded
+	auto& character = Engine::Registry().get<AtonementController::AtonementCharacter>(state_.entity);
+	if (!character.grounded) {
+		GoTo(ECharStates::JumpWinddown, state_);
+	}
 }
 
 
@@ -86,7 +89,9 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 		GoTo(ECharStates::Dashing, state_);
 	}
 
-	// TODO transition to JumpWinddown if not grounded
+	if (!character.grounded) {
+		GoTo(ECharStates::JumpWinddown, state_);
+	}
 }
 
 // Jump Windup
@@ -127,8 +132,6 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 		character.jumped = 0;
 		GoTo(ECharStates::JumpWinddown, state_);
 	}
-
-	// TODO in case of collision transition to winddown
 }
 
 // Jump Winddown
@@ -162,11 +165,15 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 
 	// TODO while not grounded fall down
 
-
+	if (!character.grounded) {
+		sprite.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+	}
 	// TODO refactor
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	if (animator.currentFrame == 3) {
-		GoTo(ECharStates::Idle, state_);
+	else{
+		auto& animator = Engine::Registry().get<Animator>(state_.entity);
+		if (animator.currentFrame == 3) {
+			GoTo(ECharStates::Idle, state_);
+		}
 	}
 }
 
@@ -188,11 +195,13 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 	// TODO refactor
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
 	if (animator.currentFrame == 15) {
+		if (!character.grounded) {
+			GoTo(ECharStates::JumpWinddown, state_);
+		}
 		GoTo(ECharStates::Idle, state_);
 	}
 	else {
 		sprite.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
 	}
 
-	// TODO transition to JumpWinddown if not grounded
 }
