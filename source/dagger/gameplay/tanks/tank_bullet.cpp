@@ -28,7 +28,7 @@ void TankBulletSystem::Run()
         if (col.colided)
         {
 
-            std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
+            //std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
 
             if (Engine::Registry().valid(col.colidedWith))
             {
