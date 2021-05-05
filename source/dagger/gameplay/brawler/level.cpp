@@ -39,37 +39,54 @@ void Level::Create()
 
 std::optional<float> Level::getGround(BrawlerCharacter c) {
     // TODO use a bounding box instead of sprite
-    // zoom is set to 2 so sprite size is double the world size
-    Vector2 bottomLeft = {c.transform.position.x - c.sprite.size.x/4.0f, c.transform.position.y - c.sprite.size.y/2.0f};
-    Vector2 bottomRight = {c.transform.position.x + c.sprite.size.x/4.0f, c.transform.position.y - c.sprite.size.y/2.0f};
-    
-    auto newY = c.transform.position.y;
-    bool changed = false;
-    for (Vector2 checkedTile = bottomLeft; checkedTile.x <= bottomRight.x; checkedTile.x += TILE_WIDTH)
-    {
-        checkedTile.x = checkedTile.x < bottomRight.x ? checkedTile.x : bottomRight.x;
+    Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.sprite.size.x/4.0f, c.movable.prevPosition.y - c.sprite.size.y/2.0f - 1};
+    Vector2 newBottomLeft = {c.transform.position.x - c.sprite.size.x/4.0f, c.transform.position.y - c.sprite.size.y/2.0f - 1};
 
-        auto [x, y] = WorldToTile(checkedTile);
-        // Logger::info("{0} {1}", x, y);
-        
-        if(x<0 || x>=LEVEL_WIDTH || y<0 || y>=LEVEL_HEIGHT)
-            continue;
-        if(Level::getTile(x, y)==PlatformType::BLOCK) {
-            float tileY = TileToWorldY(y) + c.sprite.size.y/2;
-            if(newY < tileY ) {
-                newY = tileY;
-                changed = true;
+    int endY = WorldToTileY(newBottomLeft.y);
+    int startY = std::max<int>(WorldToTileY(oldBottomLeft.y), endY);
+    int distance = std::max<int>(std::abs(endY - startY), 1);
+
+    for (int tileY = startY; tileY >= endY; tileY--)
+    {
+        Vector2 bottomLeft = newBottomLeft + (std::abs(static_cast<float>(endY - tileY)) / distance) * (oldBottomLeft - newBottomLeft);
+        Vector2 bottomRight = bottomLeft + Vector2(c.sprite.size.x/2.0f, 0);
+
+        for (Vector2 checkedTile = bottomLeft; checkedTile.x < bottomRight.x; checkedTile.x += TILE_WIDTH)
+        {
+            checkedTile.x = std::min<float>(checkedTile.x, bottomRight.x);
+
+            auto [x, y] = WorldToTile(checkedTile);
+            // Logger::info("{0} {1}", x, y);
+            
+            // TODO Move to getTile
+            if(x<0 || x>=LEVEL_WIDTH || y<0 || y>=LEVEL_HEIGHT)
+                continue;
+            if(Level::getTile(x, y)==PlatformType::BLOCK) {
+                float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.sprite.size.y/2;
+                return {ground};
             }
+
+            if(checkedTile.x >= bottomRight.x)
+                break;
         }
     }
-    if (changed)
-        return newY;
+
     return {};
 }
 
 TileCoords Level::WorldToTile(Vector2 worldPos)
 {
-    return { worldPos.x / TILE_WIDTH, worldPos.y / TILE_HEIGHT };
+    return { WorldToTileX(worldPos.x), WorldToTileY(worldPos.y) };
+}
+
+int Level::WorldToTileX(float x)
+{
+    return static_cast<int>(x) / TILE_WIDTH;
+}
+
+int Level::WorldToTileY(float y)
+{
+    return static_cast<int>(y) / TILE_HEIGHT;
 }
 
 Vector2 Level::TileToWorld(int x, int y)

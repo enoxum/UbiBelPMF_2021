@@ -29,6 +29,8 @@ namespace brawler {
         static void Create();
         
         static TileCoords WorldToTile(Vector2 worldPos);
+        inline static int WorldToTileX(float x);
+        inline static int WorldToTileY(float y);
         static Vector2 TileToWorld(int x, int y);
         inline static float TileToWorldX(int x);
         inline static float TileToWorldY(int y);
