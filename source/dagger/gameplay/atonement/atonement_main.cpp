@@ -67,7 +67,7 @@ struct Character
         if (input_ != "")
             chr.input.contexts.push_back(input_);
 
-        chr.character.speed = 50;
+        //chr.character.speed = 50;
 
         return chr;
     }
@@ -120,6 +120,7 @@ void AtonementGame::WorldSetup()
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
 
     auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 });
+    mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
 

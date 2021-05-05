@@ -16,7 +16,10 @@ namespace atonement
 	public:
 		struct AtonementCharacter
 		{
-			int speed{ 1 };
+			Float32 speed{ 500 };
+			Float32 jumpSpeed{ 300 };
+			Float32 jumped{ 0 };
+			Float32 jumpHeight{ 100 };
 		};
 
 		class AtonementControllerSystem
