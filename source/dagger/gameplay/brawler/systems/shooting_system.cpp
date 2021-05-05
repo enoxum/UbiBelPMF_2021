@@ -25,7 +25,6 @@ void ShootingSystem::Run()
             // recoil
             // TODO set based on weapon
             movable.speed.x -= sprite.scale.x * BulletSystem::s_PlayerRecoil;
-	
 	        BulletEntity::Create(transform.position, sprite.scale.x>=0.0f? 1 : -1);
         }
     });

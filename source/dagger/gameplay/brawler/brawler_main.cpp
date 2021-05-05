@@ -24,6 +24,7 @@
 #include "gameplay/brawler/systems/debug_gui.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
+#include "gameplay/brawler/systems/weaponpickupsystem.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -36,9 +37,11 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<PhysicsSystem>();
     engine.AddPausableSystem<BulletSystem>();
     engine.AddSystem<SimpleCollisionsSystem>();
+    engine.AddSystem<WeaponPickupSystem>();
     //engine.AddSystem<ParallaxSystem>();
     //engine.AddSystem<CameraFollowSystem>();
     engine.AddSystem<DebugGui>();
+
 }
 
 void Brawler::SetCamera()

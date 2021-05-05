@@ -10,7 +10,8 @@
 		{ "command-name": "down", "trigger": "KeyS" },
 		{ "command-name": "use", "trigger": "KeyE" },
 		{ "command-name": "attack", "trigger": "KeyX" , "event": "Released"},
-		{ "command-name": "fire_test", "trigger": "KeyC" , "event": "Released"}
+		{ "command-name": "spawn_weapon_debug", "trigger": "KeyV" , "event": "Released"}
+		
 		
 		
 		
