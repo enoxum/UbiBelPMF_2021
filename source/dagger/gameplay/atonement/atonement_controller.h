@@ -29,6 +29,8 @@ namespace atonement
 			CharControllerFSM characterFSM;
 
 		public:
+			AtonementControllerSystem();
+
 			String SystemName() override {
 				return "Character Controller System";
 			}

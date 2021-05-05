@@ -3,6 +3,10 @@
 using namespace dagger;
 using namespace atonement;
 
+AtonementController::AtonementControllerSystem::AtonementControllerSystem() {
+    canBePaused = true;
+}
+
 void AtonementController::AtonementControllerSystem::Run()
 {
     Engine::Registry().view<CharControllerFSM::StateComponent>()
