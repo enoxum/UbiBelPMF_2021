@@ -183,6 +183,16 @@ DEFAULT_EXIT(CharControllerFSM, Dashing);
 
 void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 {
-	// TODO transition back to idle after animation finishes
+	auto&& [sprite, character] = Engine::Registry().get<Sprite, AtonementController::AtonementCharacter>(state_.entity);
+	
+	// TODO refactor
+	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	if (animator.currentFrame == 15) {
+		GoTo(ECharStates::Idle, state_);
+	}
+	else {
+		sprite.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
+	}
+
 	// TODO transition to JumpWinddown if not grounded
 }
