@@ -7,6 +7,8 @@
 #include "gameplay/common/simple_collisions.h"
 #include "tanks_main.h"
 
+#include <iostream>
+using namespace std;
 
 #include <cmath>
 
@@ -34,7 +36,7 @@ void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3
     sprite.color = color_;
 
     auto& transform = reg.emplace<Transform>(entity);
-    transform.position = pos_ * tileSize_;
+    transform.position = pos_;
     transform.position.z = pos_.z;
     auto& ball = reg.emplace<TankBullet>(entity);
     ball.speed = speed_ * tileSize_;
@@ -69,12 +71,7 @@ void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
             }
 
             else if (kEvent_.key == ctrl_.fire_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed)) {
-                CreateTankBullet(20, ColorRGBA(1, 1, 1, 1), 
-                    { 5,
-                      5,
-                      0 },
-                    { 15, 13, 0.f }
-                );
+                ctrl_.fire = 1;
             }
 
             if (kEvent_.key == ctrl_.up_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
@@ -110,6 +107,25 @@ void TankMovement::Run()
         tank.angle += ctrl.rotation * Engine::DeltaTime() * 30.0;
         s.rotation = {-90.0f + tank.angle};
         
+        if (ctrl.fire) {
+            ctrl.fire = 0;
+
+                CreateTankBullet(
+                    20, 
+                    ColorRGBA(1, 1, 1, 1), 
+                    { sin(-s.rotation * PI / 180.0f) * 10 ,
+                      cos(-s.rotation * PI / 180.0f) * 10 ,
+                      0 
+                    },
+
+                    {   tank.pos.x + 42 * cos(tank.angle * PI / 180.0f),
+                        tank.pos.y + 42 * sin(tank.angle * PI / 180.0f),
+                      0 
+                    }
+                );
+
+        }
+
         if (col.colided)
         {
         	// kad se dodaju metkovi ovo vrv treba izmeniti
