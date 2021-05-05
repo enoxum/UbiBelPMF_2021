@@ -26,7 +26,8 @@ void WeaponPickupSystem::Run()
         if (EPSILON_NOT_ZERO(input.Get("spawn_weapon_debug")))
         {
             // TODO: This will need to include platforms as well
-            WeaponPickupEntity::Create(Vector2{ static_cast<float>(rand() % 175), 0.0f }, static_cast<WeaponType>(rand() % 3));
+            auto rand_x = static_cast<float>((rand() % (175 + 1 + 175)) - 175);
+            WeaponPickupEntity::Create(Vector2{ rand_x, 0.0f}, static_cast<WeaponType>(rand() % 3));
         }
         });
 
@@ -39,20 +40,30 @@ void WeaponPickupSystem::Run()
     for (auto wpColEntity: wpColView)
     {
         auto wpData = WeaponPickupEntity::Get(wpColEntity);
-        auto wpCol = wpData.col;
+        auto& wpCol = wpData.col;
 
         if (wpData.weaponPickup.pickedUp || !wpCol.colided)
             continue;
         for (auto playerColEntity : playerColView)
         {
-            auto playerCol = playerColView.get<SimpleCollision>(playerColEntity);
+            const auto& playerCol = playerColView.get<SimpleCollision>(playerColEntity);
             if (!playerCol.colided || playerCol.colidedWith != wpColEntity)
                 continue;
-            auto player = playerColView.get<Player>(playerColEntity);
+            auto& player = playerColView.get<Player>(playerColEntity);
 
-            player.weapons.push_back(wpData.weaponPickup.weaponType);
+            auto& playerWeapons = player.weapons;
+            const WeaponType& weapon = wpData.weaponPickup.weaponType;
+            auto w = std::find(playerWeapons.begin(), playerWeapons.end(), weapon);
+            if (w != playerWeapons.end()) {
+                int idx = w - playerWeapons.begin();
+                player.ammo[idx] += 100;
+            }
+            else {
+                playerWeapons.push_back(weapon);
+                player.ammo.push_back(100);
+            }
+
             wpData.weaponPickup.pickedUp = true;
-
         }
     }
 
