@@ -1,4 +1,5 @@
 #include "gameplay/roboship/roboship_main.h"
+#include "gameplay/roboship/selectTileController.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -15,14 +16,18 @@
 #include "core/graphics/gui.h"
 #include "core/graphics/text.h"
 
+
+
 #include "tools/diagnostics.h"
 
 using namespace dagger;
 using namespace roboship;
+using namespace robo_game;
 
 void Roboship::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
+    engine.AddSystem<SelectedTileInputSystem>();
 
 }
 
@@ -74,6 +79,27 @@ void RoboshipCreateBackdrop()
     float zPos = 1.f;
 
     constexpr float Space = 0.3f;
+
+
+    {
+        auto entity = reg.create();
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+
+        AssignSprite(sprite, "robot:INVENTORY:SelectedTile");
+
+        sprite.size.x = tileSize;
+        sprite.size.y = tileSize;
+
+        auto& transform = reg.emplace<Transform>(entity);
+
+        transform.position.x = (-1.0f + 0 + 0 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform.position.y = (2.5f + 3 + 3 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+        transform.position.z = 1.f;
+
+        auto& controller = reg.emplace<ControllerMapping>(entity);
+    }
+
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
@@ -81,40 +107,64 @@ void RoboshipCreateBackdrop()
             auto entity = reg.create();
             auto& sprite = reg.emplace<Sprite>(entity);
 
-            if (i == 3 && j == 0)
-                AssignSprite(sprite, "robot:INVENTORY:SelectedTile");
-            else
-                AssignSprite(sprite, "robot:INVENTORY:Tile");
+            AssignSprite(sprite, "robot:INVENTORY:Tile");
 
             sprite.size.x = tileSize;
             sprite.size.y = tileSize;
 
             auto& transform = reg.emplace<Transform>(entity);
-            transform.position.x = (0.5f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-            transform.position.y = (0.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
-            transform.position.z = zPos;
+            transform.position.x = (-1.0f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+            transform.position.y = (2.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+            transform.position.z = 2.f;
         }
     }
 
     tileSize = 40.f;
 
+
     for (int i = 0; i < 3; i++)
     {
 
         auto entity = reg.create();
+        
         auto& sprite = reg.emplace<Sprite>(entity);
-
+        
 
         AssignSprite(sprite, "robot:INVENTORY:SpecialTile1");
+
 
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
 
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = (- static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform.position.y = (0.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+   
+        transform.position.x = (-1.5f - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform.position.y = (2.65f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
         transform.position.z = zPos;
-    
+
+       
+     }
+
+    tileSize = 30.f;
+
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            auto entity = reg.create();
+            auto& sprite = reg.emplace<Sprite>(entity);
+
+            AssignSprite(sprite, "robot:INVENTORY:gear");
+
+            sprite.size.x = 15.f;
+            sprite.size.y = 15.f;
+
+            auto& transform = reg.emplace<Transform>(entity);
+            transform.position.x = (-1.0f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+            transform.position.y = (2.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+            transform.position.z = 0.f;
+        }
     }
 
     /*
@@ -125,6 +175,9 @@ void RoboshipCreateBackdrop()
         text.Set("pixel-font", "Roboship game");
     }
     */
+    
+
+
 }
 
 

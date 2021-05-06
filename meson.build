@@ -66,6 +66,8 @@ sources = [
     'source/dagger/gameplay/racing/racing_player_car.cpp',
     'source/dagger/gameplay/team_game/team_game_main.cpp',
     'source/dagger/gameplay/tiles_example/tiles_example_main.cpp',
+    'source/dagger/gameplay/roboship/roboship_main.cpp',
+    'source/dagger/gameplay/roboship/selectTileController.cpp',
     'source/dagger/tools/FileBrowser/imgui_demo.cpp',
     'source/dagger/tools/FileBrowser/ImGuiFileBrowser.cpp',
     'source/dagger/tools/console.cpp',
@@ -77,6 +79,7 @@ sources = [
     'source/dagger/tools/plotvar.cpp',
     'source/dagger/tools/toolmenu.cpp',
     'source/dagger/main.cpp',
+
 
     'libs/glad/include/glad/glad.c',
     'libs/imgui/include/imgui/imgui.cpp',
