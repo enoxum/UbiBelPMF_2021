@@ -1,4 +1,4 @@
-#include "Weapon.h"
+#include "weapon.h"
 namespace brawler {
 
 Weapon::Weapon(const WeaponType& weaponType, 
