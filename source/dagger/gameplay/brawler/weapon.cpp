@@ -5,12 +5,14 @@ Weapon::Weapon(const WeaponType& weaponType,
 			   const String& weaponName,
 			   int damage,
 			   int recoil, 
+			   int bulletSize,
 			   int clipSize,
 			   int numClips)
 	: m_weaponType(weaponType),
 	  m_name(weaponName),
 	  m_damage(damage),
 	  m_recoil(recoil),
+	  m_bulletSize(bulletSize),
 	  m_clipSize(clipSize),
 	  m_numClips(numClips),
 	  m_currentAmmoInClip(clipSize)
@@ -40,6 +42,11 @@ int Weapon::damage() const
 int Weapon::recoil() const
 {
 	return m_recoil;
+}
+
+int Weapon::bulletSize() const
+{
+	return m_bulletSize;
 }
 
 int Weapon::clipSize() const

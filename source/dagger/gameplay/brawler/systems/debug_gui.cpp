@@ -84,9 +84,11 @@ void DebugGui::RenderDebugWindow()
     {
         Engine::Registry().view<Player>().each([&](Player& player) {
             ImGui::Text("Player one:");
-            for (const auto& weapon : player.weapons) {
-
+            for (int i = 0; i < player.weapons.size(); i++) {
+                const auto& weapon = player.weapons[i];
+                ImGui::Text("\t%s%s : x%d [%d]", (i == player.active_weapon_idx ? "> " : ""), weapon.name().c_str(), weapon.currentAmmoInClip(), weapon.numClips());
             }
+            ImGui::Separator();
         });
     }
 

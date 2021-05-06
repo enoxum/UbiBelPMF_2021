@@ -35,6 +35,8 @@ namespace brawler
         }
 
         static BulletEntity Create(
+            int damage = 10,
+            int size   = 3,
             Vector2 position_ = { 0, 0 },
             int direction_ = 0
         ) {
@@ -47,11 +49,12 @@ namespace brawler
 
             bullet.sprite.position = { position_, 0.0f };
             bullet.sprite.size = { 1, 1 };
-            bullet.sprite.scale = { 10, 3 };
+            bullet.sprite.scale = { 10, size };
 
             AssignSprite(bullet.sprite, "EmptyWhitePixel");
 
             bullet.bullet.direction = (direction_ >= 0 ? 1 : -1);
+            bullet.bullet.damage = damage;
 
             BulletSystem::s_ActiveBullets++;
 
