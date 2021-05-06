@@ -59,7 +59,7 @@ void Brawler::WorldSetup()
     SetCamera();
     Level::Create();
 
-    auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 200, 32 });
+    auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 200, 50 });
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
 
     // auto player2 = BrawlerCharacter::Create("Arrows", { 1, 0, 0 }, { 100, 0 });

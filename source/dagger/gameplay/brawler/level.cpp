@@ -17,7 +17,7 @@ void Level::Create()
     for (unsigned y = 0; y < LEVEL_HEIGHT; y++) {
         tiles.emplace_back();
         for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
-            if(y==0 || y==5 || (y==1 && (x<6 || x>=LEVEL_WIDTH-6)))
+            if((y==0 && (x<8 || x>=LEVEL_WIDTH-8)) || y==5 || (y==1 && (x<6 || x>=LEVEL_WIDTH-6)))
                 tiles[y].push_back(PlatformType::BLOCK);
             else
                 tiles[y].push_back(PlatformType::EMPTY);
@@ -42,8 +42,8 @@ void Level::Create()
 }
 
 std::optional<float> Level::getGround(BrawlerCharacter c) {
-    Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.col.size.x/2, c.movable.prevPosition.y - c.col.size.y/2 - 1};
-    Vector2 newBottomLeft = {c.transform.position.x - c.col.size.x/2, c.transform.position.y - c.col.size.y/2 - 1};
+    Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.col.size.x/2 + 1, c.movable.prevPosition.y - c.col.size.y/2 - 1};
+    Vector2 newBottomLeft = {c.transform.position.x - c.col.size.x/2 + 1, c.transform.position.y - c.col.size.y/2 - 1};
 
     int endY = WorldToTileY(newBottomLeft.y);
     int startY = std::max<int>(WorldToTileY(oldBottomLeft.y)-1, endY);
@@ -52,7 +52,7 @@ std::optional<float> Level::getGround(BrawlerCharacter c) {
     for (int tileY = startY; tileY >= endY; tileY--)
     {
         Vector2 bottomLeft = newBottomLeft + (std::abs(static_cast<float>(endY - tileY)) / distance) * (oldBottomLeft - newBottomLeft);
-        Vector2 bottomRight = bottomLeft + Vector2(c.col.size.x, 0);
+        Vector2 bottomRight = bottomLeft + Vector2(c.col.size.x-2, 0);
 
         for (Vector2 checkedTile = bottomLeft; ; checkedTile.x += TILE_WIDTH)
         {
@@ -153,8 +153,8 @@ std::optional<float> Level::getRightWall(BrawlerCharacter c) {
 
             auto [x, y] = WorldToTile(checkedTile);
             if(Level::getTile(x, y)==PlatformType::BLOCK) {
-                float leftWall = TileToWorldX(x) - TILE_WIDTH/2 - c.col.size.x/2;
-                return {leftWall};
+                float rightWall = TileToWorldX(x) - TILE_WIDTH/2 - c.col.size.x/2;
+                return {rightWall};
             }
 
             if(checkedTile.y >= topRight.y)
@@ -172,12 +172,18 @@ TileCoords Level::WorldToTile(Vector2 worldPos)
 
 int Level::WorldToTileX(float x)
 {
-    return static_cast<int>(x) / TILE_WIDTH;
+    if(x >= 0)
+        return static_cast<int>(x) / TILE_WIDTH;
+    else
+        return static_cast<int>(x) / TILE_WIDTH - 1;
 }
 
 int Level::WorldToTileY(float y)
 {
-    return static_cast<int>(y) / TILE_HEIGHT;
+    if(y >= 0)
+        return static_cast<int>(y) / TILE_HEIGHT;
+    else
+        return static_cast<int>(y) / TILE_HEIGHT - 1;
 }
 
 Vector2 Level::TileToWorld(int x, int y)
