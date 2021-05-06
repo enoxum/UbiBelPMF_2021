@@ -23,14 +23,17 @@ namespace atonement
 			Float32 dashSpeed{ 2000 };
 			Float32 fallSpeed{ 400 };
 			Bool grounded{ true };
+			Bool fallingAnimationEnded{ false };
+			Bool dashingAnimationEnded{ false };
 		};
 
 		class AtonementControllerSystem
 			: public System
 		{
-			CharControllerFSM characterFSM;
 
 		public:
+			CharControllerFSM characterFSM;
+
 			AtonementControllerSystem();
 
 			String SystemName() override {

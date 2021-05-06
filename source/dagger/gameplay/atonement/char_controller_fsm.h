@@ -1,6 +1,9 @@
 #pragma once
 #include "core/core.h"
 #include "core/game/finite_state_machine.h"
+#include "core/graphics/animation.h"
+
+using namespace dagger;
 
 namespace atonement {
 
@@ -29,6 +32,8 @@ namespace atonement {
 			CONNECT_STATE(ECharStates, JumpWinddown);
 			CONNECT_STATE(ECharStates, Dashing);
 		}
+
+		void OnAnimationEnd(ViewPtr<Animation> animation);
 	};
 
 }

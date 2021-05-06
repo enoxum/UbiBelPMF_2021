@@ -39,9 +39,12 @@ struct Character
     {
         auto& reg = Engine::Registry();
         auto& sprite = reg.get_or_emplace<Sprite>(entity);
-        auto& anim = reg.get_or_emplace<Animator>(entity);
         auto& input = reg.get_or_emplace<InputReceiver>(entity);
         auto& character = reg.get_or_emplace<AtonementController::AtonementCharacter>(entity);
+
+        auto& anim = reg.get_or_emplace<Animator>(entity);
+        auto acs = Engine::GetDefaultResource<AtonementController::AtonementControllerSystem>();
+        anim.onAnimationEnded.connect<&CharControllerFSM::OnAnimationEnd>(acs->characterFSM);
 
         return Character{ entity, sprite, anim, input, character };
     }

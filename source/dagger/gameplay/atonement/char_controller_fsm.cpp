@@ -140,7 +140,11 @@ void CharControllerFSM::JumpWinddown::Enter(CharControllerFSM::StateComponent& s
 {
 	std::cout << "[JUMP_WD]" << std::endl;
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "BlueWizard:JUMP_WINDDOWN");
+	AnimatorPlayOnce(animator, "BlueWizard:JUMP_WINDDOWN");
+	
+	auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(state_.entity);
+
+	character.fallingAnimationEnded = false;
 }
 
 DEFAULT_EXIT(CharControllerFSM, JumpWinddown);
@@ -163,18 +167,21 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 		sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
 	}
 
-	// TODO while not grounded fall down
-
 	if (!character.grounded) {
 		sprite.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
 	}
+	else if (character.fallingAnimationEnded) {
+		GoTo(ECharStates::Idle, state_);
+	}
+
 	// TODO refactor
+	/*
 	else{
 		auto& animator = Engine::Registry().get<Animator>(state_.entity);
 		if (animator.currentFrame == 3) {
 			GoTo(ECharStates::Idle, state_);
 		}
-	}
+	}*/
 }
 
 // Dashing
@@ -182,8 +189,10 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 void CharControllerFSM::Dashing::Enter(CharControllerFSM::StateComponent& state_)
 {
 	std::cout << "[DASH]" << std::endl;
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
+	auto& [character, animator] = Engine::Registry().get<AtonementController::AtonementCharacter, Animator>(state_.entity);
 	AnimatorPlayOnce(animator, "BlueWizard:DASH");
+
+	character.dashingAnimationEnded = false;
 }
 
 DEFAULT_EXIT(CharControllerFSM, Dashing);
@@ -193,6 +202,7 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 	auto&& [sprite, character] = Engine::Registry().get<Sprite, AtonementController::AtonementCharacter>(state_.entity);
 	
 	// TODO refactor
+	/*
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
 	if (animator.currentFrame == 15) {
 		if (!character.grounded) {
@@ -200,8 +210,33 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 		}
 		GoTo(ECharStates::Idle, state_);
 	}
-	else {
+	else {*/
 		sprite.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
-	}
+	//}
 
+		if (character.dashingAnimationEnded) {
+			if (!character.grounded) {
+				GoTo(ECharStates::JumpWinddown, state_);
+			}
+			else {
+				GoTo(ECharStates::Idle, state_);
+			}
+		}
+
+}
+
+void CharControllerFSM::OnAnimationEnd(ViewPtr<Animation> animation) {
+	Engine::Registry().view<CharControllerFSM::StateComponent>()
+		.each([&](CharControllerFSM::StateComponent& state_)
+			{
+				String animName = animation.get()->name;
+				auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(state_.entity);
+
+				if (animName == "BlueWizard:DASH") {
+					character.dashingAnimationEnded = true;
+				}
+				else if (animName == "BlueWizard:JUMP_WINDDOWN") {
+					character.fallingAnimationEnded = true;
+				}
+			});
 }

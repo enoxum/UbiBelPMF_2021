@@ -33,6 +33,7 @@ void GroundednessDetectionSystem::Run()
                     char_.grounded = false;
                 }
 
+                
                 if (char_.grounded != tmp) {
                     std::cout << "Char pos: " << sprite_.position.x << " " << sprite_.position.y << std::endl;
                     std::cout << "Grounded: " << (char_.grounded ? "true" : "false") << std::endl;
