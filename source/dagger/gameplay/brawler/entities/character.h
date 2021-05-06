@@ -67,6 +67,8 @@ namespace brawler
             if (input_ != "")
                 chr.input.contexts.push_back(input_);
 
+            chr.col.size = { 24.0f, 30.0f };
+
             return chr;
         }
     };

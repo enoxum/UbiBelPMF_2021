@@ -38,9 +38,8 @@ void Level::Create()
 }
 
 std::optional<float> Level::getGround(BrawlerCharacter c) {
-    // TODO use a bounding box instead of sprite
-    Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.sprite.size.x/4.0f, c.movable.prevPosition.y - c.sprite.size.y/2.0f - 1};
-    Vector2 newBottomLeft = {c.transform.position.x - c.sprite.size.x/4.0f, c.transform.position.y - c.sprite.size.y/2.0f - 1};
+    Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.col.size.x/2, c.movable.prevPosition.y - c.col.size.y/2 - 1};
+    Vector2 newBottomLeft = {c.transform.position.x - c.col.size.x/2, c.transform.position.y - c.col.size.y/2 - 1};
 
     int endY = WorldToTileY(newBottomLeft.y);
     int startY = std::max<int>(WorldToTileY(oldBottomLeft.y), endY);
@@ -56,13 +55,8 @@ std::optional<float> Level::getGround(BrawlerCharacter c) {
             checkedTile.x = std::min<float>(checkedTile.x, bottomRight.x);
 
             auto [x, y] = WorldToTile(checkedTile);
-            // Logger::info("{0} {1}", x, y);
-            
-            // TODO Move to getTile
-            if(x<0 || x>=LEVEL_WIDTH || y<0 || y>=LEVEL_HEIGHT)
-                continue;
             if(Level::getTile(x, y)==PlatformType::BLOCK) {
-                float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.sprite.size.y/2;
+                float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.col.size.y/2;
                 return {ground};
             }
 
@@ -109,5 +103,7 @@ float Level::TileToWorldY(int y)
 
 PlatformType Level::getTile(int x, int y)
 {
+    if(x<0 || x>=LEVEL_WIDTH || y<0 || y>=LEVEL_HEIGHT)
+        return PlatformType::BLOCK;
     return tiles[y][x];
 }
