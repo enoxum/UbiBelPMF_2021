@@ -37,6 +37,9 @@ namespace brawler {
 
         static PlatformType getTile(int x, int y);
         static std::optional<float> getGround(BrawlerCharacter c);
+        static std::optional<float> getCeiling(BrawlerCharacter c);
+        static std::optional<float> getLeftWall(BrawlerCharacter c);
+        static std::optional<float> getRightWall(BrawlerCharacter c);
     private:
         static Tilemap tiles;
     };

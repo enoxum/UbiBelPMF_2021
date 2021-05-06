@@ -26,10 +26,6 @@ void PhysicsSystem::Run()
         auto& m = objects.get<Movable>(obj);
         auto& s = objects.get<Sprite>(obj);
 
-        m.prevPosition = t.position;
-        m.prevSpeed = m.speed;
-        m.wasOnGround = m.isOnGround;
-
         // Drag
         if(EPSILON_ZERO(m.speed.x)) {
             m.speed.x = 0;
@@ -40,7 +36,7 @@ void PhysicsSystem::Run()
         }
 
         // Gravity
-        if(s_UseGravity)
+        if(s_UseGravity && !m.isOnGround)
             m.speed.y -= PhysicsSystem::s_Gravity * Engine::DeltaTime();
 
         // Clamp speed
@@ -53,29 +49,40 @@ void PhysicsSystem::Run()
         t.position.x += m.speed.x * Engine::DeltaTime();
         t.position.y += m.speed.y * Engine::DeltaTime();
 
-        auto res = Level::getGround(BrawlerCharacter::Get(obj));
-        if(res) {
-            if(m.speed.y<0){ 
-                t.position.y = res.value();
-                m.speed.y = 0;
-                m.isOnGround = true;
-            } else {
-                m.isOnGround = false;
-            } 
-        } else {
-            // Simple y=0 platform collision
-            if (t.position.y < 0)
-            {
-                t.position.y = 0;
-                m.isOnGround = true;
-                if(m.speed.y < 0)
-                    m.speed.y = 0;
-            }
-            else
-            {
-                m.isOnGround = false;
-            }
+        // Tilemap collision
+        auto character = BrawlerCharacter::Get(obj);
+
+        auto leftWall = Level::getLeftWall(character);
+        if(leftWall && m.prevPosition.x > t.position.x && m.speed.x<=0.0f && m.prevPosition.x >= leftWall.value()) {
+            t.position.x = leftWall.value();
+            m.speed.x = 0.0f;
         }
+
+        auto rightWall = Level::getRightWall(character);
+        if(rightWall && m.prevPosition.x < t.position.x && m.speed.x>=0.0f && m.prevPosition.x <= rightWall.value()) {
+            t.position.x = rightWall.value();
+            m.speed.x = 0.0f;
+        }
+
+        auto ground = Level::getGround(character);
+        if(ground && m.speed.y<=0) {
+            t.position.y = ground.value();
+            m.speed.y = 0;
+            m.isOnGround = true;
+        } else {
+            m.isOnGround = false;
+        }
+
+        auto ceiling = Level::getCeiling(character);
+        if(ceiling && m.speed.y>0.0f) {
+            t.position.y = ceiling.value()-1;
+            m.speed.y = 0;
+        }
+
+        // Update previous frame data
+        m.prevPosition = t.position;
+        m.prevSpeed = m.speed;
+        m.wasOnGround = m.isOnGround;
 
     }
 }
