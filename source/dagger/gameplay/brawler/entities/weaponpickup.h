@@ -8,6 +8,8 @@
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/brawler/components/weaponpickup.h"
 
+#include "gameplay/brawler/weapon.h"
+
 using namespace dagger;
 
 namespace brawler
@@ -40,7 +42,7 @@ namespace brawler
             auto entity = reg.create();
 
             auto wp = WeaponPickupEntity::Get(entity);
-            wp.weaponPickup.weaponType = weaponType;
+            wp.weaponPickup.weapon = Weapon::CreateRandom();
             wp.transform.position = { position_, 0.0f };
             wp.sprite.position = { position_, 0.0f };
             wp.sprite.size = { 1, 1 };

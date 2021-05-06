@@ -84,10 +84,8 @@ void DebugGui::RenderDebugWindow()
     {
         Engine::Registry().view<Player>().each([&](Player& player) {
             ImGui::Text("Player one:");
-            for (int i = 0; i < player.weapons.size(); i++) {
-                const auto& weapon = player.weapons[i];
-                const auto& ammo = player.ammo[i];
-                ImGui::Text("\t%s: x%d", WeaponTypeName[static_cast<int>(weapon)], ammo);
+            for (const auto& weapon : player.weapons) {
+
             }
         });
     }

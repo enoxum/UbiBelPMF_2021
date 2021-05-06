@@ -3,4 +3,5 @@
 struct Bullet
 {
 	int direction;
+	int damage;
 };

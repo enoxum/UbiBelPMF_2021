@@ -17,10 +17,7 @@ namespace brawler
 	{
 		bool placeholder{ false };
 
-		// TODO: There should probably be a separate class called Weapon which contains WeaponType
-		String name;
-		// TODO: This is obviously not gonna stay like this
-		std::vector<WeaponType> weapons;
-		std::vector<int>		ammo;
+		std::vector<Weapon>		weapons;
+		int						active_weapon_idx;
 	};
 }

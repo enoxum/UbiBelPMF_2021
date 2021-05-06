@@ -50,6 +50,7 @@ sources = [
     'source/dagger/gameplay/common/jiggle.cpp',
     'source/dagger/gameplay/common/particles.cpp',
     'source/dagger/gameplay/common/simple_collisions.cpp',
+	'source/dagger/gameplay/brawler/weapon.cpp',
     'source/dagger/gameplay/brawler/components/movable.cpp',
     'source/dagger/gameplay/brawler/components/player.cpp',
     'source/dagger/gameplay/brawler/components/bullet.cpp',

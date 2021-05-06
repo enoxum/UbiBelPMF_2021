@@ -66,8 +66,6 @@ namespace brawler
             AssignSprite(chr.sprite, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
             AnimatorPlay(chr.animator, "Gunner_Green:IDLE");
 
-            chr.character.name = "player one";
-
             if (input_ != "")
                 chr.input.contexts.push_back(input_);
 

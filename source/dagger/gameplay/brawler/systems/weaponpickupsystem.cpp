@@ -26,6 +26,9 @@ void WeaponPickupSystem::Run()
         if (EPSILON_NOT_ZERO(input.Get("spawn_weapon_debug")))
         {
             // TODO: This will need to include platforms as well
+            // TODO: Also need to check whether pickups overlap with each other
+            // TODO: Generate between camera bounds instead of hardcode
+            // That's a lot of TODOs :D
             auto rand_x = static_cast<float>((rand() % (175 + 1 + 175)) - 175);
             WeaponPickupEntity::Create(Vector2{ rand_x, 0.0f}, static_cast<WeaponType>(rand() % 3));
         }
@@ -50,20 +53,27 @@ void WeaponPickupSystem::Run()
             if (!playerCol.colided || playerCol.colidedWith != wpColEntity)
                 continue;
             auto& player = playerColView.get<Player>(playerColEntity);
-
             auto& playerWeapons = player.weapons;
-            const WeaponType& weapon = wpData.weaponPickup.weaponType;
-            auto w = std::find(playerWeapons.begin(), playerWeapons.end(), weapon);
-            if (w != playerWeapons.end()) {
-                int idx = w - playerWeapons.begin();
-                player.ammo[idx] += 100;
+            auto& pickedUpWeapon = wpData.weaponPickup.weapon;
+
+            auto existingWeaponIt 
+                = std::find_if(std::begin(playerWeapons),
+                              std::end(playerWeapons),
+                              [&pickedUpWeapon](const auto& w) {
+                                    return w.weaponType() == pickedUpWeapon.weaponType();
+                              });
+            if (existingWeaponIt == std::end(playerWeapons)) {
+                playerWeapons.push_back(pickedUpWeapon);
+                if (playerWeapons.size() == 1) {
+                    player.active_weapon_idx = 0;
+                }
             }
             else {
-                playerWeapons.push_back(weapon);
-                player.ammo.push_back(100);
+                existingWeaponIt->transferAmmo(pickedUpWeapon);
             }
 
             wpData.weaponPickup.pickedUp = true;
+            
         }
     }
 
