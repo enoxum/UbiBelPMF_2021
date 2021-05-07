@@ -7,7 +7,8 @@ Weapon::Weapon(const WeaponType& weaponType,
 			   int recoil, 
 			   int bulletSize,
 			   int clipSize,
-			   int numClips)
+			   int numClips,
+			   String sprite)
 	: m_weaponType(weaponType),
 	  m_name(weaponName),
 	  m_damage(damage),
@@ -15,9 +16,9 @@ Weapon::Weapon(const WeaponType& weaponType,
 	  m_bulletSize(bulletSize),
 	  m_clipSize(clipSize),
 	  m_numClips(numClips),
-	  m_currentAmmoInClip(clipSize)
+	  m_currentAmmoInClip(clipSize),
+	  m_sprite(sprite)
 {
-	
 }
 
 Weapon::Weapon()
@@ -62,6 +63,11 @@ int Weapon::numClips() const
 int Weapon::currentAmmoInClip() const
 {
 	return m_currentAmmoInClip;
+}
+
+String Weapon::sprite() const
+{
+	return m_sprite;
 }
 
 bool Weapon::reload()
