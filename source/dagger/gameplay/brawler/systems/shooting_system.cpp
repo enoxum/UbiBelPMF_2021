@@ -1,5 +1,5 @@
 #include "shooting_system.h"
-
+#include "iostream"
 #include "core/engine.h"
 #include "core/input/inputs.h"
 #include "core/game/transforms.h"
@@ -30,7 +30,7 @@ void ShootingSystem::Run()
                 return;
 
             movable.speed.x -= sprite.scale.x * weapon.recoil();
-	        BulletEntity::Create(weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
+	        BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
             return;
         }
 
@@ -47,7 +47,7 @@ void ShootingSystem::Run()
                 return;
 
             player.active_weapon_idx = (player.active_weapon_idx + 1) % num_weapons;
-
+            Weapon wp = player.weapons[player.active_weapon_idx];
             return;
         }
 

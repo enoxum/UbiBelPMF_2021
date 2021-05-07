@@ -15,8 +15,8 @@ namespace brawler {
 		BAZOOKA 	= 7,
 		C4 			= 8,
 		GRANADE 	= 9,
-		MINE    	= 10,
-		MOLOTOV 	= 11,
+		FLASH 		= 10,
+		MINE    	= 11,
 		MEDKIT 		= 12,
 		BANANA 		= 13
 	};
@@ -36,31 +36,66 @@ namespace brawler {
 
 		static Weapon M4A1(int numClips)
 		{
-			return Weapon(WeaponType::M4A1, "M4A1",8, 15, 4, 30, numClips, "m4a1"); 
+			return Weapon(WeaponType::M4A1, "M4A1", 8, 15, 4, 30, numClips, "m4a1"); 
 		}
 
 		static Weapon AK(int numClips)
 		{
-			return Weapon(WeaponType::AK, "AK",8, 15, 4, 30, numClips, "ak"); 
+			return Weapon(WeaponType::AK, "AK", 8, 15, 4, 30, numClips, "ak"); 
 		}
 
 		static Weapon P90(int numClips)
 		{
-			return Weapon(WeaponType::P90, "P90",6, 12, 2, 50, numClips, "p90"); 
+			return Weapon(WeaponType::P90, "P90", 6, 12, 2, 50, numClips, "p90"); 
 		}
 
 		static Weapon Sniper(int numClips)
 		{
-			return Weapon(WeaponType::SNIPER, "Sniper",20, 20, 3, 5, numClips, "sniper"); 
+			return Weapon(WeaponType::SNIPER, "Sniper", 20, 20, 3, 5, numClips, "sniper"); 
 		}
 
 		static Weapon Uzi(int numClips)
 		{
-			return Weapon(WeaponType::UZI, "Uzi",6, 12, 3, 50, numClips, "uzi"); 
+			return Weapon(WeaponType::UZI, "Uzi", 6, 12, 3, 50, numClips, "uzi"); 
+		}
+
+		static Weapon Bazooka(int numClips)
+		{
+			return Weapon(WeaponType::BAZOOKA, "Bazooka", 50, 20, 5, 1, numClips, "bazooka"); 
+		}
+
+		static Weapon C4(int numClips)
+		{
+			return Weapon(WeaponType::C4, "C4", 50, 20, 5, 1, numClips, "c4"); 
+		}
+
+		static Weapon Granade(int numClips)
+		{
+			return Weapon(WeaponType::GRANADE, "Granade", 25, 12, 3, 1, numClips, "granade"); 
+		}
+
+		static Weapon Flash(int numClips)
+		{
+			return Weapon(WeaponType::FLASH, "Flash", 0, 12, 3, 1, numClips, "flash"); 
+		}
+
+		static Weapon Mine(int numClips)
+		{
+			return Weapon(WeaponType::MINE, "Mine", 50, 12, 3, 1, numClips, "mine"); 
+		}
+
+		static Weapon Medkit(int numClips)
+		{
+			return Weapon(WeaponType::MEDKIT, "Medkit", 0, 12, 3, 1, numClips, "medkit"); 
+		}
+
+		static Weapon Banana(int numClips)
+		{
+			return Weapon(WeaponType::BANANA, "Banana", 0, 12, 3, 3, numClips, "banana"); 
 		}
 
 		static Weapon CreateRandom() {
-			WeaponType randomType = static_cast<WeaponType>(rand() % 7);
+			WeaponType randomType = static_cast<WeaponType>(rand() % 14);
 			switch (randomType) {
 			case WeaponType::PISTOL:
 				return Pistol(1 + rand() % 7);
@@ -76,6 +111,20 @@ namespace brawler {
 				return Sniper(1 + rand() % 2);
 			case WeaponType::UZI:
 				return Uzi(1 + rand() % 4);
+			case WeaponType::BAZOOKA:
+				return Bazooka(1 + rand() % 100);
+			case WeaponType::C4:
+				return C4(1 + rand() % 100);
+			case WeaponType::GRANADE:
+				return Granade(1 + rand() % 7);
+			case WeaponType::FLASH:
+				return Flash(1 + rand() % 7);
+			case WeaponType::MINE:
+				return Mine(1 + rand() % 7);
+			case WeaponType::MEDKIT:
+				return Medkit(1 + rand() % 100);
+			case WeaponType::BANANA:
+				return Banana(1 + rand() % 100);
 			default:
 				throw "Unknown weapon type!";
 			}
