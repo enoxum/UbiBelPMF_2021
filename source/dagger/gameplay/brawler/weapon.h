@@ -46,12 +46,12 @@ namespace brawler {
 
 		static Weapon P90(int numClips)
 		{
-			return Weapon(WeaponType::P90, "P90",6, 12, 3, 50, numClips, "p90"); 
+			return Weapon(WeaponType::P90, "P90",6, 12, 2, 50, numClips, "p90"); 
 		}
 
 		static Weapon Sniper(int numClips)
 		{
-			return Weapon(WeaponType::SNIPER, "Sniper",20, 20, 5, 5, numClips, "sniper"); 
+			return Weapon(WeaponType::SNIPER, "Sniper",20, 20, 3, 5, numClips, "sniper"); 
 		}
 
 		static Weapon Uzi(int numClips)

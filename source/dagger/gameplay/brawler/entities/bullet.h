@@ -49,9 +49,9 @@ namespace brawler
 
             bullet.sprite.position = { position_, 0.0f };
             bullet.sprite.size = { 1, 1 };
-            bullet.sprite.scale = { 10, size };
+            bullet.sprite.scale = { 0.05, 0.05 };
 
-            AssignSprite(bullet.sprite, "EmptyWhitePixel");
+            AssignSprite(bullet.sprite, "brawler:bullet");
 
             bullet.bullet.direction = (direction_ >= 0 ? 1 : -1);
             bullet.bullet.damage = damage;
