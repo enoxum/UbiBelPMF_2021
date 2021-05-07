@@ -122,9 +122,34 @@ void EditorToolSystem::OnToolMenuRender()
 
 void EditorToolSystem::OnKeyboardEvent(KeyboardEvent event_)
 {
-    if (event_.key == EDaggerKeyboard::KeyTab && event_.action == EDaggerInputState::Released)
-        if (Input::IsInputDown(EDaggerKeyboard::KeyLeftControl))
+    auto* camera = Engine::GetDefaultResource<Camera>();
+
+    if (event_.key == EDaggerKeyboard::KeyTab && event_.action == EDaggerInputState::Released) {
+        if (Input::IsInputDown(EDaggerKeyboard::KeyLeftControl)) {
             m_IsInEditor = !m_IsInEditor;
+        }
+    }
+    else if (event_.key == EDaggerKeyboard::KeyUp) {
+        //std::cout << "up" << std::endl;
+        camera->position.y += 50;
+        camera->Update();
+    }
+    else if (event_.key == EDaggerKeyboard::KeyDown) {
+        //std::cout << "down" << std::endl;
+        camera->position.y -= 50;
+        camera->Update();
+    }
+    else if (event_.key == EDaggerKeyboard::KeyRight) {
+        //std::cout << "right" << std::endl;
+        camera->position.x += 50;
+        camera->Update();
+    }
+    else if (event_.key == EDaggerKeyboard::KeyLeft) {
+        //std::cout << "left" << std::endl;
+        camera->position.x -= 50;
+        camera->Update();
+    }
+
 }
 
 void EditorToolSystem::Run()
