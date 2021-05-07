@@ -3,6 +3,7 @@
 #include "core/core.h"
 #include "core/engine.h"
 #include "gameplay/brawler/entities/character.h"
+#include <optional>
 
 using namespace dagger;
 

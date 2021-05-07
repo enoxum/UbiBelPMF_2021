@@ -12,12 +12,37 @@ void Level::Create()
 {
     auto& reg = Engine::Registry();
 
+    // Create backdrop
+    {
+        auto sky = reg.create();
+        auto& sprite = reg.get_or_emplace<Sprite>(sky);
+        AssignSprite(sprite, "war_background:war4:sky");
+        sprite.position = { 200, 150, 10 };
+        sprite.scale = { 0.3f, 0.3f };
+    }
+
+    {
+        auto moon = reg.create();
+        auto& sprite = reg.get_or_emplace<Sprite>(moon);
+        AssignSprite(sprite, "war_background:war4:moon");
+        sprite.position = { 200, 150, 9 };
+        sprite.scale = { 0.3f, 0.3f };
+    }
+
+    {
+        auto background1 = reg.create();
+        auto& sprite = reg.get_or_emplace<Sprite>(background1);
+        AssignSprite(sprite, "war_background:war4:houses4");
+        sprite.position = { 200, 100, 8 };
+        sprite.scale = { 0.25f, 0.25f };
+    }
+
     // Fill the tilemap
     // TODO Load from json asset
     for (unsigned y = 0; y < LEVEL_HEIGHT; y++) {
         tiles.emplace_back();
         for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
-            if((y==0 && (x<8 || x>=LEVEL_WIDTH-8)) || y==5 || (y==1 && (x<6 || x>=LEVEL_WIDTH-6)))
+            if((y==0 && (x<8 || x>=LEVEL_WIDTH-8)) || (y==5 && x>3 && x<LEVEL_WIDTH-4) || (y==4 && (x==3 || x==LEVEL_WIDTH-4)) || (y==1 && (x<6 || x>=LEVEL_WIDTH-6)))
                 tiles[y].push_back(PlatformType::BLOCK);
             else
                 tiles[y].push_back(PlatformType::EMPTY);
