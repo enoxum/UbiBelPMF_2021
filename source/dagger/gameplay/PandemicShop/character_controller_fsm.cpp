@@ -13,7 +13,7 @@ using namespace dagger;
 void CharacterControllerFSM::Idle::Enter(
     CharacterControllerFSM::StateComponent &state_) {
   auto &animator = Engine::Registry().get<Animator>(state_.entity);
-  AnimatorPlay(animator, "souls_like_knight_character:IDLE");
+  AnimatorPlay(animator, "PandemicShop:IDLE");
 }
 
 DEFAULT_EXIT(CharacterControllerFSM, Idle);

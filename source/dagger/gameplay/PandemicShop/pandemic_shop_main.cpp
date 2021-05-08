@@ -80,6 +80,7 @@ struct Character {
     auto &anim = reg.get_or_emplace<Animator>(entity);
     auto &input = reg.get_or_emplace<InputReceiver>(entity);
     auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
+    
     //-----------------------------------------------
     auto &col = reg.emplace<SimpleCollision>(entity);
     auto &transform = reg.emplace<Transform>(entity);
@@ -103,8 +104,8 @@ struct Character {
     chr.sprite.color = {color_, 1.0f};
 
 
-    AssignSprite(chr.sprite, "souls_like_knight_character:IDLE:idle1");
-    AnimatorPlay(chr.animator, "souls_like_knight_character:IDLE");
+    AssignSprite(chr.sprite, "PandemicShop:IDLE:idle1");
+    AnimatorPlay(chr.animator, "PandemicShop:IDLE");
 
     if (input_ != "")
       chr.input.contexts.push_back(input_);
