@@ -99,7 +99,7 @@ struct Character {
 
     auto chr = Character::Get(entity);
 
-    chr.sprite.scale = {0.8, 0.8};
+    chr.sprite.scale = {2, 2};
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
 
