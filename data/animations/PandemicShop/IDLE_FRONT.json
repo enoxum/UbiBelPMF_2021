@@ -1,11 +1,10 @@
 {
-	"animation-name": "PandemicShop:IDLE",
+	"animation-name": "PandemicShop:IDLE_FRONT",
 	"animation-length-ms": 600,
-	"animation-frames": 
-	[
+	"animation-frames": [
 		{ "texture-name": "PandemicShop:IDLE:idle1" },
 		{ "texture-name": "PandemicShop:IDLE:idle2" },
 		{ "texture-name": "PandemicShop:IDLE:idle3" },
 		{ "texture-name": "PandemicShop:IDLE:idle4" }
 	]
-}
+} 

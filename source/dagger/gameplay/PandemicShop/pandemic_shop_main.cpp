@@ -99,13 +99,13 @@ struct Character {
 
     auto chr = Character::Get(entity);
 
-    chr.sprite.scale = {1, 1};
+    chr.sprite.scale = {0.8, 0.8};
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
 
 
-    AssignSprite(chr.sprite, "PandemicShop:IDLE:idle1");
-    AnimatorPlay(chr.animator, "PandemicShop:IDLE");
+    AssignSprite(chr.sprite, "PandemicShop:bob_front_front");
+    AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");
 
     if (input_ != "")
       chr.input.contexts.push_back(input_);
@@ -134,7 +134,8 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     float zPos = 1.f;
 
     constexpr float Space = 0.1f;
-
+   
+    //----------------------POZADINA-------------------------------
     for (int i = 0; i < height; i++)
     {
         
@@ -177,10 +178,99 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             transform.position.z = zPos;
         }
     }
-
+    
     zPos -= 1.f;
+    
+    //------------------------ELEMENTI NA SCENI--------------------------
+    
+    
+    // Police i drvo PRVI RED-------------------------------------------------------------------------
+
+    //Polica1
+    {
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:shelf1");
+      //sprite.color = {0, 0, 0, 1};
+      sprite.size = {189, 90};
+      sprite.scale = {1, 1};
+      sprite.position = {-205, 235, 1};
+    }
+    //Polica2
+    {
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:shelf2");
+      // sprite.color = {0, 0, 0, 1};
+      sprite.size = {80, 80};
+      sprite.scale = {1, 1};
+      sprite.position = {-90, 230, 1};
+    }
+    //Drvo
+    {
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:tree1");
+      // sprite.color = {0, 0, 0, 1};
+      sprite.size = {60, 60};
+      sprite.scale = {1, 1};
+      sprite.position = {-40, 218, 1};
+    }
+    // Police i drvo DRUGI PUT--------------------------------------------------------------------------
+
+    // Polica1
+    {
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:shelf1");
+      // sprite.color = {0, 0, 0, 1};
+      sprite.size = {189, 90};
+      sprite.scale = {1, 1};
+      sprite.position = {95, 125, 1};
+    }
+    // Polica2
+    {
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:shelf2");
+      // sprite.color = {0, 0, 0, 1};
+      sprite.size = {80, 80};
+      sprite.scale = {1, 1};
+      sprite.position = {210, 120, 1};
+    }
+    // Drvo
+    {
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:tree1");
+      // sprite.color = {0, 0, 0, 1};
+      sprite.size = {60, 60};
+      sprite.scale = {1, 1};
+      sprite.position = {260, 108, 1};
+    }
+    // KASA-----------------------------------
+    /*{
+      auto entity = reg.create();
+      auto &sprite = reg.get_or_emplace<Sprite>(entity);
+
+      AssignSprite(sprite, "PandemicShop:kasa");
+      sprite.size = {100, 100};
+      sprite.scale = {1, 1};
+      sprite.position = {-260, -180, 1};
+    }
+
+
+    */
+    /*--------------------------KRAJ ELEMENTI NA SCENI--------------------------------------------*/
 
     // collisions
+    /*
     {
         // up
         {
@@ -236,7 +326,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             transform.position.z = zPos;
 
         }
-    }
+    }*/
 
     
     // player controller setup
