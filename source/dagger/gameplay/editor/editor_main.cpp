@@ -171,9 +171,18 @@ void EditorToolSystem::Run()
             auto& reg = Engine::Registry();
             if (reg.valid(m_Selected.entity))
             {
-                auto& sprite = reg.get<Sprite>(m_Selected.entity);
-                knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
-                sprite.position = knob.position;
+                if (reg.has<Transform>(m_Selected.entity))
+                {
+                    auto& transform = reg.get<Transform>(m_Selected.entity);
+                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
+                    transform.position = knob.position;
+                }
+                else if (reg.has<Sprite>(m_Selected.entity))
+                {
+                    auto& sprite = reg.get<Sprite>(m_Selected.entity);
+                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
+                    sprite.position = knob.position;
+                }
             }
         }
 
@@ -210,7 +219,9 @@ void EditorToolSystem::GUIExecuteCreateEntity()
     auto& reg = Engine::Registry();
     auto newEntity = reg.create();
     auto& newSprite = reg.emplace<Sprite>(newEntity);
-    AssignSprite(newSprite, "tools:knob2");
+    AssignSprite(newSprite, "tools:knob2"); 
+    reg.emplace<Transform>(newEntity);
+    //newSprite.UseAsUI();                //Sta radi ovo?
     auto& newSavegame = reg.emplace<SaveGame<ECommonSaveArchetype>>(newEntity);
 }
 
@@ -265,26 +276,26 @@ void EditorToolSystem::GUIDrawSpriteEditor()
 
         /* Position values */ {
             float pos[]{ compSprite.position.x, compSprite.position.y, compSprite.position.z };
-            ImGui::InputFloat3("Position", pos, "%f", 1);
+            ImGui::InputFloat3("Sprite Position", pos, "%f", 1);
             compSprite.position.x = pos[0];
             compSprite.position.y = pos[1];
             compSprite.position.z = pos[2];
         }
 
         /* Rotation value */ {
-            ImGui::SliderFloat("Rotation", &compSprite.rotation, 0, 360, "%f", 1);
+            ImGui::SliderFloat("Sprite Rotation", &compSprite.rotation, 0, 360, "%f", 1);
         }
 
         /* Scale values */ {
             float size[]{ compSprite.scale.x, compSprite.scale.y };
-            ImGui::DragFloat2("Scale", size, 1, -10, 10, "%f", 1);
+            ImGui::DragFloat2("Sprite Scale", size, 1, -10, 10, "%f", 1);
             compSprite.scale.x = size[0];
             compSprite.scale.y = size[1];
         }
 
         /* Pivot values */ {
             float pivot[]{ compSprite.pivot.x, compSprite.pivot.y };
-            ImGui::DragFloat2("Pivot", pivot, 1, -0.5f, 0.5f, "%f", 1);
+            ImGui::DragFloat2("Sprite Pivot", pivot, 1, -0.5f, 0.5f, "%f", 1);
             compSprite.pivot.x = pivot[0];
             compSprite.pivot.y = pivot[1];
         }
@@ -297,6 +308,31 @@ void EditorToolSystem::GUIDrawSpriteEditor()
         }
     }
 }
+
+
+void EditorToolSystem::GUIDrawTransformEditor()
+{
+    auto& reg = Engine::Registry();
+    if (reg.has<Transform>(m_Selected.entity) && ImGui::CollapsingHeader("Transform"))
+    {
+        Transform& compTransform = reg.get<Transform>(m_Selected.entity);
+        /* Transform position value */ {
+            float pos[]{ compTransform.position.x, compTransform.position.y, compTransform.position.z };
+            ImGui::InputFloat3("Transform Position", pos, "%f", 1);
+            compTransform.position.x = pos[0];
+            compTransform.position.y = pos[1];
+            compTransform.position.z = pos[2];
+        }
+    }
+    else if (!reg.has<Transform>(m_Selected.entity))
+    {
+        if (ImGui::Button("Attach Transform"))
+        {
+            reg.emplace<Transform>(m_Selected.entity);
+        }
+    }
+}
+
 
 void EditorToolSystem::GUIDrawAnimationEditor()
 {
@@ -353,14 +389,14 @@ void EditorToolSystem::GUIDrawPhysicsEditor()
 
         /* Pivot values */ {
             float pivot[]{ compCol.pivot.x, compCol.pivot.y };
-            ImGui::DragFloat2("Pivot", pivot, 1, -0.5f, 0.5f, "%f", 1);
+            ImGui::DragFloat2("Collision Pivot", pivot, 1, -0.5f, 0.5f, "%f", 1);
             compCol.pivot.x = pivot[0];
             compCol.pivot.y = pivot[1];
         }
 
         /* Size values */ {
             float size[]{ compCol.size.x, compCol.size.y };
-            ImGui::DragFloat2("Size", size, 1, -0.5f, 0.5f, "%f", 1);
+            ImGui::DragFloat2("Collision Size", size, 1, -0.5f, 0.5f, "%f", 1);
             compCol.size.x = size[0];
             compCol.size.y = size[1];
         }
@@ -401,7 +437,7 @@ bool EditorToolSystem::GUIDrawEntityFocusSelection(int& selectedItem)
 
         if (!reg.valid(m_Selected.entity))
         {
-            ImGui::End();
+            //ImGui::End();         //zasto je ova linija izbrisana u novoj verziji?
             return false;
         }
 
@@ -434,6 +470,7 @@ void EditorToolSystem::OnRenderGUI()
         if (GUIDrawEntityFocusSelection(selectedItem))
         {
             GUIDrawSpriteEditor();
+            GUIDrawTransformEditor();
             GUIDrawAnimationEditor();
             GUIDrawPhysicsEditor();
 
