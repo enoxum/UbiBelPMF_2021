@@ -131,22 +131,22 @@ void EditorToolSystem::OnKeyboardEvent(KeyboardEvent event_)
     }
     else if (event_.key == EDaggerKeyboard::KeyUp) {
         //std::cout << "up" << std::endl;
-        camera->position.y += 50;
+        camera->position.y += 200;
         camera->Update();
     }
     else if (event_.key == EDaggerKeyboard::KeyDown) {
         //std::cout << "down" << std::endl;
-        camera->position.y -= 50;
+        camera->position.y -= 200;
         camera->Update();
     }
     else if (event_.key == EDaggerKeyboard::KeyRight) {
         //std::cout << "right" << std::endl;
-        camera->position.x += 50;
+        camera->position.x += 200;
         camera->Update();
     }
     else if (event_.key == EDaggerKeyboard::KeyLeft) {
         //std::cout << "left" << std::endl;
-        camera->position.x -= 50;
+        camera->position.x -= 200;
         camera->Update();
     }
 
@@ -161,7 +161,7 @@ void EditorToolSystem::Run()
         auto& focus = m_Registry.get<EditorFocus>(m_Focus);
 
         if (Input::IsInputDown(EDaggerMouse::MouseButton3))
-        {
+        {   
             knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
             focus.dirty = true;
         }
