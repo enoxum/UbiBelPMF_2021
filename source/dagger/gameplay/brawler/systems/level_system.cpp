@@ -52,11 +52,15 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
 	assert(json.contains("map_height"));
     assert(json.contains("tileset"));
     assert(json.contains("tilemap"));
+	assert(json.contains("backgrounds"));
+	assert(json.contains("player1"));
+	assert(json.contains("player2"));
 
     levelData->name = json["name"];
 	levelData->mapWidth = json["map_width"];
     levelData->mapHeight = json["map_height"];
 
+	// Tileset
     Sequence<TileData> tileset;
 	for (auto& tile : json["tileset"])
 	{
@@ -78,6 +82,7 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
 	}
     levelData->tileset = std::move(tileset);
 
+	// Tilemap
     Sequence<Sequence<int>> tiles;
     assert(json["tilemap"].size() == levelData->mapHeight);
     for (auto row = json["tilemap"].rbegin(); row != json["tilemap"].rend(); row++)
@@ -90,12 +95,17 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
     }
     levelData->tilemap = std::move(tiles);
 
+	// Backgrounds
 	Sequence<TextureData> backgrounds;
 	for (auto& background : json["backgrounds"])
     {
 		backgrounds.push_back(LoadTexture(background));
     }
 	levelData->backgrounds = std::move(backgrounds);
+
+	// Players
+	levelData->player1 = LoadPlayer(json["player1"]);
+	levelData->player2 = LoadPlayer(json["player2"]);
 
 	auto& library = Engine::Res<LevelData>();
 	if (library.contains(levelData->name))
@@ -113,6 +123,18 @@ TextureData LevelSystem::LoadTexture(JSON::json& input_)
 	texture.name = input_.value("texture", "EmptyWhitePixel");
 	texture.scale = input_.value("scale", 1.0f);
 	return texture;
+}
+
+PlayerData LevelSystem::LoadPlayer(JSON::json& player_)
+{
+	assert(player_.contains("x"));
+	assert(player_.contains("y"));
+	assert(player_.contains("is_left"));
+	PlayerData p1;
+	p1.x = player_["x"];
+	p1.y = player_["y"];
+	p1.isLeft = player_["is_left"];
+	return p1;
 }
 
 void LevelSystem::Run()

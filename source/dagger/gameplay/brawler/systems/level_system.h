@@ -21,6 +21,13 @@ struct TileData
     TextureData texture;
 };
 
+struct PlayerData
+{
+    int x;
+    int y;
+    bool isLeft;
+};
+
 struct LevelData
 {
     String name;
@@ -29,6 +36,8 @@ struct LevelData
     Sequence<TileData> tileset;
     Sequence<Sequence<int>> tilemap;
     Sequence<TextureData> backgrounds;
+    PlayerData player1;
+    PlayerData player2;
 };
 
 class LevelSystem : public System
@@ -46,6 +55,7 @@ public:
     void WindDown() override;
 private:
     TextureData LoadTexture(JSON::json& input_);
+    PlayerData LoadPlayer(JSON::json& player_);
 };
 
 }

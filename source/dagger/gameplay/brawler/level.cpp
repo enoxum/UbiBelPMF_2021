@@ -16,6 +16,8 @@ Tilemap Level::tiles{};
 void Level::Load(String map)
 {
     auto& reg = Engine::Registry();
+    reg.clear();
+
     const auto* level = Engine::Res<LevelData>()[map];
 
     LEVEL_WIDTH = level->mapWidth;
@@ -52,6 +54,11 @@ void Level::Load(String map)
         sprite.scale = { background.scale, background.scale };
         backgroundZ--;
     }
+
+    auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, 
+        { TileToWorldX(level->player1.x), TileToWorldY(level->player1.y) }, level->player1.isLeft);
+    // auto player2 = BrawlerCharacter::Create("controller_2", { 1, 1, 1 }, 
+    //     { TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, level->player2.isLeft);
 }
 
 std::optional<float> Level::getGround(BrawlerCharacter c) {

@@ -27,5 +27,7 @@
         { "texture": "war_background:war4:sky", "scale":0.3 },
         { "texture": "war_background:war4:moon", "scale":0.3 },
         { "texture": "war_background:war4:houses4", "scale":0.3 }
-    ]
+    ],
+    "player1": { "x":  1, "y":  3, "is_left": false },
+    "player2": { "x": 18, "y":  3, "is_left": true  }
 }
