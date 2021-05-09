@@ -24,10 +24,10 @@ namespace brawler {
         static constexpr float TILE_WIDTH = 20.0f;
         static constexpr float TILE_HEIGHT = 20.0f;
 
-        static constexpr unsigned LEVEL_WIDTH = 20;
-        static constexpr unsigned LEVEL_HEIGHT = 15;
+        static unsigned LEVEL_WIDTH;
+        static unsigned LEVEL_HEIGHT;
 
-        static void Create();
+        static void Load(String name);
         
         static TileCoords WorldToTile(Vector2 worldPos);
         inline static int WorldToTileX(float x);

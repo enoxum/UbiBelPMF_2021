@@ -2,67 +2,51 @@
 
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
+#include "gameplay/brawler/systems/level_system.h"
+#include "core/graphics/sprite.h"
 
 using namespace dagger;
 using namespace brawler;
 
+unsigned Level::LEVEL_WIDTH = 0;
+unsigned Level::LEVEL_HEIGHT = 0;
+
 Tilemap Level::tiles{};
 
-void Level::Create()
+void Level::Load(String map)
 {
     auto& reg = Engine::Registry();
+    const auto* level = Engine::Res<LevelData>()[map];
 
-    // Create backdrop
-    {
-        auto sky = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(sky);
-        AssignSprite(sprite, "war_background:war4:sky");
-        sprite.position = { 200, 150, 10 };
-        sprite.scale = { 0.3f, 0.3f };
-    }
+    LEVEL_WIDTH = level->mapWidth;
+    LEVEL_HEIGHT = level->mapHeight;
 
-    {
-        auto moon = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(moon);
-        AssignSprite(sprite, "war_background:war4:moon");
-        sprite.position = { 200, 150, 9 };
-        sprite.scale = { 0.3f, 0.3f };
-    }
-
-    {
-        auto background1 = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(background1);
-        AssignSprite(sprite, "war_background:war4:houses4");
-        sprite.position = { 200, 100, 8 };
-        sprite.scale = { 0.25f, 0.25f };
-    }
-
-    // Fill the tilemap
-    // TODO Load from json asset
+    tiles.clear();
     for (unsigned y = 0; y < LEVEL_HEIGHT; y++) {
         tiles.emplace_back();
         for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
-            if((y==0 && (x<8 || x>=LEVEL_WIDTH-8)) || (y==5 && x>3 && x<LEVEL_WIDTH-4) || (y==4 && (x==3 || x==LEVEL_WIDTH-4)) || (y==1 && (x<6 || x>=LEVEL_WIDTH-6)))
-                tiles[y].push_back(PlatformType::BLOCK);
-            else
-                tiles[y].push_back(PlatformType::EMPTY);
-            // tiles[y].push_back(((x+y)%2==1) && y<4 ? PlatformType::BLOCK : PlatformType::EMPTY);
-        }
-    }
-
-    // Create tilemap entites
-    for (unsigned x = 0; x < LEVEL_WIDTH; x++) {
-        for(unsigned y = 0; y < LEVEL_HEIGHT; y++) {
+            tiles[y].push_back(level->tileset[level->tilemap[y][x]].type);
             if(getTile(x, y) == PlatformType::BLOCK) {
                 auto tile = reg.create();
                 auto& sprite = reg.get_or_emplace<Sprite>(tile);
-                AssignSprite(sprite, "EmptyWhitePixel");
+                auto texture = level->tileset[level->tilemap[y][x]].texture;
+                AssignSprite(sprite, texture.name);
                 sprite.color = { 1, 1, 1, 1 };
                 sprite.size = { TILE_WIDTH, TILE_HEIGHT };
-                sprite.scale = { 1, 1 };
+                sprite.scale = { texture.scale, texture.scale };
                 sprite.position = { TileToWorld(x, y), 1 };
             }
         }
+    }
+
+    float backgroundZ = 100.0f;
+    for (auto& background : level->backgrounds) {
+        auto bg = reg.create();
+        auto& sprite = reg.get_or_emplace<Sprite>(bg);
+        AssignSprite(sprite, background.name);
+        sprite.position = { 200, 150, backgroundZ };
+        sprite.scale = { background.scale, background.scale };
+        backgroundZ--;
     }
 }
 
@@ -178,7 +162,7 @@ std::optional<float> Level::getRightWall(BrawlerCharacter c) {
 
             auto [x, y] = WorldToTile(checkedTile);
             if(Level::getTile(x, y)==PlatformType::BLOCK) {
-                float rightWall = TileToWorldX(x) - TILE_WIDTH/2 - c.col.size.x/2;
+                float rightWall = TileToWorldX(x) - TILE_WIDTH/2 - c.col.size.x/2 - 1;
                 return {rightWall};
             }
 

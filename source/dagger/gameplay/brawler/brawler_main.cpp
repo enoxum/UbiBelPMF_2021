@@ -25,6 +25,7 @@
 #include "gameplay/brawler/systems/character_controller.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
+#include "gameplay/brawler/systems/level_system.h"
 #include "gameplay/brawler/level.h"
 
 using namespace dagger;
@@ -33,11 +34,12 @@ using namespace brawler;
 void Brawler::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
+    engine.AddSystem<LevelSystem>();
     engine.AddPausableSystem<CharacterControllerSystem>();
     engine.AddPausableSystem<ShootingSystem>();
     engine.AddPausableSystem<PhysicsSystem>();
     engine.AddPausableSystem<BulletSystem>();
-    engine.AddSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<SimpleCollisionsSystem>();
     
     // Debug Systems
     engine.AddSystem<CameraControlSystem>();
@@ -57,7 +59,7 @@ void Brawler::SetCamera()
 void Brawler::WorldSetup()
 {
     SetCamera();
-    Level::Create();
+    Level::Load("default");
 
     auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 200, 50 });
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
