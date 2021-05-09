@@ -17,6 +17,8 @@ struct Movable
 
 	Bool isOnGround{ true };
 	Bool wasOnGround{ true };
+
+	Bool canDrop{ false };
 };
 
 }

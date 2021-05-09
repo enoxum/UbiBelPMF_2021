@@ -25,8 +25,12 @@ void Level::Load(String map)
     for (unsigned y = 0; y < LEVEL_HEIGHT; y++) {
         tiles.emplace_back();
         for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
+            if(level->tilemap[y][x] == -1) {
+                tiles[y].push_back(PlatformType::EMPTY);
+                continue;
+            }
             tiles[y].push_back(level->tileset[level->tilemap[y][x]].type);
-            if(getTile(x, y) == PlatformType::BLOCK) {
+            if(getTile(x, y) == PlatformType::BLOCK || getTile(x, y) == PlatformType::ONEWAY) {
                 auto tile = reg.create();
                 auto& sprite = reg.get_or_emplace<Sprite>(tile);
                 auto texture = level->tileset[level->tilemap[y][x]].texture;
@@ -63,18 +67,26 @@ std::optional<float> Level::getGround(BrawlerCharacter c) {
         Vector2 bottomLeft = newBottomLeft + (std::abs(static_cast<float>(endY - tileY)) / distance) * (oldBottomLeft - newBottomLeft);
         Vector2 bottomRight = bottomLeft + Vector2(c.col.size.x-2, 0);
 
+        c.movable.canDrop = false;
         for (Vector2 checkedTile = bottomLeft; ; checkedTile.x += TILE_WIDTH)
         {
             checkedTile.x = std::min<float>(checkedTile.x, bottomRight.x);
 
             auto [x, y] = WorldToTile(checkedTile);
+            float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.col.size.y/2;
+            
             if(Level::getTile(x, y)==PlatformType::BLOCK) {
-                float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.col.size.y/2;
+                c.movable.canDrop = false;
                 return {ground};
+            } else if(Level::getTile(x, y)==PlatformType::ONEWAY && std::abs(checkedTile.y - (TileToWorldY(y) + TILE_HEIGHT/2)) <= DROPDOWN_OFFSET + c.transform.position.y - c.movable.prevPosition.y) {
+                c.movable.canDrop = true;
             }
 
-            if(checkedTile.x >= bottomRight.x)
+            if(checkedTile.x >= bottomRight.x) {
+                if(c.movable.canDrop)
+                    return {ground};
                 break;
+            }
         }
     }
 

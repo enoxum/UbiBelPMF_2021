@@ -66,6 +66,10 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
                 tileData.type = PlatformType::BLOCK;
 				tileData.texture = LoadTexture(tile);
                 break;
+			case 2:
+                tileData.type = PlatformType::ONEWAY;
+				tileData.texture = LoadTexture(tile);
+                break;
             default:
                 tileData.type = PlatformType::EMPTY;
                 break;
