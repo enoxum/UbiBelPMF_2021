@@ -22,7 +22,8 @@
 
 #include "gameplay/atonement/char_controller_fsm.h"
 #include "gameplay/atonement/atonement_controller.h"
-#include "gameplay/atonement/groundedness_detection_system.h"
+#include "gameplay/atonement/systems/groundedness_detection_system.h"
+#include "gameplay/atonement/systems/collision_handler_system.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -34,6 +35,8 @@ struct Character
     Animator& animator;
     InputReceiver& input;
     AtonementController::AtonementCharacter& character;
+    Transform& transform;
+    SimpleCollision& collision;
 
     static Character Get(Entity entity)
     {
@@ -46,13 +49,17 @@ struct Character
         auto acs = Engine::GetDefaultResource<AtonementController::AtonementControllerSystem>();
         anim.onAnimationEnded.connect<&CharControllerFSM::OnAnimationEnd>(acs->characterFSM);
 
-        return Character{ entity, sprite, anim, input, character };
+        auto& transform = reg.get_or_emplace<Transform>(entity);
+        auto& collision = reg.get_or_emplace<SimpleCollision>(entity);
+
+        return Character{ entity, sprite, anim, input, character, transform, collision };
     }
 
     static Character Create(
         String input_ = "",
         ColorRGB color_ = { 1, 1, 1 },
-        Vector2 position_ = { 0, 0 })
+        Vector2 position_ = { 0, 0 },
+        Vector2 collision_size_ = {0, 0})
     {
         auto& reg = Engine::Registry();
         auto entity = reg.create();
@@ -64,6 +71,9 @@ struct Character
         chr.sprite.scale = { 1, 1 };
         chr.sprite.position = { position_, 0.0f };
         chr.sprite.color = { color_, 1.0f };
+
+        chr.collision.size = collision_size_;
+        chr.transform.position = { position_, 0.0f };
 
         AssignSprite(chr.sprite, "BlueWizard:IDLE:idle1");
         AnimatorPlay(chr.animator, "BlueWizard:IDLE");
@@ -103,6 +113,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
     engine.AddPausableSystem<GroundednessDetectionSystem>();
+    engine.AddPausableSystem<CollisionHandlerSystem>();
 
 
 #if defined(DAGGER_DEBUG)
@@ -124,7 +135,7 @@ void AtonementGame::WorldSetup()
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
 
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 });
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
     mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
