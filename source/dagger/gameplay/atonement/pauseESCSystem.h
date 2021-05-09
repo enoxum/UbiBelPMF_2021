@@ -1,7 +1,7 @@
 #pragma once
-#include "core/system.h"
-#include "core/core.h"
-#include "core/engine.h"
+#include "source/dagger/core/system.h"
+#include "source/dagger/core/core.h"
+#include "source/dagger/core/engine.h"
 
 using namespace dagger;
 

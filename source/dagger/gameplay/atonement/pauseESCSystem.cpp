@@ -1,6 +1,6 @@
-#include "pauseESC.h"
-#include "core/engine.h"
-#include "core/system.h"
+#include "pauseESCSystem.h"
+#include "source/dagger/core/engine.h"
+#include "source/dagger/core/system.h"
 #include <iostream>
 using namespace dagger;
 
@@ -21,7 +21,13 @@ void pauseESC::OnKeyboardEvent(KeyboardEvent kEvent_)
   if (kEvent_.key == EDaggerKeyboard::KeyEscape && kEvent_.action == EDaggerInputState::Released)
         {
             std::cout<<"PAUSE";
-            Engine::Instance().ToggleSystemsPause(true);
+            if (Engine::s_IsPaused == false){
+              Engine::Instance().ToggleSystemsPause(true);  
+            }
+            else{
+                Engine::Instance().ToggleSystemsPause(false);
+            }
+            
         }
 }
 

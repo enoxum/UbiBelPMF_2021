@@ -35,14 +35,14 @@ struct SaveGameSystem : public dagger::System
 
     void SpinUp() override
     {
-        Engine::Dispatcher().sink<SaveRequest>().connect<&SaveGameSystem::OnSaveRequested>(this);
-        Engine::Dispatcher().sink<LoadRequest>().connect<&SaveGameSystem::OnLoadRequested>(this);
+        Engine::Dispatcher().sink<SaveRequest>().template connect<&SaveGameSystem::OnSaveRequested>(this);
+        Engine::Dispatcher().sink<LoadRequest>().template connect<&SaveGameSystem::OnLoadRequested>(this);
     }
 
     void WindDown() override
     {
-        Engine::Dispatcher().sink<LoadRequest>().disconnect<&SaveGameSystem::OnLoadRequested>(this);
-        Engine::Dispatcher().sink<SaveRequest>().disconnect<&SaveGameSystem::OnSaveRequested>(this);
+        Engine::Dispatcher().sink<LoadRequest>().template disconnect<&SaveGameSystem::OnLoadRequested>(this);
+        Engine::Dispatcher().sink<SaveRequest>().template disconnect<&SaveGameSystem::OnSaveRequested>(this);
     }
 
     void OnSaveRequested(SaveRequest request_)
