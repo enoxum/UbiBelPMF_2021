@@ -1,6 +1,6 @@
 {
 	"animation-name": "BlueWizard:DASH",
-	"animation-length-ms": 800,
+	"animation-length-ms": 500,
 	"animation-frames": 
 	[
 		{ "texture-name": "BlueWizard:DASH:dash1" },

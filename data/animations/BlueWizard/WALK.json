@@ -1,6 +1,6 @@
 {
 	"animation-name": "BlueWizard:WALK",
-	"animation-length-ms": 900,
+	"animation-length-ms": 600,
 	"animation-frames": 
 	[
 		{ "texture-name": "BlueWizard:WALK:walk1" },
