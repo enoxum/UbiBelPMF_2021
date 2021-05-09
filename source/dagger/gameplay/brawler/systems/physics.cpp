@@ -53,13 +53,13 @@ void PhysicsSystem::Run()
         auto character = BrawlerCharacter::Get(obj);
 
         auto leftWall = Level::getLeftWall(character);
-        if(leftWall && m.prevPosition.x > t.position.x && m.speed.x<=0.0f && m.prevPosition.x >= leftWall.value()) {
+        if(leftWall && m.prevPosition.x > t.position.x && m.prevPosition.x >= leftWall.value()) {
             t.position.x = leftWall.value();
             m.speed.x = 0.0f;
         }
 
         auto rightWall = Level::getRightWall(character);
-        if(rightWall && m.prevPosition.x < t.position.x && m.speed.x>=0.0f && m.prevPosition.x <= rightWall.value()) {
+        if(rightWall && m.prevPosition.x < t.position.x && m.prevPosition.x <= rightWall.value()) {
             t.position.x = rightWall.value();
             m.speed.x = 0.0f;
         }
