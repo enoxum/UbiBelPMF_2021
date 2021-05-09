@@ -13,7 +13,7 @@
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
-#include "pauseESCSystem.h"
+#include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/editor/savegame_system.h"
 #include "core/savegame.h"
@@ -33,14 +33,13 @@ void AtonementGame::CoreSystemsSetup()
     engine.AddSystem<ShaderSystem>();
     engine.AddSystem<TextureSystem>();
     engine.AddSystem<SpriteRenderSystem>();
-    engine.AddSystem<pauseESC>();
+    engine.AddSystem<AtonementPauseSystem>();
     engine.AddPausableSystem<TransformSystem>();
     engine.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
     engine.AddSystem<DiagnosticSystem>();
     engine.AddSystem<GUISystem>();
     engine.AddSystem<ToolMenuSystem>();
-    //engine.AddPausableSystem<test_system>();
 #endif //!defined(NDEBUG)
 }
 
