@@ -42,6 +42,7 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
     engine_.AddSystem<CollisionDetectionSystem>();
     engine_.AddSystem<GUISystem>();
     engine_.AddSystem<ToolMenuSystem>();
+    engine_.AddSystem<PandemicControllerSystem>();
 #endif //!defined(NDEBUG)
 }
 
@@ -103,7 +104,7 @@ struct Character {
     chr.sprite.color = {color_, 1.0f};
 
 
-    AssignSprite(chr.sprite, "PandemicShop:IDLE:idle1");
+    AssignSprite(chr.sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
     AnimatorPlay(chr.animator, "PandemicShop:IDLE");
 
     if (input_ != "")

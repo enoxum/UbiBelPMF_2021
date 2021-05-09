@@ -51,7 +51,7 @@ void CharacterControllerFSM::Running::Run(
   if (EPSILON_ZERO(run)) {
     GoTo(ECharacterStates::Idle, state_);
   } else {
-    sprite.scale.x = run;
+    //sprite.scale.x = run;
     sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
   }
 }
