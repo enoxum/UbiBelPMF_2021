@@ -1,4 +1,4 @@
-#include "gameplay/PandemicShop/character_controller_fsm.h"
+#include "character_controller_fsm.h"
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/graphics/animation.h"
@@ -13,7 +13,7 @@ using namespace dagger;
 void CharacterControllerFSM::Idle::Enter(
     CharacterControllerFSM::StateComponent &state_) {
   auto &animator = Engine::Registry().get<Animator>(state_.entity);
-  AnimatorPlay(animator, "PandemicShop:IDLE_FRONT");
+  AnimatorPlay(animator, "PandemicShop:IDLE");
 }
 
 DEFAULT_EXIT(CharacterControllerFSM, Idle);
@@ -32,7 +32,7 @@ void CharacterControllerFSM::Idle::Run(
 void CharacterControllerFSM::Running::Enter(
     CharacterControllerFSM::StateComponent &state_) {
   auto &animator = Engine::Registry().get<Animator>(state_.entity);
-  AnimatorPlay(animator, "souls_like_knight_character:RUN");
+  AnimatorPlay(animator, "PandemicShop:RUN");
 }
 
 // same as: DEFAULT_EXIT(CharacterControllerFSM, Running);

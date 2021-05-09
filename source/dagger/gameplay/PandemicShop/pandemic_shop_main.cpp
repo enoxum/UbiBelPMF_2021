@@ -25,7 +25,6 @@
 
 using namespace dagger;
 using namespace pandemic_shop;
-//---------------------------
 using namespace pandemic;
 
 
@@ -104,8 +103,8 @@ struct Character {
     chr.sprite.color = {color_, 1.0f};
 
 
-    AssignSprite(chr.sprite, "PandemicShop:bob_front_front");
-    AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");
+    AssignSprite(chr.sprite, "PandemicShop:IDLE:idle1");
+    AnimatorPlay(chr.animator, "PandemicShop:IDLE");
 
     if (input_ != "")
       chr.input.contexts.push_back(input_);
@@ -264,8 +263,6 @@ void pandemic_shop::SetupWorld(Engine& engine_)
       sprite.scale = {1, 1};
       sprite.position = {-260, -180, 1};
     }
-
-
     */
     /*--------------------------KRAJ ELEMENTI NA SCENI--------------------------------------------*/
 

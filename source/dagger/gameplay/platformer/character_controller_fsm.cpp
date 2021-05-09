@@ -35,7 +35,7 @@ void CharacterControllerFSM::Idle::Run(CharacterControllerFSM::StateComponent& s
 void CharacterControllerFSM::Running::Enter(CharacterControllerFSM::StateComponent& state_) 
 {
 	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "souls_like_knight_character:RUN");
+	AnimatorPlay(animator, "PandemicShop:RUN");
 }
 
 // same as: DEFAULT_EXIT(CharacterControllerFSM, Running);
