@@ -30,7 +30,6 @@ namespace atonement {
         entt::entity colidedWithUp = entt::null;
         bool colidedDown = false;
         entt::entity colidedWithDown = entt::null;
-
         
         CollisionSide IsCollided(const Vector3& pos_, const Vector3& posOther_, const SimpleCollision& colOther_);
 
