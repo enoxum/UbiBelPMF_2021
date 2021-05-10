@@ -22,6 +22,7 @@ namespace atonement
 			Float32 jumpHeight{ 100 };
 			Float32 dashSpeed{ 2000 };
 			Float32 fallSpeed{ 400 };
+			Float32 dashCooldown{ 1 };
 			Bool grounded{ true };
 			Bool fallingAnimationEnded{ false };
 			Bool dashingAnimationEnded{ false };
