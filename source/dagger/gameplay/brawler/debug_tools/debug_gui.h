@@ -11,25 +11,25 @@ namespace brawler
 {
 
 class DebugGui
-    : public System
-    , public Publisher<ToolMenuRender>
+	: public System
+	, public Publisher<ToolMenuRender>
 {
-    public:
-        inline String SystemName() { return "Brawler Debug System"; }
+	public:
+		inline String SystemName() { return "Brawler Debug System"; }
 
-        void SpinUp() override;
-        void Run() override;
-        void WindDown() override;
+		void SpinUp() override;
+		void Run() override;
+		void WindDown() override;
 
-    protected:
-        void RenderToolMenu();
-        void RenderDebugWindow();
-        void OnEndOfFrame();
+	protected:
+		void RenderToolMenu();
+		void RenderDebugWindow();
+		void OnEndOfFrame();
 
-    private:
-        bool debugActive { true };
+	private:
+		bool debugActive { true };
 
-        bool resetPosition { false };
+		bool resetPosition { false };
 };
 
 }

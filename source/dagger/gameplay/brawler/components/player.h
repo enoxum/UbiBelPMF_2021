@@ -7,7 +7,7 @@ using namespace dagger;
 
 namespace brawler
 {
-    struct Player
+	struct Player
 	{
 		Vector2 startPosition{ 0.0f, 0.0f };
 		int startDirection{ 1 };

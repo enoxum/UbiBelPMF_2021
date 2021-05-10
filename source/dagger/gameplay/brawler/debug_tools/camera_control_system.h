@@ -14,25 +14,25 @@ class CameraControlSystem : public System
 {
 public:
 
-    String SystemName() override {
-        return "Camera Control System";
-    }
+	String SystemName() override {
+		return "Camera Control System";
+	}
 
-    void SpinUp() override;
-    void Run() override;
-    void WindDown() override;
+	void SpinUp() override;
+	void Run() override;
+	void WindDown() override;
 
-    void OnKeyboardEvent(KeyboardEvent kEvent_);
-    void SetControlKeys(EDaggerKeyboard up, EDaggerKeyboard down, EDaggerKeyboard left, EDaggerKeyboard right);
+	void OnKeyboardEvent(KeyboardEvent kEvent_);
+	void SetControlKeys(EDaggerKeyboard up, EDaggerKeyboard down, EDaggerKeyboard left, EDaggerKeyboard right);
 
 private:
-    static float cameraSpeed;
-    Vector2 direction {0, 0};
-    
-    static EDaggerKeyboard up_key;
-    static EDaggerKeyboard down_key;
-    static EDaggerKeyboard left_key;
-    static EDaggerKeyboard right_key;
+	static float cameraSpeed;
+	Vector2 direction {0, 0};
+	
+	static EDaggerKeyboard up_key;
+	static EDaggerKeyboard down_key;
+	static EDaggerKeyboard left_key;
+	static EDaggerKeyboard right_key;
 };
 
 }

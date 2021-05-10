@@ -12,9 +12,9 @@ using namespace brawler;
 
 void CharacterControllerSystem::Run()
 {
-    Engine::Registry().view<BrawlerCharacterFSM::StateComponent>()
-        .each([&](BrawlerCharacterFSM::StateComponent& state_)
-            {
-                characterFSM.Run(state_);
-            });
+	Engine::Registry().view<BrawlerCharacterFSM::StateComponent>()
+		.each([&](BrawlerCharacterFSM::StateComponent& state_)
+			{
+				characterFSM.Run(state_);
+			});
 }

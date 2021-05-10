@@ -47,60 +47,60 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
 	handle >> json;
 
 	LevelData* levelData = new LevelData();
-    assert(json.contains("name"));
+	assert(json.contains("name"));
 	assert(json.contains("map_width"));
 	assert(json.contains("map_height"));
-    assert(json.contains("tileset"));
-    assert(json.contains("tilemap"));
+	assert(json.contains("tileset"));
+	assert(json.contains("tilemap"));
 	assert(json.contains("backgrounds"));
 	assert(json.contains("player1"));
 	assert(json.contains("player2"));
 
-    levelData->name = json["name"];
+	levelData->name = json["name"];
 	levelData->mapWidth = json["map_width"];
-    levelData->mapHeight = json["map_height"];
+	levelData->mapHeight = json["map_height"];
 
 	// Tileset
-    Sequence<TileData> tileset;
+	Sequence<TileData> tileset;
 	for (auto& tile : json["tileset"])
 	{
 		TileData tileData;
-        switch(tile.value("type", 0)) {
-            case 1:
-                tileData.type = PlatformType::BLOCK;
+		switch(tile.value("type", 0)) {
+			case 1:
+				tileData.type = PlatformType::BLOCK;
 				tileData.texture = LoadTexture(tile);
-                break;
+				break;
 			case 2:
-                tileData.type = PlatformType::ONEWAY;
+				tileData.type = PlatformType::ONEWAY;
 				tileData.texture = LoadTexture(tile);
-                break;
-            default:
-                tileData.type = PlatformType::EMPTY;
-                break;
-        }
+				break;
+			default:
+				tileData.type = PlatformType::EMPTY;
+				break;
+		}
 		tileset.push_back(std::move(tileData));
 	}
-    levelData->tileset = std::move(tileset);
+	levelData->tileset = std::move(tileset);
 
 	// Tilemap
-    Sequence<Sequence<int>> tiles;
-    assert(json["tilemap"].size() == levelData->mapHeight);
-    for (auto row = json["tilemap"].rbegin(); row != json["tilemap"].rend(); row++)
-    {
-        assert(row->size() == levelData->mapWidth);
-        tiles.emplace_back();
-        for (auto& tile : (*row)) {
-            tiles.back().push_back(tile.get<int>()-1);
-        }
-    }
-    levelData->tilemap = std::move(tiles);
+	Sequence<Sequence<int>> tiles;
+	assert(json["tilemap"].size() == levelData->mapHeight);
+	for (auto row = json["tilemap"].rbegin(); row != json["tilemap"].rend(); row++)
+	{
+		assert(row->size() == levelData->mapWidth);
+		tiles.emplace_back();
+		for (auto& tile : (*row)) {
+			tiles.back().push_back(tile.get<int>()-1);
+		}
+	}
+	levelData->tilemap = std::move(tiles);
 
 	// Backgrounds
 	Sequence<TextureData> backgrounds;
 	for (auto& background : json["backgrounds"])
-    {
+	{
 		backgrounds.push_back(LoadTexture(background));
-    }
+	}
 	levelData->backgrounds = std::move(backgrounds);
 
 	// Players
