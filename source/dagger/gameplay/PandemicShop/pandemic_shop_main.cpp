@@ -110,7 +110,7 @@ struct Character {
     if (input_ != "")
       chr.input.contexts.push_back(input_);
 
-    chr.character.speed = 50;
+    chr.character.speed = 200;
 
     return chr;
   }

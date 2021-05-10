@@ -54,10 +54,10 @@ void PandemicCharacterControllerFSM::Running::Run(
       transform.position.x += character.speed * (1) * Engine::DeltaTime();
       break;
     case EDirection::Up:
-      transform.position.y += character.speed * (1) * Engine::DeltaTime();
+      transform.position.y += character.speed * (-1) * Engine::DeltaTime();
       break;
     case EDirection::Down:
-      transform.position.x += character.speed * (-1) * Engine::DeltaTime();
+      transform.position.y += character.speed * (1) * Engine::DeltaTime();
       break;
 
     default:
