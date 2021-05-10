@@ -26,6 +26,7 @@
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 #include "gameplay/brawler/systems/level_system.h"
+#include "gameplay/brawler/systems/map_collision_system.h"
 #include "gameplay/brawler/level.h"
 
 using namespace dagger;
@@ -35,11 +36,14 @@ void Brawler::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
     engine.AddSystem<LevelSystem>();
-    engine.AddPausableSystem<CharacterControllerSystem>();
-    engine.AddPausableSystem<ShootingSystem>();
+    
     engine.AddPausableSystem<PhysicsSystem>();
-    engine.AddPausableSystem<BulletSystem>();
+    engine.AddPausableSystem<CharacterControllerSystem>();
+    engine.AddPausableSystem<MapCollisionSystem>();
+
     engine.AddPausableSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<ShootingSystem>();
+    engine.AddPausableSystem<BulletSystem>();
     
     // Debug Systems
     engine.AddSystem<CameraControlSystem>();
