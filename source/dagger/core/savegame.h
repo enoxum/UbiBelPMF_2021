@@ -24,26 +24,26 @@ static void DeserializeComponent(JSON::json input_, T& fill_)
 // Serialize vectors
 
 template<>
-static JSON::json SerializeComponent(Vector2& input_)
+ JSON::json SerializeComponent(Vector2& input_)
 {
     return JSON::json{ { "x", input_.x }, { "y", input_.y } };
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, Vector2& fill_)
+ void DeserializeComponent(JSON::json input_, Vector2& fill_)
 {
     fill_.x = input_["x"];
     fill_.y = input_["y"];
 }
 
 template<>
-static JSON::json SerializeComponent(Vector3& input_)
+ JSON::json SerializeComponent(Vector3& input_)
 {
     return JSON::json{ { "x", input_.x }, { "y", input_.y }, { "z", input_.z } };
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, Vector3& fill_)
+ void DeserializeComponent(JSON::json input_, Vector3& fill_)
 {
     fill_.x = input_["x"];
     fill_.y = input_["y"];
@@ -51,13 +51,13 @@ static void DeserializeComponent(JSON::json input_, Vector3& fill_)
 }
 
 template<>
-static JSON::json SerializeComponent(Vector4& input_)
+ JSON::json SerializeComponent(Vector4& input_)
 {
     return JSON::json{ { "x", input_.x }, { "y", input_.y }, { "z", input_.z }, { "w", input_.w } };
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, Vector4& fill_)
+ void DeserializeComponent(JSON::json input_, Vector4& fill_)
 {
     fill_.x = input_["x"];
     fill_.y = input_["y"];
@@ -68,7 +68,7 @@ static void DeserializeComponent(JSON::json input_, Vector4& fill_)
 // Serialize sprites
 
 template<>
-static JSON::json SerializeComponent(Sprite& input_)
+ JSON::json SerializeComponent(Sprite& input_)
 {
     JSON::json save{};
     save["subSize"] = SerializeComponent(input_.subSize);
@@ -86,7 +86,7 @@ static JSON::json SerializeComponent(Sprite& input_)
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, Sprite& fill_)
+ void DeserializeComponent(JSON::json input_, Sprite& fill_)
 {
     AssignSpriteShader(fill_, input_["shader"]);
     AssignSprite(fill_, input_["image"]);
@@ -104,7 +104,7 @@ static void DeserializeComponent(JSON::json input_, Sprite& fill_)
 // Serialize transforms
 
 template<>
-static JSON::json SerializeComponent(Transform& input_)
+ JSON::json SerializeComponent(Transform& input_)
 {
     JSON::json save{};
     save["position"] = SerializeComponent(input_.position);
@@ -112,7 +112,7 @@ static JSON::json SerializeComponent(Transform& input_)
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, Transform& fill_)
+ void DeserializeComponent(JSON::json input_, Transform& fill_)
 {
     DeserializeComponent(input_["position"], fill_.position);
 }
@@ -120,7 +120,7 @@ static void DeserializeComponent(JSON::json input_, Transform& fill_)
 // Serialize animations
 
 template<>
-static JSON::json SerializeComponent(Animator& input_)
+ JSON::json SerializeComponent(Animator& input_)
 {
     JSON::json save{};
     save["name"] = input_.currentAnimation.c_str();
@@ -128,13 +128,13 @@ static JSON::json SerializeComponent(Animator& input_)
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, Animator& fill_)
+ void DeserializeComponent(JSON::json input_, Animator& fill_)
 {
     AnimatorPlay(fill_, input_["name"]);
 }
 
 template<>
-static JSON::json SerializeComponent(SimpleCollision& collision_)
+ JSON::json SerializeComponent(SimpleCollision& collision_)
 {
     JSON::json save{};
     save["size"] = SerializeComponent(collision_.size);
@@ -143,7 +143,7 @@ static JSON::json SerializeComponent(SimpleCollision& collision_)
 }
 
 template<>
-static void DeserializeComponent(JSON::json input_, SimpleCollision& fill_)
+ void DeserializeComponent(JSON::json input_, SimpleCollision& fill_)
 {
     DeserializeComponent(input_["size"], fill_.size);
     DeserializeComponent(input_["pivot"], fill_.pivot);

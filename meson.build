@@ -43,8 +43,6 @@ sources = [
     'source/dagger/core/graphics/text.cpp',
     'source/dagger/core/graphics/window.cpp',
     'source/dagger/core/graphics/tool_render.cpp',
-    'source/dagger/core/graphics/test_system.cpp',
-    'source/dagger/core/graphics/pauseESC.cpp',
     'source/dagger/core/input/inputs.cpp',
     'source/dagger/core/audio_linux.cpp',
     'source/dagger/core/engine.cpp',
@@ -52,6 +50,7 @@ sources = [
     'source/dagger/gameplay/common/jiggle.cpp',
     'source/dagger/gameplay/common/particles.cpp',
     'source/dagger/gameplay/common/simple_collisions.cpp',
+    
     #'source/dagger/gameplay/ping_pong/ping_pong_main.cpp',
     #'source/dagger/gameplay/ping_pong/pingpong_ball.cpp',
     #'source/dagger/gameplay/ping_pong/pingpong_playerinput.cpp',
@@ -67,12 +66,14 @@ sources = [
     #'source/dagger/gameplay/racing/racing_player_car.cpp',
     #'source/dagger/gameplay/team_game/team_game_main.cpp',
     #'source/dagger/gameplay/tiles_example/tiles_example_main.cpp',
+    
     'source/dagger/gameplay/atonement/atonement_controller.cpp',
     'source/dagger/gameplay/atonement/atonement_main.cpp',
     'source/dagger/gameplay/atonement/char_controller_fsm.cpp',
     'source/dagger/gameplay/atonement/systems/groundedness_detection_system.cpp',
     'source/dagger/gameplay/atonement/systems/collision_handler_system.cpp',
     'source/dagger/gameplay/atonement/systems/character_collisions.cpp',
+
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',
