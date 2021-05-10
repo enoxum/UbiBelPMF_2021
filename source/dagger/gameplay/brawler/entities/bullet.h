@@ -21,7 +21,6 @@ namespace brawler
     {
         Entity entity;
         Bullet& bullet;
-        Movable& mov;
         Transform& transform;
         SimpleCollision& col;
         Sprite& sprite;
@@ -30,12 +29,11 @@ namespace brawler
         {
             auto& reg = Engine::Registry();
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
-            auto& mov = reg.get_or_emplace<Movable>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& col = reg.get_or_emplace<SimpleCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
 
-            return BulletEntity{ entity, bullet, mov, transform, col, sprite };
+            return BulletEntity{ entity, bullet, transform, col, sprite };
         }
 
         static BulletEntity Create(

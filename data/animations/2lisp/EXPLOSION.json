@@ -1,6 +1,6 @@
 {
 	"animation-name": "EXPLOSION",
-	"animation-length-ms": 600,
+	"animation-length-ms": 2600,
 	"animation-frames": 
 	[
 		{ "texture-name": "brawler:EXPLOSION:1" },

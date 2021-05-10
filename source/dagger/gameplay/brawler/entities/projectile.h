@@ -25,6 +25,7 @@ namespace brawler
         Transform& transform;
         SimpleCollision& col;
         Sprite& sprite;
+        Animator& animator;
 
         static ProjectileEntity Get(Entity entity)
         {
@@ -34,8 +35,9 @@ namespace brawler
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& col = reg.get_or_emplace<SimpleCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
+            auto& animator = reg.get_or_emplace<Animator>(entity);
 
-            return ProjectileEntity{ entity, bullet, mov, transform, col, sprite };
+            return ProjectileEntity{ entity, bullet, mov, transform, col, sprite, animator };
         }
 
         static ProjectileEntity Create(
@@ -49,6 +51,8 @@ namespace brawler
             auto entity = reg.create();
 
             auto projectile = ProjectileEntity::Get(entity);
+
+            projectile.mov.speed = {150*direction_, 250};
 
             projectile.transform.position = { position_, 0.0f };
 
