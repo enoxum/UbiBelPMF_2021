@@ -22,9 +22,6 @@ namespace atonement {
         Vector2 size;
         Vector2 pivot{ -0.5f, -0.5f };
 
-        bool colided = false;
-        entt::entity colidedWith;
-
         bool colidedLeft = false;
         entt::entity colidedWithLeft = entt::null;
         bool colidedRight = false;
@@ -37,10 +34,8 @@ namespace atonement {
         
         CollisionSide IsCollided(const Vector3& pos_, const Vector3& posOther_, const SimpleCollision& colOther_);
 
-        // return (0,1) if collision happen by y, (1,0) if collision happen by x
-        //Vector2 GetCollisionSides(const Vector3& pos_, const CharacterCollision& other_, const Vector3& posOther_);
-
-        //Vector3 GetCollisionCenter(const Vector3& pos_, const CharacterCollision& other_, const Vector3& posOther_);
+        //UNTESTED
+        Vector3 GetCollisionCenter(const Vector3& pos_, const SimpleCollision& other_, const Vector3& posOther_);
     };
 
     class CharacterCollisionsSystem : public System

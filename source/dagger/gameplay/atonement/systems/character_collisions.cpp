@@ -63,25 +63,24 @@ void CharacterCollisionsSystem::Run()
 
 CollisionSide CharacterCollision::IsCollided(const Vector3& pos_, const Vector3& posOther_, const SimpleCollision& colOther_)
 {
-    //pivot = 0 za sve kolizije u nasoj igrici
-    Vector2 p(pos_.x + pivot.x * size.x, pos_.y + pivot.y * size.y);
-    Vector2 p2(posOther_.x + colOther_.pivot.x * colOther_.size.x, posOther_.y + colOther_.pivot.y * colOther_.size.y);
+    Vector2 p(pos_.x, pos_.y);
+    Vector2 p2(posOther_.x, posOther_.y);
 
-    if (p.x < p2.x && ((p2.x - p.x) < (size.x + colOther_.size.x) / 2.) &&
-        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2. )
+    if (p.x < p2.x && ((p2.x - p.x) < (size.x + colOther_.size.x) / 2.f ) &&
+        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2.f )
     {   
         
-        if (p.y + size.y / 2. < p2.y) { return CollisionSide::Up; }
-        else if (p.y - size.y / 2. > p2.y) { return CollisionSide::Down; }
+        if (p.y + size.y / 2.f < p2.y) { return CollisionSide::Up; }
+        else if (p.y - size.y / 2.f > p2.y) { return CollisionSide::Down; }
 
         return CollisionSide::Right;
     }
 
-    else if (p.x > p2.x && ((p.x - p2.x) < (size.x + colOther_.size.x) / 2.) &&
-        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2.)
+    else if (p.x > p2.x && ((p.x - p2.x) < (size.x + colOther_.size.x) / 2.f) &&
+        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2.f)
     {
-        if (p.y + size.y / 2. < p2.y) { return CollisionSide::Up; }
-        else if (p.y - size.y / 2. > p2.y) { return CollisionSide::Down; }
+        if (p.y + size.y / 2.f < p2.y) { return CollisionSide::Up; }
+        else if (p.y - size.y / 2.f > p2.y) { return CollisionSide::Down; }
 
         return CollisionSide::Left;
     }
@@ -101,38 +100,17 @@ CollisionSide CharacterCollision::IsCollided(const Vector3& pos_, const Vector3&
     return CollisionSide::None;
 }
 
-//Vector2 CharacterCollision::GetCollisionSides(const Vector3& pos_, const CharacterCollision& other_, const Vector3& posOther_)
-//{
-//    Vector2 res(0, 0);
-//
-//    Vector2 p(pos_.x + pivot.x * size.x, pos_.y + pivot.y * size.y);
-//    Vector2 p2(posOther_.x + other_.pivot.x * other_.size.x, posOther_.y + other_.pivot.y * other_.size.y);
-//
-//    Float32 xDif = std::min(std::abs(p.x + size.x - p2.x), std::abs(p2.x + other_.size.x - p.x));
-//    Float32 yDif = std::min(std::abs(p.y + size.y - p2.y), std::abs(p2.y + other_.size.y - p.y));
-//
-//    if (xDif < yDif)
-//    {
-//        res.x = std::abs(p.x + size.x - p2.x) < std::abs(p2.x + other_.size.x - p.x) ? 1 : -1;
-//    }
-//    else
-//    {
-//        res.y = std::abs(p.y + size.y - p2.y) < std::abs(p2.y + other_.size.y - p.y) ? 1 : -1;
-//    }
-//
-//    return res;
-//}
-//
-//Vector3 CharacterCollision::GetCollisionCenter(const Vector3& pos_, const CharacterCollision& other_, const Vector3& posOther_)
-//{
-//    Vector3 res;
-//
-//    Vector2 p(pos_.x + pivot.x * size.x, pos_.y + pivot.y * size.y);
-//    Vector2 p2(posOther_.x + other_.pivot.x * other_.size.x, posOther_.y + other_.pivot.y * other_.size.y);
-//
-//    res.x = (p.x + size.x / 2.f + p2.x + other_.size.x) / 2.f;
-//    res.y = (p.y + size.y / 2.f + p2.y + other_.size.y) / 2.f;
-//    res.z = 1.f;
-//
-//    return res;
-//}
+//UNTESTED
+Vector3 CharacterCollision::GetCollisionCenter(const Vector3& pos_, const SimpleCollision& other_, const Vector3& posOther_)
+{
+    Vector3 res;
+
+    Vector2 p(pos_.x + pivot.x * size.x, pos_.y + pivot.y * size.y);
+    Vector2 p2(posOther_.x + other_.pivot.x * other_.size.x, posOther_.y + other_.pivot.y * other_.size.y);
+
+    res.x = (p.x + size.x / 2.f + p2.x + other_.size.x) / 2.f;
+    res.y = (p.y + size.y / 2.f + p2.y + other_.size.y) / 2.f;
+    res.z = 1.f;
+
+    return res;
+}
