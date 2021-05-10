@@ -32,15 +32,15 @@ using namespace brawler;
 void Brawler::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
-    engine.AddPausableSystem<CharacterControllerSystem>();
-    engine.AddPausableSystem<ShootingSystem>();
-    engine.AddPausableSystem<PhysicsSystem>();
-    engine.AddPausableSystem<BulletSystem>();
-    engine.AddSystem<SimpleCollisionsSystem>();
-    engine.AddSystem<WeaponPickupSystem>();
-    //engine.AddSystem<ParallaxSystem>();
-    //engine.AddSystem<CameraFollowSystem>();
-    engine.AddSystem<DebugGui>();
+    // engine.AddPausableSystem<CharacterControllerSystem>();
+    // engine.AddPausableSystem<ShootingSystem>();
+    // engine.AddPausableSystem<PhysicsSystem>();
+    // engine.AddPausableSystem<BulletSystem>();
+    // engine.AddSystem<SimpleCollisionsSystem>();
+    // engine.AddSystem<WeaponPickupSystem>();
+    // engine.AddSystem<ParallaxSystem>();
+    // engine.AddSystem<CameraFollowSystem>();
+    // engine.AddSystem<DebugGui>();
 
 }
 

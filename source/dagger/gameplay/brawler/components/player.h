@@ -15,9 +15,8 @@ namespace brawler
 {
     struct Player
 	{
-		bool placeholder{ false };
-
 		std::vector<Weapon>		weapons;
 		int						active_weapon_idx{ -1 };
+		Entity 					currentWeapon;
 	};
 }

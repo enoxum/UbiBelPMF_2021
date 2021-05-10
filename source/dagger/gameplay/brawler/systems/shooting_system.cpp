@@ -82,6 +82,8 @@ void ShootingSystem::Run()
 
             player.active_weapon_idx = (player.active_weapon_idx + 1) % num_weapons;
             Weapon wp = player.weapons[player.active_weapon_idx];
+            auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
+            //AssignSprite(weaponSprite, "brawler:" + wp.sprite());
             return;
         }
 
