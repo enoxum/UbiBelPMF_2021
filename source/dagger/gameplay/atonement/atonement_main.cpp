@@ -24,6 +24,7 @@
 #include "gameplay/atonement/atonement_controller.h"
 #include "gameplay/atonement/systems/groundedness_detection_system.h"
 #include "gameplay/atonement/systems/collision_handler_system.h"
+#include "gameplay/atonement/systems/character_collisions.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -36,7 +37,7 @@ struct Character
     InputReceiver& input;
     AtonementController::AtonementCharacter& character;
     Transform& transform;
-    SimpleCollision& collision;
+    CharacterCollision& collision;
 
     static Character Get(Entity entity)
     {
@@ -50,7 +51,7 @@ struct Character
         anim.onAnimationEnded.connect<&CharControllerFSM::OnAnimationEnd>(acs->characterFSM);
 
         auto& transform = reg.get_or_emplace<Transform>(entity);
-        auto& collision = reg.get_or_emplace<SimpleCollision>(entity);
+        auto& collision = reg.get_or_emplace<CharacterCollision>(entity);
 
         return Character{ entity, sprite, anim, input, character, transform, collision };
     }
@@ -110,6 +111,7 @@ void AtonementGame::GameplaySystemsSetup()
     auto& engine = Engine::Instance();
 
     engine.AddPausableSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<CharacterCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
     engine.AddPausableSystem<GroundednessDetectionSystem>();
