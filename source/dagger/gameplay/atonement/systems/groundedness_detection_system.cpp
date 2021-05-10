@@ -7,6 +7,7 @@
 #include "core/graphics/animation.h"
 #include "core/game/transforms.h"
 #include "gameplay/atonement/atonement_controller.h"
+#include "gameplay/atonement/systems/character_collisions.h"
 
 #include <iostream>
 
@@ -21,13 +22,13 @@ GroundednessDetectionSystem::GroundednessDetectionSystem()
 
 void GroundednessDetectionSystem::Run()
 {
-    Engine::Registry().view<Transform, Sprite, AtonementController::AtonementCharacter>()
-        .each([&](Transform& transform_, Sprite& sprite_, AtonementController::AtonementCharacter& char_)
+    Engine::Registry().view<Transform, Sprite, CharacterCollision, AtonementController::AtonementCharacter>()
+        .each([&](Transform& transform_, Sprite& sprite_, CharacterCollision& collision_, AtonementController::AtonementCharacter& char_)
         {
                 bool tmp = char_.grounded;
 
-                // TODO: use actual collisions
-                if (transform_.position.y <= -200) {
+                if(collision_.colidedDown)
+                {
                     char_.grounded = true;
                 }
                 else {
