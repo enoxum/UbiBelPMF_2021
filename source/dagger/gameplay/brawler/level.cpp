@@ -61,9 +61,9 @@ void Level::Load(String map)
 	// 	{ TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, level->player2.isLeft);
 }
 
-std::optional<float> Level::getGround(BrawlerCharacter c) {
-	Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.col.size.x/2 + 1, c.movable.prevPosition.y - c.col.size.y/2 - 1};
-	Vector2 newBottomLeft = {c.transform.position.x - c.col.size.x/2 + 1, c.transform.position.y - c.col.size.y/2 - 1};
+std::optional<float> Level::getGround(Transform& t, Movable& m, SimpleCollision& c) {
+	Vector2 oldBottomLeft = {m.prevPosition.x - c.size.x/2 + 1, m.prevPosition.y - c.size.y/2 - 1};
+	Vector2 newBottomLeft = {t.position.x - c.size.x/2 + 1, t.position.y - c.size.y/2 - 1};
 
 	int endY = WorldToTileY(newBottomLeft.y);
 	int startY = std::max<int>(WorldToTileY(oldBottomLeft.y)-1, endY);
@@ -72,25 +72,25 @@ std::optional<float> Level::getGround(BrawlerCharacter c) {
 	for (int tileY = startY; tileY >= endY; tileY--)
 	{
 		Vector2 bottomLeft = newBottomLeft + (std::abs(static_cast<float>(endY - tileY)) / distance) * (oldBottomLeft - newBottomLeft);
-		Vector2 bottomRight = bottomLeft + Vector2(c.col.size.x-2, 0);
+		Vector2 bottomRight = bottomLeft + Vector2(c.size.x-2, 0);
 
-		c.movable.canDrop = false;
+		m.canDrop = false;
 		for (Vector2 checkedTile = bottomLeft; ; checkedTile.x += TILE_WIDTH)
 		{
 			checkedTile.x = std::min<float>(checkedTile.x, bottomRight.x);
 
 			auto [x, y] = WorldToTile(checkedTile);
-			float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.col.size.y/2;
+			float ground = TileToWorldY(y) + TILE_HEIGHT/2 + c.size.y/2;
 			
 			if(Level::getTile(x, y)==PlatformType::BLOCK) {
-				c.movable.canDrop = false;
+				m.canDrop = false;
 				return {ground};
-			} else if(Level::getTile(x, y)==PlatformType::ONEWAY && std::abs(checkedTile.y - (TileToWorldY(y) + TILE_HEIGHT/2)) <= DROPDOWN_OFFSET + c.transform.position.y - c.movable.prevPosition.y) {
-				c.movable.canDrop = true;
+			} else if(Level::getTile(x, y)==PlatformType::ONEWAY && std::abs(checkedTile.y - (TileToWorldY(y) + TILE_HEIGHT/2)) <= DROPDOWN_OFFSET + t.position.y - m.prevPosition.y) {
+				m.canDrop = true;
 			}
 
 			if(checkedTile.x >= bottomRight.x) {
-				if(c.movable.canDrop)
+				if(m.canDrop)
 					return {ground};
 				break;
 			}
@@ -100,9 +100,9 @@ std::optional<float> Level::getGround(BrawlerCharacter c) {
 	return {};
 }
 
-std::optional<float> Level::getCeiling(BrawlerCharacter c) {
-	Vector2 oldTopLeft = {c.movable.prevPosition.x - c.col.size.x/2, c.movable.prevPosition.y + c.col.size.y/2 + 1};
-	Vector2 newTopLeft = {c.transform.position.x - c.col.size.x/2, c.transform.position.y + c.col.size.y/2 + 1};
+std::optional<float> Level::getCeiling(Transform& t, Movable& m, SimpleCollision& c) {
+	Vector2 oldTopLeft = {m.prevPosition.x - c.size.x/2, m.prevPosition.y + c.size.y/2 + 1};
+	Vector2 newTopLeft = {t.position.x - c.size.x/2, t.position.y + c.size.y/2 + 1};
 
 	int endY = WorldToTileY(newTopLeft.y);
 	int startY = std::min<int>(WorldToTileY(oldTopLeft.y)+1, endY);
@@ -111,7 +111,7 @@ std::optional<float> Level::getCeiling(BrawlerCharacter c) {
 	for (int tileY = startY; tileY <= endY; tileY++)
 	{
 		Vector2 topLeft = newTopLeft + (std::abs(static_cast<float>(endY - tileY)) / distance) * (oldTopLeft - newTopLeft);
-		Vector2 topRight = topLeft + Vector2(c.col.size.x, 0);
+		Vector2 topRight = topLeft + Vector2(c.size.x, 0);
 
 		for (Vector2 checkedTile = topLeft; ; checkedTile.x += TILE_WIDTH)
 		{
@@ -119,7 +119,7 @@ std::optional<float> Level::getCeiling(BrawlerCharacter c) {
 
 			auto [x, y] = WorldToTile(checkedTile);
 			if(Level::getTile(x, y)==PlatformType::BLOCK) {
-				float ceiling = TileToWorldY(y) - TILE_HEIGHT/2 - c.col.size.y/2;
+				float ceiling = TileToWorldY(y) - TILE_HEIGHT/2 - c.size.y/2;
 				return {ceiling};
 			}
 
@@ -131,9 +131,9 @@ std::optional<float> Level::getCeiling(BrawlerCharacter c) {
 	return {};
 }
 
-std::optional<float> Level::getLeftWall(BrawlerCharacter c) {
-	Vector2 oldBottomLeft = {c.movable.prevPosition.x - c.col.size.x/2 - 1, c.movable.prevPosition.y - c.col.size.y/2};
-	Vector2 newBottomLeft = {c.transform.position.x - c.col.size.x/2 - 1, c.transform.position.y - c.col.size.y/2};
+std::optional<float> Level::getLeftWall(Transform& t, Movable& m, SimpleCollision& c) {
+	Vector2 oldBottomLeft = {m.prevPosition.x - c.size.x/2 - 1, m.prevPosition.y - c.size.y/2};
+	Vector2 newBottomLeft = {t.position.x - c.size.x/2 - 1, t.position.y - c.size.y/2};
 
 	int endX = WorldToTileX(newBottomLeft.x);
 	int startX = std::max<int>(WorldToTileX(oldBottomLeft.x)-1, endX);
@@ -142,7 +142,7 @@ std::optional<float> Level::getLeftWall(BrawlerCharacter c) {
 	for (int tileX = startX; tileX >= endX; tileX--)
 	{
 		Vector2 bottomLeft = newBottomLeft + (std::abs(static_cast<float>(endX - tileX)) / distance) * (oldBottomLeft - newBottomLeft);
-		Vector2 topLeft = bottomLeft + Vector2(0, c.col.size.y);
+		Vector2 topLeft = bottomLeft + Vector2(0, c.size.y);
 
 		for (Vector2 checkedTile = bottomLeft; ; checkedTile.y += TILE_HEIGHT)
 		{
@@ -150,7 +150,7 @@ std::optional<float> Level::getLeftWall(BrawlerCharacter c) {
 
 			auto [x, y] = WorldToTile(checkedTile);
 			if(Level::getTile(x, y)==PlatformType::BLOCK) {
-				float leftWall = TileToWorldX(x) + TILE_WIDTH/2 + c.col.size.x/2;
+				float leftWall = TileToWorldX(x) + TILE_WIDTH/2 + c.size.x/2;
 				return {leftWall};
 			}
 
@@ -162,9 +162,9 @@ std::optional<float> Level::getLeftWall(BrawlerCharacter c) {
 	return {};
 }
 
-std::optional<float> Level::getRightWall(BrawlerCharacter c) {
-	Vector2 oldBottomRight = {c.movable.prevPosition.x + c.col.size.x/2 + 1, c.movable.prevPosition.y - c.col.size.y/2};
-	Vector2 newBottomRight = {c.transform.position.x + c.col.size.x/2 + 1, c.transform.position.y - c.col.size.y/2};
+std::optional<float> Level::getRightWall(Transform& t, Movable& m, SimpleCollision& c) {
+	Vector2 oldBottomRight = {m.prevPosition.x + c.size.x/2 + 1, m.prevPosition.y - c.size.y/2};
+	Vector2 newBottomRight = {t.position.x + c.size.x/2 + 1, t.position.y - c.size.y/2};
 
 	int endX = WorldToTileX(newBottomRight.x);
 	int startX = std::min<int>(WorldToTileX(oldBottomRight.x)+1, endX);
@@ -173,7 +173,7 @@ std::optional<float> Level::getRightWall(BrawlerCharacter c) {
 	for (int tileX = startX; tileX <= endX; tileX++)
 	{
 		Vector2 bottomRight = newBottomRight + (std::abs(static_cast<float>(endX - tileX)) / distance) * (oldBottomRight - newBottomRight);
-		Vector2 topRight = bottomRight + Vector2(0, c.col.size.y);
+		Vector2 topRight = bottomRight + Vector2(0, c.size.y);
 
 		for (Vector2 checkedTile = bottomRight; ; checkedTile.y += TILE_HEIGHT)
 		{
@@ -181,7 +181,7 @@ std::optional<float> Level::getRightWall(BrawlerCharacter c) {
 
 			auto [x, y] = WorldToTile(checkedTile);
 			if(Level::getTile(x, y)==PlatformType::BLOCK) {
-				float rightWall = TileToWorldX(x) - TILE_WIDTH/2 - c.col.size.x/2 - 1;
+				float rightWall = TileToWorldX(x) - TILE_WIDTH/2 - c.size.x/2 - 1;
 				return {rightWall};
 			}
 

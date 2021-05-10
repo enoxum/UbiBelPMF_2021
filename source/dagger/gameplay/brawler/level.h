@@ -40,10 +40,10 @@ namespace brawler {
 		inline static float TileToWorldY(int y);
 
 		static PlatformType getTile(int x, int y);
-		static std::optional<float> getGround(BrawlerCharacter c);
-		static std::optional<float> getCeiling(BrawlerCharacter c);
-		static std::optional<float> getLeftWall(BrawlerCharacter c);
-		static std::optional<float> getRightWall(BrawlerCharacter c);
+		static std::optional<float> getGround(Transform& t, Movable& m, SimpleCollision& c);
+		static std::optional<float> getCeiling(Transform& t, Movable& m, SimpleCollision& c);
+		static std::optional<float> getLeftWall(Transform& t, Movable& m, SimpleCollision& c);
+		static std::optional<float> getRightWall(Transform& t, Movable& m, SimpleCollision& c);
 	private:
 		static Tilemap tiles;
 	};
