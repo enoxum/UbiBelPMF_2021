@@ -20,7 +20,7 @@
 #include "gameplay/ping_pong/pingpong_tools.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
-#include "gameplay/PandemicShop/character_controller.h";
+#include "gameplay/PandemicShop/pandemic_character_controller.h";
 
 
 using namespace dagger;
@@ -91,7 +91,7 @@ struct Character {
     auto &reg = Engine::Registry();
     auto entity = reg.create();
 
-    ATTACH_TO_FSM(CharacterControllerFSM, entity);
+    ATTACH_TO_FSM(PandemicCharacterControllerFSM, entity);
 
     auto chr = Character::Get(entity);
 
@@ -99,9 +99,8 @@ struct Character {
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
 
-
-    AssignSprite(chr.sprite, "souls_like_knight_character:IDLE:idle1");
-    AnimatorPlay(chr.animator, "souls_like_knight_character:IDLE");
+    AssignSprite(chr.sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
+    AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");
 
     if (input_ != "")
       chr.input.contexts.push_back(input_);
@@ -260,11 +259,11 @@ void pandemic_shop::SetupWorld(Engine& engine_)
          // player 
         
         auto &sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "PandemicShop:bob_front_front");
+        AssignSprite(sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
         float ratio = sprite.size.y / sprite.size.x;
         sprite.size = {2 * tileSize, 2 * tileSize * ratio};
 
-        auto mainChar = Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+        Character::Create("Pandemic", {1, 1, 1}, {0, 0});
     }
 
     // // add score system to count scores for left and right collisions
