@@ -75,6 +75,7 @@ void hotline_miami::SetupWorld()
 
     float zPos = 1.f;
 
+    // for orientation
     {
         auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
@@ -90,6 +91,24 @@ void hotline_miami::SetupWorld()
         AssignSprite(sprite, "EmptyWhitePixel");
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
+        
+    }
+    // sodlier
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = tileSize * 5;
+        col.size.y = tileSize * 5;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 50;
+        transform.position.y = 50;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:IDLE:soldier_stand");
+        sprite.size.x = tileSize * 5;
+        sprite.size.y = tileSize * 5;
     }
 
     

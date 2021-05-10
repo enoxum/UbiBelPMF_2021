@@ -1,0 +1,7 @@
+{
+  "animation-name": "hotline_miami:IDLE",
+  "animation-length-ms": 600,
+  "animation-frames": [
+    { "texture-name": "hotline_miami:IDLE:soldier_stand" }
+  ]
+}
