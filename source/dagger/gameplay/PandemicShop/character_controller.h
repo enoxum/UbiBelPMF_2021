@@ -9,6 +9,7 @@ using namespace dagger;
 namespace pandemic {
 struct PandemicCharacter {
   int speed{1};
+  EDirection direction{ EDirection::Down };
 };
 
 class PandemicControllerSystem : public System {

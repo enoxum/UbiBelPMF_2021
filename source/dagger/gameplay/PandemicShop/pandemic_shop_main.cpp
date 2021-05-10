@@ -49,7 +49,7 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
 void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
-    engine_.AddPausableSystem<PandemicShopPlayerInputSystem>();
+    engine_.AddPausableSystem<PandemicControllerSystem>();
 #if defined(DAGGER_DEBUG)
     engine_.AddPausableSystem<ping_pong::PingPongTools>();
 #endif //defined(DAGGER_DEBUG)
@@ -215,8 +215,6 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             transform.position.x = (0.5f - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
             transform.position.y = 0;
             transform.position.z = zPos;
-
-            
         }
 
         // right
@@ -234,14 +232,19 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         }
     }
 
-    
-    // player controller setup
     const Float32 playerSize = tileSize;
-    PandemicShopPlayerInputSystem::SetupPlayerBoarders((height - 2)* (tileSize + Space + 5) / 2.f , 
-                                                        -(height - 2)* (tileSize + Space + 5) / 2.f, 
-                                                        (width - 2)* (tileSize + Space + 5) / 2.f,
-                                                        -(width - 2)* (tileSize + Space + 5) / 2.f);
-    PandemicShopPlayerInputSystem::s_PlayerSpeed = tileSize * 14.f;
+
+    // player controller setup
+    {
+        auto* stats = new pandemic_shop::GameStats;
+        stats->SetupPlayerBorders((height - 2)* (tileSize + Space + 5) / 2.f,
+            -(height - 2) * (tileSize + Space + 5) / 2.f,
+            (width - 2)* (tileSize + Space + 5) / 2.f,
+            -(width - 2) * (tileSize + Space + 5) / 2.f);
+        stats->PlayerSpeed = tileSize * 14.f;
+        Engine::Instance().PutDefaultResource<pandemic_shop::GameStats>(stats);
+    }
+
     //1st player
     {
         auto entity = reg.create();
@@ -256,18 +259,12 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
          // player 
         
-          auto &sprite = reg.emplace<Sprite>(entity);
-          AssignSprite(sprite, "PandemicShop:bob_front_front");
-          float ratio = sprite.size.y / sprite.size.x;
-          sprite.size = {2 * tileSize, 2 * tileSize * ratio};
+        auto &sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "PandemicShop:bob_front_front");
+        float ratio = sprite.size.y / sprite.size.x;
+        sprite.size = {2 * tileSize, 2 * tileSize * ratio};
 
-
-         auto mainChar = Character::Create("ASDW", {1, 1, 1}, {0, 0});
-
-      
-        //**OVDE NASTAJE GRESKA**
-        auto& controller = reg.emplace<ControllerMapping>(mainChar.entity);
-        PandemicShopPlayerInputSystem::SetupPlayerInput(controller);
+        auto mainChar = Character::Create("Pandemic", {1, 1, 1}, {0, 0});
     }
 
     // // add score system to count scores for left and right collisions

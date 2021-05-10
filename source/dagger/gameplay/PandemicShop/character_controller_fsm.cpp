@@ -7,51 +7,74 @@
 #include "gameplay/PandemicShop/character_controller.h"
 
 using namespace dagger;
-
 // Idle
 
 void CharacterControllerFSM::Idle::Enter(
     CharacterControllerFSM::StateComponent &state_) {
-  auto &animator = Engine::Registry().get<Animator>(state_.entity);
-  AnimatorPlay(animator, "souls_like_knight_character:IDLE");
+
+    auto& [animator, character] = Engine::Registry().get<Animator, pandemic::PandemicCharacter>(state_.entity);
+
+    String animationToPlay = "PandemicShop:IDLE_FRONT";
+    switch (character.direction)
+    {
+    case EDirection::Up: animationToPlay = "PandemicShop:IDLE_FRONT"; break;
+    case EDirection::Right: animationToPlay = "PandemicShop:IDLE_RIGHT"; break;
+    case EDirection::Left: animationToPlay = "PandemicShop:IDLE_LEFT"; break;
+    case EDirection::Down: default:
+        animationToPlay = "PandemicShop:IDLE_DOWN"; break;
+    }
+    AnimatorPlay(animator, animationToPlay);
 }
 
 DEFAULT_EXIT(CharacterControllerFSM, Idle);
 
-void CharacterControllerFSM::Idle::Run(
-    CharacterControllerFSM::StateComponent &state_) {
-  auto &input = Engine::Registry().get<InputReceiver>(state_.entity);
+void CharacterControllerFSM::Idle::Run(CharacterControllerFSM::StateComponent &state_) {
+    
+    auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
 
-  if (EPSILON_NOT_ZERO(input.Get("run"))) {
-    GoTo(ECharacterStates::Running, state_);
-  }
+    auto h = input.Get("horizontal");
+    auto v = input.Get("vertical");
+
+    if (EPSILON_NOT_ZERO(h) || EPSILON_NOT_ZERO(v)) {
+        GoTo(ECharacterStates::Running, state_);
+    }
 }
 
 // Running
 
 void CharacterControllerFSM::Running::Enter(
-    CharacterControllerFSM::StateComponent &state_) {
-  auto &animator = Engine::Registry().get<Animator>(state_.entity);
-  AnimatorPlay(animator, "souls_like_knight_character:RUN");
-}
+    CharacterControllerFSM::StateComponent &state_) {}
 
 // same as: DEFAULT_EXIT(CharacterControllerFSM, Running);
 void CharacterControllerFSM::Running::Exit(
     CharacterControllerFSM::StateComponent &state_) {}
 
 void CharacterControllerFSM::Running::Run(
-    CharacterControllerFSM::StateComponent &state_) {
-  auto &&[sprite, input, character] =
-      Engine::Registry()
-          .get<Sprite, InputReceiver, pandemic::PandemicCharacter>(
-              state_.entity);
+    CharacterControllerFSM::StateComponent &state_) 
+{
+    auto &&[animator, input, character] =
+        Engine::Registry().get<Animator, InputReceiver, pandemic::PandemicCharacter>(state_.entity);
 
-  Float32 run = input.Get("run");
+    auto h = input.Get("horizontal");
+    auto v = input.Get("vertical");
 
-  if (EPSILON_ZERO(run)) {
-    GoTo(ECharacterStates::Idle, state_);
-  } else {
-    sprite.scale.x = run;
-    sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
-  }
+    if (EPSILON_ZERO(h) && EPSILON_ZERO(v)) 
+    {
+        GoTo(ECharacterStates::Idle, state_);
+    } else {
+        auto direction = GetDirectionFromVector(Vector2{ h, v });
+        if (direction != character.direction)
+        {
+            character.direction = direction;
+            String animationToPlay = "PandemicShop:RUN_FRONT";
+            switch (character.direction)
+            {
+            case EDirection::Up: animationToPlay = "PandemicShop:RUN_FRONT"; break;
+            case EDirection::Right: animationToPlay = "PandemicShop:RUN_RIGHT"; break;
+            case EDirection::Left: animationToPlay = "PandemicShop:RUN_LEFT"; break;
+            case EDirection::Down: default: animationToPlay = "PandemicShop:RUN_DOWN"; break;
+            }
+            AnimatorPlay(animator, animationToPlay);
+        }
+    }
 }
