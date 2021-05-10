@@ -19,4 +19,4 @@ public:
 
   void Run() override;
 };
-} // namespace platformer
+} // namespace pandemic

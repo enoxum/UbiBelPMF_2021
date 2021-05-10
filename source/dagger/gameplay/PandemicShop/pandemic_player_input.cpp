@@ -2,9 +2,11 @@
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
+#include "gameplay/PandemicShop/movable.h";
 
 using namespace dagger;
 using namespace pandemic_shop;
+using namespace pandemic;
 
 Float32 PandemicShopPlayerInputSystem::s_BoarderDown = -20;
 Float32 PandemicShopPlayerInputSystem::s_BoarderUp = 20;
@@ -25,40 +27,49 @@ void PandemicShopPlayerInputSystem::WindDown()
 
 void PandemicShopPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-    Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
+
+    Engine::Registry().view<ControllerMapping, Movable>().each([&](ControllerMapping& ctrl_, Movable& movable)
     {
         if (kEvent_.key == ctrl_.up_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
         {
             ctrl_.input.y = 1;
+            movable.pravac = 1;
         }
         else if (kEvent_.key == ctrl_.up_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.y > 0)
         {
             ctrl_.input.y = 0;
+            movable.pravac = 1;
         }
         else if (kEvent_.key == ctrl_.down_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
         {
             ctrl_.input.y = -1;
+            movable.pravac = 4;
         }
         else if (kEvent_.key == ctrl_.down_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.y < 0)
         {
-            ctrl_.input.y = 0;
+          ctrl_.input.y = 0;
+          movable.pravac = 4;
         }
         
         if (kEvent_.key == ctrl_.right_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
         {
             ctrl_.input.x = 1;
+            movable.pravac = 2;
         }
         else if (kEvent_.key == ctrl_.right_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.x > 0)
         {
             ctrl_.input.x = 0;
+            movable.pravac = 2;
         }
         else if (kEvent_.key == ctrl_.left_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
         {
-            ctrl_.input.x = -1;
+          ctrl_.input.x = -1;
+          movable.pravac = 3;
         }
         else if (kEvent_.key == ctrl_.left_key && kEvent_.action == EDaggerInputState::Released && ctrl_.input.x < 0)
         {
-            ctrl_.input.x = 0;
+          ctrl_.input.x = 0;
+          movable.pravac = 3;
         }
     });
 }

@@ -21,6 +21,7 @@
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
 #include "gameplay/PandemicShop/character_controller.h";
+#include "gameplay/PandemicShop/movable.h";
 
 
 using namespace dagger;
@@ -73,6 +74,7 @@ struct Character {
   Animator &animator;
   InputReceiver &input;
   PandemicCharacter &character;
+  Movable &movable;
 
   static Character Get(Entity entity) {
     auto &reg = Engine::Registry();
@@ -80,14 +82,13 @@ struct Character {
     auto &anim = reg.get_or_emplace<Animator>(entity);
     auto &input = reg.get_or_emplace<InputReceiver>(entity);
     auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
-    
-    //-----------------------------------------------
+    auto &movable = reg.get_or_emplace<Movable>(entity);
     auto &col = reg.emplace<SimpleCollision>(entity);
     auto &transform = reg.emplace<Transform>(entity);
     auto &controller = reg.emplace<ControllerMapping>(entity);
     PandemicShopPlayerInputSystem::SetupPlayerInput(controller);
 
-    return Character{entity, sprite, anim, input, character};
+    return Character{entity, sprite, anim, input, character, movable};
   }
 
   static Character Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
@@ -105,7 +106,7 @@ struct Character {
 
 
     AssignSprite(chr.sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
-    AnimatorPlay(chr.animator, "PandemicShop:IDLE");
+    AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");
 
     if (input_ != "")
       chr.input.contexts.push_back(input_);
