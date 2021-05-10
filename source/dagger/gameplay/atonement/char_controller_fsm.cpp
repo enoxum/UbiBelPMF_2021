@@ -4,6 +4,7 @@
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
+#include "core/game/transforms.h"
 #include <gameplay/atonement/atonement_controller.h>
 
 #include <iostream>
@@ -63,7 +64,7 @@ void CharControllerFSM::Walking::Exit(CharControllerFSM::StateComponent& state_)
 
 void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
+	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
 	Float32 walk = input.Get("walk");
 
@@ -76,7 +77,7 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 		if((sprite.scale.x < 0 && walk > 0) || (sprite.scale.x > 0 && walk < 0)){
 			sprite.scale.x *= -1;
 		}
-		sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
 	}
 
 	if (EPSILON_NOT_ZERO(input.Get("jump")))
@@ -107,7 +108,7 @@ DEFAULT_EXIT(CharControllerFSM, JumpWindup);
 
 void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
+	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")))
 	{
@@ -120,12 +121,12 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 		if ((sprite.scale.x < 0 && walk > 0) || (sprite.scale.x > 0 && walk < 0)) {
 			sprite.scale.x *= -1;
 		}
-		sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
 	}
 
 	if (character.jumped < character.jumpHeight) {
 		Float32 tmp = character.jumpSpeed * sprite.scale.y * Engine::DeltaTime();
-		sprite.position.y += tmp;
+		transform.position.y += tmp;
 		character.jumped += tmp;
 	}
 	else {
@@ -151,7 +152,7 @@ DEFAULT_EXIT(CharControllerFSM, JumpWinddown);
 
 void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, character] = Engine::Registry().get<Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
+	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")))
 	{
@@ -164,11 +165,11 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 		if ((sprite.scale.x < 0 && walk > 0) || (sprite.scale.x > 0 && walk < 0)) {
 			sprite.scale.x *= -1;
 		}
-		sprite.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
 	}
 
 	if (!character.grounded) {
-		sprite.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		transform.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
 	}
 	else if (character.fallingAnimationEnded) {
 		GoTo(ECharStates::Idle, state_);
@@ -199,7 +200,7 @@ DEFAULT_EXIT(CharControllerFSM, Dashing);
 
 void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [sprite, character] = Engine::Registry().get<Sprite, AtonementController::AtonementCharacter>(state_.entity);
+	auto&& [transform, sprite, character] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter>(state_.entity);
 	
 	// TODO refactor
 	/*
@@ -211,7 +212,7 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 		GoTo(ECharStates::Idle, state_);
 	}
 	else {*/
-		sprite.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
+		transform.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
 	//}
 
 		if (character.dashingAnimationEnded) {
