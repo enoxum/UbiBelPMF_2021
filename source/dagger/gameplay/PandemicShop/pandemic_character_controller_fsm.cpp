@@ -6,6 +6,7 @@
 #include "core/graphics/animation.h"
 #include "core/graphics/sprite.h"
 #include "core/input/inputs.h"
+#include "core/game/transforms.h"
 
 using namespace dagger;
 using namespace pandemic;
@@ -38,11 +39,30 @@ DEFAULT_EXIT(PandemicCharacterControllerFSM, Idle);
 void PandemicCharacterControllerFSM::Running::Run(
     PandemicCharacterControllerFSM::StateComponent &state_) 
 {
-    auto &&[animator, input, character] =
-        Engine::Registry().get<Animator, InputReceiver, pandemic::PandemicCharacter>(state_.entity);
+  auto &&[animator, input, character, transform] =
+        Engine::Registry().get<Animator, InputReceiver, pandemic::PandemicCharacter, Transform>(state_.entity);
 
     auto h = input.Get("horizontal");
     auto v = input.Get("vertical");
+
+    switch (character.direction)
+    {
+    case EDirection::Left:
+      transform.position.x += character.speed * (-1) * Engine::DeltaTime();
+      break;
+    case EDirection::Right:
+      transform.position.x += character.speed * (1) * Engine::DeltaTime();
+      break;
+    case EDirection::Up:
+      transform.position.y += character.speed * (1) * Engine::DeltaTime();
+      break;
+    case EDirection::Down:
+      transform.position.x += character.speed * (-1) * Engine::DeltaTime();
+      break;
+
+    default:
+      break;
+    }
 
     if (EPSILON_ZERO(h) && EPSILON_ZERO(v)) 
     {

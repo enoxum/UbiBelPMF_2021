@@ -13,6 +13,7 @@
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
+#include "core/game/transforms.h"
 
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/ping_pong/pingpong_ball.h"
@@ -73,6 +74,7 @@ struct Character {
   Animator &animator;
   InputReceiver &input;
   PandemicCharacter &character;
+  Transform &transform;
 
   static Character Get(Entity entity) {
     auto &reg = Engine::Registry();
@@ -80,10 +82,11 @@ struct Character {
     auto &anim = reg.get_or_emplace<Animator>(entity);
     auto &input = reg.get_or_emplace<InputReceiver>(entity);
     auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
+    auto &transform = reg.get_or_emplace<Transform>(entity);
 
     
     //return Character{entity, sprite, anim, input};
-    return Character{entity, sprite, anim, input, character};
+    return Character{entity, sprite, anim, input, character, transform};
   }
 
   static Character Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
@@ -95,7 +98,9 @@ struct Character {
 
     auto chr = Character::Get(entity);
 
-    chr.sprite.scale = {1, 1};
+    chr.transform.position = {position_, 0.0f};
+
+    chr.sprite.scale = {2, 2};
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
 
@@ -246,7 +251,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     //1st player
     {
-        auto entity = reg.create();
+     /*   auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
         col.size.x = playerSize;
         col.size.y = playerSize;
@@ -259,10 +264,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
          // player 
         
         auto &sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
+       AssignSprite(sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
         float ratio = sprite.size.y / sprite.size.x;
         sprite.size = {2 * tileSize, 2 * tileSize * ratio};
-
+        */
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
     }
 
