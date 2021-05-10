@@ -17,7 +17,7 @@ using namespace dagger;
 namespace brawler
 {
 
-    struct BulletEntity
+    struct ProjectileEntity
     {
         Entity entity;
         Bullet& bullet;
@@ -26,7 +26,7 @@ namespace brawler
         SimpleCollision& col;
         Sprite& sprite;
 
-        static BulletEntity Get(Entity entity)
+        static ProjectileEntity Get(Entity entity)
         {
             auto& reg = Engine::Registry();
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
@@ -35,10 +35,10 @@ namespace brawler
             auto& col = reg.get_or_emplace<SimpleCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
 
-            return BulletEntity{ entity, bullet, mov, transform, col, sprite };
+            return ProjectileEntity{ entity, bullet, mov, transform, col, sprite };
         }
 
-        static BulletEntity Create(
+        static ProjectileEntity Create(
             WeaponType weaponType,
             int size   = 3,
             int damage = 10,
@@ -48,47 +48,47 @@ namespace brawler
             auto& reg = Engine::Registry();
             auto entity = reg.create();
 
-            auto bullet = BulletEntity::Get(entity);
+            auto projectile = ProjectileEntity::Get(entity);
 
-            bullet.transform.position = { position_, 0.0f };
+            projectile.transform.position = { position_, 0.0f };
 
-            bullet.sprite.position = { position_, 0.0f };
-            bullet.sprite.size = { 1, 1 };
-            bullet.bullet.type = 0;
+            projectile.sprite.position = { position_, 0.0f };
+            projectile.sprite.size = { 1, 1 };
+            projectile.bullet.type = 1;
 
             switch(weaponType){
                 case WeaponType::BAZOOKA:
-                    AssignSprite(bullet.sprite, "brawler:bazookaAmmo");
+                    AssignSprite(projectile.sprite, "brawler:bazookaAmmo");
                     break;
                 case WeaponType::FLASH:
-                    AssignSprite(bullet.sprite, "brawler:flash");
+                    AssignSprite(projectile.sprite, "brawler:flash");
                     break;
                 case WeaponType::GRANADE:
-                    AssignSprite(bullet.sprite, "brawler:granade");
+                    AssignSprite(projectile.sprite, "brawler:granade");
                     break;
                 case WeaponType::MINE:
-                    AssignSprite(bullet.sprite, "brawler:mine");
+                    AssignSprite(projectile.sprite, "brawler:mine");
                     break;
                 case WeaponType::BANANA:
-                    AssignSprite(bullet.sprite, "brawler:banana");
+                    AssignSprite(projectile.sprite, "brawler:banana");
                     break;
                 case WeaponType::C4:
-                    AssignSprite(bullet.sprite, "brawler:c4");
+                    AssignSprite(projectile.sprite, "brawler:c4");
                     break;
                 case WeaponType::MEDKIT:
-                    AssignSprite(bullet.sprite, "brawler:medkit");
+                    AssignSprite(projectile.sprite, "brawler:medkit");
                     break;
                 default:
-                    AssignSprite(bullet.sprite, "brawler:bullet");
-                    bullet.sprite.scale = { 0.05, 0.05 };
+                    AssignSprite(projectile.sprite, "brawler:bullet");
+                    projectile.sprite.scale = { 0.05, 0.05 };
             }
 
-            bullet.bullet.direction = (direction_ >= 0 ? 1 : -1);
-            bullet.bullet.damage = damage;
+            projectile.bullet.direction = (direction_ >= 0 ? 1 : -1);
+            projectile.bullet.damage = damage;
 
             BulletSystem::s_ActiveBullets++;
 
-            return bullet;
+            return projectile;
         }
     };
 

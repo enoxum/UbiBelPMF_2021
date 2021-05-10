@@ -26,12 +26,12 @@ namespace brawler {
 	public:
 		static Weapon Pistol(int numClips)
 		{
-			return Weapon(WeaponType::PISTOL, "Pistol", 2, 20, 3, 7, numClips, "machinegun");
+			return Weapon(WeaponType::PISTOL, "Pistol", 2, 20, 3, 7, numClips, "pistol");
 		}
 
 		static Weapon MachineGun(int numClips)
 		{
-			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 15, 4, 70, numClips, "pistol");
+			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 15, 4, 70, numClips, "machinegun");
 		}
 
 		static Weapon M4A1(int numClips)

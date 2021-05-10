@@ -36,15 +36,23 @@ void BulletSystem::Run()
 		auto& t = objects.get<Transform>(obj);
 		auto& b = objects.get<Bullet>(obj);
 
-		Vector3 dp = { b.direction*BulletSystem::s_BulletSpeed, 0, 0 };
-		t.position += dp * Engine::DeltaTime();
-
-		if (t.position.x < BulletSystem::s_CameraBoundLeft || t.position.x > BulletSystem::s_CameraBoundRight) {
-			reg.destroy(obj);
+		if(b.type == 0){
+			Vector3 dp = { b.direction*BulletSystem::s_BulletSpeed, 0, 0 };
+			t.position += dp * Engine::DeltaTime();
+		
+			if (t.position.x < BulletSystem::s_CameraBoundLeft || t.position.x > BulletSystem::s_CameraBoundRight) {
+				reg.destroy(obj);
+				BulletSystem::s_ActiveBullets--;
+			}
+		}else{
+			Vector3 dp = { 250*b.direction, 250, 0 };
+			t.position += dp * Engine::DeltaTime();
 			
-			BulletSystem::s_ActiveBullets--;
+			// TODO Destory projectile when hits the ground
+			if (t.position.x < BulletSystem::s_CameraBoundLeft || t.position.x > BulletSystem::s_CameraBoundRight || t.position.y < 0.01) {
+				reg.destroy(obj);
+				BulletSystem::s_ActiveBullets--;
+			}
 		}
-
 	}
-
 }

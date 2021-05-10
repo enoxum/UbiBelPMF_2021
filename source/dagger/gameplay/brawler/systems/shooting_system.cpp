@@ -9,10 +9,39 @@
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/entities/bullet.h"
+#include "gameplay/brawler/entities/projectile.h"
 #include "gameplay/brawler/weapon.h"
 
 using namespace brawler;
 using namespace dagger;
+
+Bool ShootingSystem::isProjectile(WeaponType wp)
+{
+    switch (wp)
+    {
+    case WeaponType::C4:
+        return true;
+        break;
+    case WeaponType::GRANADE:
+        return true;
+        break;
+    case WeaponType::FLASH:
+        return true;
+        break;
+    case WeaponType::MINE:
+        return true;
+        break;
+    case WeaponType::MEDKIT:
+        return true;
+        break;
+    case WeaponType::BANANA:
+        return true;
+        break;
+    default:
+        return false;
+        break;
+    }
+}
 
 void ShootingSystem::Run()
 {
@@ -30,7 +59,12 @@ void ShootingSystem::Run()
                 return;
 
             movable.speed.x -= sprite.scale.x * weapon.recoil();
-	        BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
+
+            if(!isProjectile(weapon.weaponType())){
+                BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
+            }else{
+                ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
+            }
             return;
         }
 

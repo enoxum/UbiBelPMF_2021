@@ -2,6 +2,7 @@
 
 #include "core/system.h"
 #include "core/core.h"
+#include "gameplay/brawler/weapon.h"
 
 using namespace dagger;
 
@@ -17,6 +18,8 @@ public:
     }
 
     void Run() override;
+
+    static Bool isProjectile(WeaponType wp);
 };
 
 }
