@@ -55,9 +55,9 @@ void Level::Load(String map)
         backgroundZ--;
     }
 
-    auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, 
+    auto player1 = BrawlerCharacter::Create("controller_1", 
         { TileToWorldX(level->player1.x), TileToWorldY(level->player1.y) }, level->player1.isLeft);
-    // auto player2 = BrawlerCharacter::Create("controller_2", { 1, 1, 1 }, 
+    // auto player2 = BrawlerCharacter::Create("controller_2",
     //     { TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, level->player2.isLeft);
 }
 

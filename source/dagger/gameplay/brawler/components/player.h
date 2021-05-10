@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/core.h"
-#include "core/system.h"
+#include "core/engine.h"
 
 using namespace dagger;
 
@@ -9,6 +9,7 @@ namespace brawler
 {
     struct Player
 	{
-		bool placeholder{ false };
+		Vector2 startPosition{ 0.0f, 0.0f };
+		int startDirection{ 1 };
 	};
 }

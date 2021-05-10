@@ -96,12 +96,15 @@ void DebugGui::Run()
 void DebugGui::OnEndOfFrame()
 {
     if(resetPosition) {
-        Engine::Registry().view<Transform, Movable, Player>().each([&](Transform& t, Movable& m, Player& p)
+        Engine::Registry().view<Transform, Movable, Player, Sprite>().each([&](Transform& t, Movable& m, Player& p, Sprite& s)
             {
-                t.position.x = 0.0f;
-                t.position.y = 0.0f;
+                t.position.x = p.startPosition.x;
+                t.position.y = p.startPosition.y;
+                m.prevPosition.x = p.startPosition.x;
+                m.prevPosition.y = p.startPosition.y;
                 m.speed.x = 0.0f;
                 m.speed.y = 0.0f;
+                s.scale.x = p.startDirection;
             });
         resetPosition = false;
     }
