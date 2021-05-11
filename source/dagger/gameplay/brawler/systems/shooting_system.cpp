@@ -62,8 +62,11 @@ void ShootingSystem::Run()
         s.scale.x = sprite.scale.x;
         int dir = sprite.scale.x>=0.0f? 1 : -1;
 
-        t.position.x = transform.position.x + weapon.translate().x * dir;
-        t.position.y = transform.position.y + weapon.translate().y;
+        int trans_x = weapon.translate().x;
+        int trans_y = weapon.translate().y;
+
+        t.position.x = transform.position.x + trans_x * dir;
+        t.position.y = transform.position.y + trans_y;
         t.position.z = 0.0f;
         
         if (EPSILON_NOT_ZERO(input.Get("attack")))
@@ -75,9 +78,14 @@ void ShootingSystem::Run()
             movable.speed.x -= sprite.scale.x * weapon.recoil();
 
             if(!isProjectile(weapon.weaponType())){
-                BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
+                if(trans_y < 0){
+                    trans_y *= -1;
+                }
+                Vector3 pos = {transform.position.x, transform.position.y + trans_y, transform.position.z};
+                BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
             }else{
-                ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
+                Vector3 pos = {transform.position.x + trans_x, transform.position.y + trans_y, transform.position.z};
+                ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
             }
 
             if(weapon.currentAmmoInClip() == 0){
