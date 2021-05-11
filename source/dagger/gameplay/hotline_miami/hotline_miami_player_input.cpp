@@ -1,4 +1,5 @@
 #include "hotline_miami_player_input.h"
+#include "hotline_miami_player.h"
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
@@ -6,8 +7,6 @@
 using namespace dagger;
 using namespace hotline_miami;
 
-
-Float32 HotlineMiamiPlayerInputSystem::s_PlayerSpeed = 30.f;
 
 void HotlineMiamiPlayerInputSystem::SpinUp()
 {
@@ -62,13 +61,14 @@ void HotlineMiamiPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 
 void HotlineMiamiPlayerInputSystem::Run()
 {
-    auto view = Engine::Registry().view<Transform, ControllerMapping>();
+    auto view = Engine::Registry().view<Transform, ControllerMapping, HotlineMiamiPlayer>();
     for (auto entity : view)
     {
         auto& t = view.get<Transform>(entity);
         auto& ctrl = view.get<ControllerMapping>(entity);
-
-        t.position.y += ctrl.input.y * s_PlayerSpeed * Engine::DeltaTime();
-        t.position.x += ctrl.input.x * s_PlayerSpeed * Engine::DeltaTime();
+        auto& player = view.get<HotlineMiamiPlayer>(entity);
+    
+        t.position.y += ctrl.input.y * player.s_PlayerSpeed * Engine::DeltaTime();
+        t.position.x += ctrl.input.x * player.s_PlayerSpeed * Engine::DeltaTime();
     }
 }
