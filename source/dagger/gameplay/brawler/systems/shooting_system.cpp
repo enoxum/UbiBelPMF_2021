@@ -68,8 +68,9 @@ void ShootingSystem::Run()
         
         if (EPSILON_NOT_ZERO(input.Get("attack")))
         {
-            if (!weapon.shoot())
+            if (!weapon.shoot()){
                 return;
+            }
 
             movable.speed.x -= sprite.scale.x * weapon.recoil();
 
@@ -78,11 +79,25 @@ void ShootingSystem::Run()
             }else{
                 ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), transform.position, sprite.scale.x>=0.0f? 1 : -1);
             }
+
+            if(weapon.currentAmmoInClip() == 0){
+                if(isProjectile(weapon.weaponType())){
+                    auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
+                    weaponSprite.color = {1.0f, 1.0f, 1.0f, 0.0f};
+                    weaponSprite.scale = weapon.scale();
+                    AssignSprite(weaponSprite, "brawler:" + weapon.sprite());
+                }
+            }
+
             return;
         }
 
         if (EPSILON_NOT_ZERO(input.Get("reload")))
         {   
+            auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
+            weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
+            weaponSprite.scale = weapon.scale();
+            AssignSprite(weaponSprite, "brawler:" + weapon.sprite());
             weapon.reload();
             return;
         }

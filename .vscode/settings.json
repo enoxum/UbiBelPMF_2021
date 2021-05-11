@@ -15,6 +15,11 @@
         "xlocmes": "cpp",
         "xlocmon": "cpp",
         "xlocnum": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "utility": "cpp"
     }
 }
