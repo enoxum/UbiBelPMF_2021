@@ -50,6 +50,7 @@ sources = [
     'source/dagger/gameplay/common/jiggle.cpp',
     'source/dagger/gameplay/common/particles.cpp',
     'source/dagger/gameplay/common/simple_collisions.cpp',
+    'source/dagger/gameplay/common/camera_focus.cpp',
     'source/dagger/gameplay/atonement/atonement_main.cpp',
     'source/dagger/gameplay/atonement/atonement_controller.cpp',
     'source/dagger/gameplay/atonement/char_controller_fsm.cpp',

@@ -15,6 +15,7 @@
 #include "tools/diagnostics.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/common/camera_focus.h"
 #include "gameplay/editor/savegame_system.h"
 #include "core/savegame.h"
 #include <iostream>
@@ -107,7 +108,6 @@ void AtonementGame::CoreSystemsSetup()
     engine.AddSystem<DiagnosticSystem>();
     engine.AddSystem<GUISystem>();
     engine.AddSystem<ToolMenuSystem>();
-    //engine.AddPausableSystem<test_system>();
 #endif //!defined(NDEBUG)
 }
 
@@ -122,7 +122,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<GroundednessDetectionSystem>();
     engine.AddPausableSystem<CollisionHandlerSystem>();
     engine.AddPausableSystem<CooldownManager>();
-
+    engine.AddSystem<CameraFollowSystem>();
 
 #if defined(DAGGER_DEBUG)
 #endif //defined(DAGGER_DEBUG)
@@ -145,7 +145,7 @@ void AtonementGame::WorldSetup()
 
     auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
     mainChar.sprite.scale = { 0.5, 0.5 };
-    //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
+    Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
 
 
