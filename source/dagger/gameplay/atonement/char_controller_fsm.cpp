@@ -7,6 +7,8 @@
 #include "core/game/transforms.h"
 #include <gameplay/atonement/atonement_controller.h>
 
+#include "gameplay/atonement/systems/cooldown_manager.h"
+
 #include <iostream>
 
 using namespace dagger;
@@ -37,7 +39,7 @@ void CharControllerFSM::Idle::Run(CharControllerFSM::StateComponent& state_)
 		GoTo(ECharStates::JumpWindup, state_);
 	}
 
-	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
 		GoTo(ECharStates::Dashing, state_);
 	}
@@ -85,7 +87,7 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 		GoTo(ECharStates::JumpWindup, state_);
 	}
 
-	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
 		GoTo(ECharStates::Dashing, state_);
 	}
@@ -110,8 +112,9 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 {
 	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
-	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
+		character.dashJumped = true;
 		GoTo(ECharStates::Dashing, state_);
 	}
 
@@ -124,13 +127,13 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
 	}
 
-	if (character.jumped < character.jumpHeight) {
+	if (character.jumpedHeight < character.jumpHeight) {
 		Float32 tmp = character.jumpSpeed * sprite.scale.y * Engine::DeltaTime();
 		transform.position.y += tmp;
-		character.jumped += tmp;
+		character.jumpedHeight += tmp;
 	}
 	else {
-		character.jumped = 0;
+		character.jumpedHeight = 0;
 		GoTo(ECharStates::JumpWinddown, state_);
 	}
 }
@@ -154,8 +157,9 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 {
 	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
-	if (EPSILON_NOT_ZERO(input.Get("dash")))
+	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
+		character.dashJumped = true;
 		GoTo(ECharStates::Dashing, state_);
 	}
 
@@ -174,15 +178,6 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 	else if (character.fallingAnimationEnded) {
 		GoTo(ECharStates::Idle, state_);
 	}
-
-	// TODO refactor
-	/*
-	else{
-		auto& animator = Engine::Registry().get<Animator>(state_.entity);
-		if (animator.currentFrame == 3) {
-			GoTo(ECharStates::Idle, state_);
-		}
-	}*/
 }
 
 // Dashing
@@ -194,6 +189,9 @@ void CharControllerFSM::Dashing::Enter(CharControllerFSM::StateComponent& state_
 	AnimatorPlayOnce(animator, "BlueWizard:DASH");
 
 	character.dashingAnimationEnded = false;
+
+	auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+	cdManager->registerCooldown(state_.entity, "dash", character.dashCooldown);
 }
 
 DEFAULT_EXIT(CharControllerFSM, Dashing);
@@ -202,29 +200,20 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 {
 	auto&& [transform, sprite, character] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter>(state_.entity);
 	
-	// TODO refactor
-	/*
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	if (animator.currentFrame == 15) {
+	transform.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
+
+	if (character.dashingAnimationEnded) {
 		if (!character.grounded) {
 			GoTo(ECharStates::JumpWinddown, state_);
 		}
-		GoTo(ECharStates::Idle, state_);
-	}
-	else {*/
-		transform.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
-	//}
-
-		if (character.dashingAnimationEnded) {
-			if (!character.grounded) {
-				GoTo(ECharStates::JumpWinddown, state_);
-			}
-			else {
-				GoTo(ECharStates::Idle, state_);
-			}
+		else {
+			GoTo(ECharStates::Idle, state_);
 		}
+	}
 
 }
+
+/* Helper functions */
 
 void CharControllerFSM::OnAnimationEnd(ViewPtr<Animation> animation) {
 	Engine::Registry().view<CharControllerFSM::StateComponent>()
@@ -240,4 +229,10 @@ void CharControllerFSM::OnAnimationEnd(ViewPtr<Animation> animation) {
 					character.fallingAnimationEnded = true;
 				}
 			});
+}
+
+Bool CharControllerFSM::canDash(Entity entity) {
+	auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+	auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(entity);
+	return !cdManager->isOnCooldown(entity, "dash") && !character.dashJumped;
 }

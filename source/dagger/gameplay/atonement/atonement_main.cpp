@@ -14,7 +14,6 @@
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
-
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/editor/savegame_system.h"
 #include "core/savegame.h"
@@ -26,6 +25,8 @@
 #include "gameplay/atonement/systems/groundedness_detection_system.h"
 #include "gameplay/atonement/systems/collision_handler_system.h"
 #include "gameplay/atonement/systems/character_collisions.h"
+#include "gameplay/atonement/systems/atonement_pause_system.h"
+#include "gameplay/atonement/systems/cooldown_manager.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -120,6 +121,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
     engine.AddPausableSystem<GroundednessDetectionSystem>();
     engine.AddPausableSystem<CollisionHandlerSystem>();
+    engine.AddPausableSystem<CooldownManager>();
 
 
 #if defined(DAGGER_DEBUG)

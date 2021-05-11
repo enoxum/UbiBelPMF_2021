@@ -30,6 +30,7 @@ void GroundednessDetectionSystem::Run()
                 if(collision_.colidedDown)
                 {
                     char_.grounded = true;
+                    char_.dashJumped = false;
                 }
                 else {
                     char_.grounded = false;
