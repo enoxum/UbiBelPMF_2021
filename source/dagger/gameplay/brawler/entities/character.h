@@ -46,7 +46,8 @@ namespace brawler
         static BrawlerCharacter Create(
             String input_ = "",
             ColorRGB color_ = { 1, 1, 1 },
-            Vector2 position_ = { 0, 0 })
+            Vector2 position_ = { 0, 0 },
+            bool side = false)
         {
             auto& reg = Engine::Registry();
             auto entity = reg.create();
@@ -64,6 +65,7 @@ namespace brawler
             chr.col.size = chr.sprite.size;
         
             chr.character.currentWeapon = reg.create();
+            chr.character.side = side;
             reg.get_or_emplace<Transform>(chr.character.currentWeapon);
             auto& x = reg.get_or_emplace<Sprite>(chr.character.currentWeapon);
             x.scale = { 1, 1};

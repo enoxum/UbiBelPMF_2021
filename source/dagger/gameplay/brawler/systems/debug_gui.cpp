@@ -7,6 +7,7 @@
 #include "gameplay/brawler/entities/character.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/bullet_system.h"
+#include "gameplay/brawler/systems/hud_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -91,6 +92,15 @@ void DebugGui::RenderDebugWindow()
             ImGui::Separator();
         });
     }
+
+    ImGui::Separator();
+
+    if (ImGui::CollapsingHeader("HUD"))
+    {
+        ImGui::SliderFloat("Main weapon scale", &HUDSystem::s_mainWeaponScale, 0.0f, 10.0f);
+        ImGui::SliderFloat("Other weapons scale", &HUDSystem::s_otherWeaponsScale, 0.0f, 10.0f);
+    }
+    
 
     // Removed these because they are wrong anyway
     //ImGui::Separator();

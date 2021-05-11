@@ -18,5 +18,10 @@ namespace brawler
 		std::vector<Weapon>		weapons;
 		int						active_weapon_idx{ -1 };
 		Entity 					currentWeapon;
+
+		int						health{ 100 };
+
+		// Left player / right player
+		bool					side{ false };
 	};
 }
