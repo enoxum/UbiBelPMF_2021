@@ -174,14 +174,8 @@ void EditorToolSystem::Run()
                 if (reg.has<Transform>(m_Selected.entity))
                 {
                     auto& transform = reg.get<Transform>(m_Selected.entity);
-                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
+                    knob.position = Vector3{ Input::CursorPositionInWorld(), transform.position.z };
                     transform.position = knob.position;
-                }
-                else if (reg.has<Sprite>(m_Selected.entity))
-                {
-                    auto& sprite = reg.get<Sprite>(m_Selected.entity);
-                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
-                    sprite.position = knob.position;
                 }
             }
         }
@@ -220,7 +214,8 @@ void EditorToolSystem::GUIExecuteCreateEntity()
     auto newEntity = reg.create();
     auto& newSprite = reg.emplace<Sprite>(newEntity);
     AssignSprite(newSprite, "tools:knob2"); 
-    reg.emplace<Transform>(newEntity);
+    auto& transf = reg.emplace<Transform>(newEntity);
+    transf.position = Vector3{ Input::CursorPositionInWorld(), 0 } - Vector3 { 300.f, 300.f, 0.f  };
     //newSprite.UseAsUI();                //Sta radi ovo?
     auto& newSavegame = reg.emplace<SaveGame<ECommonSaveArchetype>>(newEntity);
 }

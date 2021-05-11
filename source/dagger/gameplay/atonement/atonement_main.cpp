@@ -70,11 +70,11 @@ struct Character
         auto chr = Character::Get(entity);
 
         chr.sprite.scale = { 1, 1 };
-        chr.sprite.position = { position_, 0.0f };
+        chr.sprite.position = { position_, 5.0f };
         chr.sprite.color = { color_, 1.0f };
 
         chr.collision.size = collision_size_;
-        chr.transform.position = { position_, 0.0f };
+        chr.transform.position = { position_, 5.0f };
 
         AssignSprite(chr.sprite, "BlueWizard:IDLE:idle1");
         AnimatorPlay(chr.animator, "BlueWizard:IDLE");
@@ -136,9 +136,10 @@ void AtonementGame::WorldSetup()
 
     //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
-        SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
+        //SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
+        SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
 
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 140});
     mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
