@@ -25,9 +25,15 @@
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 #include "gameplay/brawler/systems/weaponpickupsystem.h"
+#include "gameplay/brawler/systems/hud_system.h""
 
 using namespace dagger;
 using namespace brawler;
+
+Entity Brawler::leftPlayer = {};
+Entity Brawler::rightPlayer = {};
+Entity Brawler::leftMainWeaponBlip = {};
+Entity Brawler::rightMainWeaponBlip = {};
 
 void Brawler::GameplaySystemsSetup()
 {
@@ -38,8 +44,8 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<BulletSystem>();
     engine.AddSystem<SimpleCollisionsSystem>();
     engine.AddSystem<WeaponPickupSystem>();
-    //engine.AddSystem<ParallaxSystem>();
-    //engine.AddSystem<CameraFollowSystem>();
+    engine.AddSystem<HUDSystem>();
+
     engine.AddSystem<DebugGui>();
 
 }
@@ -113,7 +119,16 @@ void Brawler::WorldSetup()
     SetCamera();
     // CreateBackdrop();
 
-    BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
+    auto c1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
+    //auto c2 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
+    Brawler::leftPlayer = c1.entity;
+    //Brawler::rightPlayer = c2.entity;
+
+    HUDSystem::CreateHealthBarLeft();
+    //HUDSystem::CreateHealthBarRight();
+    HUDSystem::CreateLeftMainWeaponBlip();
+    //HUDSystem::CreateRightMainWeaponBlip();
+    HUDSystem::CreateWeaponsLeft();
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
 
     // auto player2 = BrawlerCharacter::Create("Arrows", { 1, 0, 0 }, { 100, 0 });

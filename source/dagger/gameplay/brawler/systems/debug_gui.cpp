@@ -93,21 +93,14 @@ void DebugGui::RenderDebugWindow()
         });
     }
 
-    ImGui::Separator();
-
     if (ImGui::CollapsingHeader("HUD"))
     {
-        ImGui::SliderFloat("Main weapon scale", &HUDSystem::s_mainWeaponScale, 0.0f, 10.0f);
-        ImGui::SliderFloat("Other weapons scale", &HUDSystem::s_otherWeaponsScale, 0.0f, 10.0f);
+        ImGui::SliderFloat("Main weapon scale: ", &HUDSystem::s_mainWeaponScale, 0.0f, 10.0f);
+        ImGui::SliderFloat("Other weapons scale: ", &HUDSystem::s_otherWeaponsScale, 0.0f, 10.0f);
+        ImGui::SliderFloat("Blip width: ", &HUDSystem::s_blipWidth, 0.0f, 10.0f);
+        ImGui::SliderFloat("Blip height: ", &HUDSystem::s_blipHeight, 0.0f, 50.0f);
+        ImGui::SliderFloat("Initial y offset: ", &HUDSystem::s_initialYOffset, -50.f, 0.0f);
     }
-    
-
-    // Removed these because they are wrong anyway
-    //ImGui::Separator();
-    //ImGui::Text("Cam bound left: %f", BulletSystem::s_CameraBoundLeft);
-    //ImGui::Text("Cam bound right: %f", BulletSystem::s_CameraBoundRight);
-    //ImGui::Text("Cam bound up: %f", BulletSystem::s_CameraBoundUp);
-    //ImGui::Text("Cam bound down: %f", BulletSystem::s_CameraBoundDown);
      
     ImGui::End();
 }

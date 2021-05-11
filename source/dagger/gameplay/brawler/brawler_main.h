@@ -7,8 +7,11 @@ using namespace dagger;
 
 namespace brawler
 {
+    
+
     class Brawler : public Game
     {
+        
         String GetIniFile() override
         {
             return "brawler.ini";
@@ -19,5 +22,11 @@ namespace brawler
 
         void SetCamera();
         void CreateBackdrop();
+
+    public:
+        static Entity leftPlayer;
+        static Entity rightPlayer;
+        static Entity leftMainWeaponBlip;
+        static Entity rightMainWeaponBlip;
     };
 }
