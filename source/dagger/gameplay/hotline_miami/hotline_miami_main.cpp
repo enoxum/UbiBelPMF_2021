@@ -1,5 +1,6 @@
 #include "hotline_miami_main.h"
 #include "hotline_miami_obstacle.h"
+#include "hotline_miami_player.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -47,6 +48,7 @@ void HotlineMiamiGame::GameplaySystemsSetup()
 
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
+    engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
 }
 
@@ -102,18 +104,21 @@ void hotline_miami::SetupWorld()
     {
         auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 5;
-        col.size.y = tileSize * 5;
+        col.size.x = tileSize;
+        col.size.y = tileSize;
 
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 50;
-        transform.position.y = 50;
+        transform.position.x = 100;
+        transform.position.y = 100;
         transform.position.z = zPos;
 
         auto& sprite = reg.emplace<Sprite>(entity);
         AssignSprite(sprite, "hotline_miami:IDLE:soldier_stand");
-        sprite.size.x = tileSize * 5;
-        sprite.size.y = tileSize * 5;
+        sprite.size.x = tileSize;
+        sprite.size.y = tileSize;
+
+        auto& player = reg.emplace<HotlineMiamiPlayer>(entity);
+        player.s_PlayerSpeed = 30.f;
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
         HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
@@ -127,16 +132,16 @@ void hotline_miami::SetupWorld()
         col.size.y = tileSize;
 
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 300;
-        transform.position.y = 300;
+        transform.position.x = -50;
+        transform.position.y = -50;
         transform.position.z = zPos;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
 
         auto& sprite = reg.emplace<Sprite>(entity);
         AssignSprite(sprite, "EmptyWhitePixel");
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
+
+        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
     }
 
     

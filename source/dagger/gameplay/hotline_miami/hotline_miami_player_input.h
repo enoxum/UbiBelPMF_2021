@@ -21,10 +21,6 @@ namespace hotline_miami
         : public System
     {
     public:
-
-        static Float32 s_PlayerSpeed;
-
-    public:
         inline String SystemName() { return "HotlineMiami Player Input System"; }
 
         void SpinUp() override;
