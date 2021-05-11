@@ -331,10 +331,15 @@ void EditorToolSystem::GUIDrawTransformEditor()
 
 void EditorToolSystem::GUIDrawAnimationEditor()
 {
+    static String animFilter;
+
+
     auto& reg = Engine::Registry();
 
     if (reg.has<Animator>(m_Selected.entity) && ImGui::CollapsingHeader("Animator"))
-    {
+    {   
+        ImGui::InputText("Filter", animFilter.data(), 80);
+
         Animator& compAnim = reg.get<Animator>(m_Selected.entity);
         /* Animation */ {
             static int selectedAnim = 0;
@@ -342,8 +347,10 @@ void EditorToolSystem::GUIDrawAnimationEditor()
             int i = 0;
             int currentSelected = 0;
             for (auto& [k, n] : Engine::Res<Animation>())
-            {
-                animations.push_back(k.c_str());
+            {   
+                if (strstr(k.data(), animFilter.data()) != nullptr)
+                    animations.push_back(k.c_str());
+
                 if (k == compAnim.currentAnimation)
                 {
                     selectedAnim = i;
@@ -352,7 +359,10 @@ void EditorToolSystem::GUIDrawAnimationEditor()
             }
 
             currentSelected = selectedAnim;
-            if (ImGui::Combo("Animation", &selectedAnim, animations.data(), animations.size()))
+            String title{};
+            title.reserve(100);
+            sprintf(title.data(), "Animation (%d)", animations.size());
+            if (ImGui::Combo(title.data(), &selectedAnim, animations.data(), animations.size()))
             {
                 if (currentSelected != selectedAnim)
                 {
