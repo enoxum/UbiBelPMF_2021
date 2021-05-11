@@ -75,6 +75,7 @@ struct Character {
   InputReceiver &input;
   PandemicCharacter &character;
   Transform &transform;
+  SimpleCollision &collision;
 
   static Character Get(Entity entity) {
     auto &reg = Engine::Registry();
@@ -83,10 +84,11 @@ struct Character {
     auto &input = reg.get_or_emplace<InputReceiver>(entity);
     auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
     auto &transform = reg.get_or_emplace<Transform>(entity);
+    auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
 
     
     //return Character{entity, sprite, anim, input};
-    return Character{entity, sprite, anim, input, character, transform};
+    return Character{entity, sprite, anim, input, character, transform, collision};
   }
 
   static Character Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
@@ -99,6 +101,8 @@ struct Character {
     auto chr = Character::Get(entity);
 
     chr.transform.position = {position_, 0.0f};
+
+    chr.collision.size = {32, 32};
 
     chr.sprite.scale = {2, 2};
     chr.sprite.position = {position_, 0.0f};
