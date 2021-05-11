@@ -25,6 +25,11 @@ namespace atonement {
 
         void Run() override;
 
+        /* entity and name are a combination of entity to which the cooldown 
+        applies and a name of a cooldown, if two cooldowns are registered 
+        with the same entity-name combo the older one will be overwritten
+        
+        * once a cooldown is registered, the timer starts immediately */
         void registerCooldown(Entity entity, std::string name, Float32 duration);
 
         Bool isOnCooldown(Entity entity, std::string name);

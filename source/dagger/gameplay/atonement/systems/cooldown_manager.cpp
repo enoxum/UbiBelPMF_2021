@@ -29,17 +29,16 @@ void CooldownManager::registerCooldown(Entity entity, std::string name, Float32 
 Bool CooldownManager::isOnCooldown(Entity entity, std::string name) {
     std::pair<Entity, std::string> key = std::make_pair(entity, name);
     auto res = lookup.find(key);
-    if (res == lookup.end()) {
-        // not found
+    if (res == lookup.end()) {  // not found, so never registered
         return false;
     }
-    else {
-        // found
+    else { // found
+
         auto& cd = res->second;
-        if (cd.time < cd.duration) {
+        if (cd.time < cd.duration) { // hasn't expired
             return true;
         }
-        else {
+        else { // expired
             return false;
         }
     }
