@@ -185,7 +185,7 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 void CharControllerFSM::Dashing::Enter(CharControllerFSM::StateComponent& state_)
 {
 	std::cout << "[DASH]" << std::endl;
-	auto& [character, animator] = Engine::Registry().get<AtonementController::AtonementCharacter, Animator>(state_.entity);
+	auto&& [character, animator] = Engine::Registry().get<AtonementController::AtonementCharacter, Animator>(state_.entity);
 	AnimatorPlayOnce(animator, "BlueWizard:DASH");
 
 	character.dashingAnimationEnded = false;
