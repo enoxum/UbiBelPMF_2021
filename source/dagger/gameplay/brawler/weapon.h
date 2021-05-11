@@ -26,72 +26,72 @@ namespace brawler {
 	public:
 		static Weapon Pistol(int numClips)
 		{
-			return Weapon(WeaponType::PISTOL, "Pistol", 2, 20, 3, 7, numClips, "pistol");
+			return Weapon(WeaponType::PISTOL, "Pistol", 2, 20, 3, 7, numClips, "pistol", {5.0, 2.0}, {0.8, 0.8});
 		}
 
 		static Weapon MachineGun(int numClips)
 		{
-			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 15, 4, 70, numClips, "machinegun");
+			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 15, 4, 70, numClips, "machinegun", {1.0, 1.0}, {0.8, 0.8});
 		}
 
 		static Weapon M4A1(int numClips)
 		{
-			return Weapon(WeaponType::M4A1, "M4A1", 8, 15, 4, 30, numClips, "m4a1"); 
+			return Weapon(WeaponType::M4A1, "M4A1", 8, 15, 4, 30, numClips, "m4a1", {5.0, 2.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon AK(int numClips)
 		{
-			return Weapon(WeaponType::AK, "AK", 8, 15, 4, 30, numClips, "ak"); 
+			return Weapon(WeaponType::AK, "AK", 8, 15, 4, 30, numClips, "ak", {5.0, 2.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon P90(int numClips)
 		{
-			return Weapon(WeaponType::P90, "P90", 6, 12, 2, 50, numClips, "p90"); 
+			return Weapon(WeaponType::P90, "P90", 6, 12, 2, 50, numClips, "p90", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon Sniper(int numClips)
 		{
-			return Weapon(WeaponType::SNIPER, "Sniper", 20, 20, 3, 5, numClips, "sniper"); 
+			return Weapon(WeaponType::SNIPER, "Sniper", 20, 20, 3, 5, numClips, "sniper", {1.0, 1.0}, {0.6, 0.7}); 
 		}
 
 		static Weapon Uzi(int numClips)
 		{
-			return Weapon(WeaponType::UZI, "Uzi", 6, 12, 3, 50, numClips, "uzi"); 
+			return Weapon(WeaponType::UZI, "Uzi", 6, 12, 3, 50, numClips, "uzi", {5.0, -2.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon Bazooka(int numClips)
 		{
-			return Weapon(WeaponType::BAZOOKA, "Bazooka", 50, 20, 5, 1, numClips, "bazooka"); 
+			return Weapon(WeaponType::BAZOOKA, "Bazooka", 50, 20, 5, 1, numClips, "bazooka", {-4.0, 1.0}, {0.7, 0.7}); 
 		}
 
 		static Weapon C4(int numClips)
 		{
-			return Weapon(WeaponType::C4, "C4", 50, 20, 5, 1, numClips, "c4"); 
+			return Weapon(WeaponType::C4, "C4", 50, 20, 5, 1, numClips, "c4", {1.0, 1.0}, {0.5, 0.7}); 
 		}
 
 		static Weapon Granade(int numClips)
 		{
-			return Weapon(WeaponType::GRANADE, "Granade", 25, 12, 3, 1, numClips, "granade"); 
+			return Weapon(WeaponType::GRANADE, "Granade", 25, 12, 3, 1, numClips, "granade", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon Flash(int numClips)
 		{
-			return Weapon(WeaponType::FLASH, "Flash", 0, 12, 3, 1, numClips, "flash"); 
+			return Weapon(WeaponType::FLASH, "Flash", 0, 12, 3, 1, numClips, "flash", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon Mine(int numClips)
 		{
-			return Weapon(WeaponType::MINE, "Mine", 50, 12, 3, 1, numClips, "mine"); 
+			return Weapon(WeaponType::MINE, "Mine", 50, 12, 3, 1, numClips, "mine", {1.0, 1.0}, {0.7, 0.8}); 
 		}
 
 		static Weapon Medkit(int numClips)
 		{
-			return Weapon(WeaponType::MEDKIT, "Medkit", 0, 12, 3, 1, numClips, "medkit"); 
+			return Weapon(WeaponType::MEDKIT, "Medkit", 0, 12, 3, 1, numClips, "medkit", {1.0, 1.0}, {0.5, 0.7}); 
 		}
 
 		static Weapon Banana(int numClips)
 		{
-			return Weapon(WeaponType::BANANA, "Banana", 0, 12, 3, 3, numClips, "banana"); 
+			return Weapon(WeaponType::BANANA, "Banana", 0, 12, 3, 3, numClips, "banana", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon CreateRandom() {
@@ -131,14 +131,17 @@ namespace brawler {
 		}
 
 	public:
-		Weapon(const WeaponType& weaponType,
+		Weapon(
+			const WeaponType& weaponType,
 			const String& name,
 			int damage,
 			int recoil,
 			int bulletSize,
 			int clipSize,
 			int numClips,
-			String sprite
+			String sprite,
+			Vector2 translate,
+			Vector2 scale
 				);
 		Weapon();
 
@@ -151,6 +154,8 @@ namespace brawler {
 		int		numClips() const;
 		int		currentAmmoInClip() const;
 		String  sprite() const;
+		Vector2 translate() const;
+		Vector2 scale() const;
 
 
 		bool	reload();
@@ -171,6 +176,8 @@ namespace brawler {
 		int		   m_numClips;
 		int		   m_currentAmmoInClip;
 		String     m_sprite;
+		Vector2    m_translate;
+		Vector2    m_scale;		
 
 	};
 }

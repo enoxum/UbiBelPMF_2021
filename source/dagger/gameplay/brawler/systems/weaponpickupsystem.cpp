@@ -67,7 +67,11 @@ void WeaponPickupSystem::Run()
                 if (playerWeapons.size() == 1) {
                     player.active_weapon_idx = 0;
                     auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
+                    int dir = weaponSprite.scale.x>=0.0f? 1 : -1;
                     weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
+                    weaponSprite.scale = pickedUpWeapon.scale();
+                    weaponSprite.position.x += pickedUpWeapon.translate().x * dir;
+                    weaponSprite.position.y += pickedUpWeapon.translate().y;
                     AssignSprite(weaponSprite, "brawler:" + pickedUpWeapon.sprite());
                 }
             }

@@ -54,15 +54,18 @@ void ShootingSystem::Run()
         auto& t = Engine::Registry().get<Transform>(player.currentWeapon);
         auto& s = Engine::Registry().get<Sprite>(player.currentWeapon);
 
-        s.scale.x = sprite.scale.x;
-
-        t.position.x = transform.position.x;
-        t.position.y = transform.position.y;
-        t.position.z = 0.0f;
-        
         if (player.active_weapon_idx == -1)
             return;
+
         auto& weapon = player.weapons[player.active_weapon_idx];
+
+        s.scale.x = sprite.scale.x;
+        int dir = sprite.scale.x>=0.0f? 1 : -1;
+
+        t.position.x = transform.position.x + weapon.translate().x * dir;
+        t.position.y = transform.position.y + weapon.translate().y;
+        t.position.z = 0.0f;
+        
         if (EPSILON_NOT_ZERO(input.Get("attack")))
         {
             if (!weapon.shoot())
@@ -94,6 +97,7 @@ void ShootingSystem::Run()
             Weapon wp = player.weapons[player.active_weapon_idx];
             auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
             weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
+            weaponSprite.scale = wp.scale();
             AssignSprite(weaponSprite, "brawler:" + wp.sprite());
             return;
         }

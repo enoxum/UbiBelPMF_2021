@@ -8,7 +8,9 @@ Weapon::Weapon(const WeaponType& weaponType,
 			   int bulletSize,
 			   int clipSize,
 			   int numClips,
-			   String sprite)
+			   String sprite,
+			   Vector2 translate,
+			   Vector2 scale)
 	: m_weaponType(weaponType),
 	  m_name(weaponName),
 	  m_damage(damage),
@@ -17,7 +19,9 @@ Weapon::Weapon(const WeaponType& weaponType,
 	  m_clipSize(clipSize),
 	  m_numClips(numClips),
 	  m_currentAmmoInClip(clipSize),
-	  m_sprite(sprite)
+	  m_sprite(sprite),
+	  m_translate(translate),
+	  m_scale(scale)
 {
 }
 
@@ -68,6 +72,16 @@ int Weapon::currentAmmoInClip() const
 String Weapon::sprite() const
 {
 	return m_sprite;
+}
+
+Vector2 Weapon::translate() const
+{
+	return m_translate;
+}
+
+Vector2 Weapon::scale() const
+{
+	return m_scale;
 }
 
 bool Weapon::reload()
