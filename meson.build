@@ -56,6 +56,8 @@ sources = [
     'source/dagger/gameplay/atonement/systems/groundedness_detection_system.cpp',
     'source/dagger/gameplay/atonement/systems/collision_handler_system.cpp',
     'source/dagger/gameplay/atonement/systems/character_collisions.cpp',
+    'source/dagger/gameplay/atonement/systems/cooldown_manager.cpp',
+    'source/dagger/gameplay/atonement/systems/atonement_pause_system.cpp',
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',
