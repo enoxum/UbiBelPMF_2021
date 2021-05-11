@@ -18,7 +18,7 @@ namespace atonement
 		{
 			Float32 speed{ 500 };
 			Float32 jumpSpeed{ 300 };
-			Float32 jumped{ 0 };
+			Float32 jumpedHeight{ 0 };
 			Float32 jumpHeight{ 100 };
 			Float32 dashSpeed{ 2000 };
 			Float32 fallSpeed{ 400 };
@@ -26,6 +26,7 @@ namespace atonement
 			Bool grounded{ true };
 			Bool fallingAnimationEnded{ false };
 			Bool dashingAnimationEnded{ false };
+			Bool dashJumped{ false };
 		};
 
 		class AtonementControllerSystem
