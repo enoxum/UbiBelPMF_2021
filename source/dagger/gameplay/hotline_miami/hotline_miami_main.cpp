@@ -1,4 +1,5 @@
 #include "hotline_miami_main.h"
+#include "hotline_miami_obstacle.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -45,6 +46,7 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     auto& engine = Engine::Instance();
 
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
+    engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
 }
 
@@ -93,9 +95,10 @@ void hotline_miami::SetupWorld()
         AssignSprite(sprite, "EmptyWhitePixel");
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
-        
+
     }
-    // sodlier
+    
+    // player
     {
         auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
@@ -114,6 +117,26 @@ void hotline_miami::SetupWorld()
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
         HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
+    }
+
+     // obstacle
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = tileSize;
+        col.size.y = tileSize;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 300;
+        transform.position.y = 300;
+        transform.position.z = zPos;
+
+        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "EmptyWhitePixel");
+        sprite.size.x = tileSize;
+        sprite.size.y = tileSize;
     }
 
     
