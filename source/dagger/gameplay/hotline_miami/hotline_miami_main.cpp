@@ -14,6 +14,7 @@
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
 
+#include "gameplay/hotline_miami/hotline_miami_player_input.h"
 #include "gameplay/common/simple_collisions.h"
 
 
@@ -43,6 +44,7 @@ void HotlineMiamiGame::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
 
+    engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
 }
 
@@ -109,6 +111,9 @@ void hotline_miami::SetupWorld()
         AssignSprite(sprite, "hotline_miami:IDLE:soldier_stand");
         sprite.size.x = tileSize * 5;
         sprite.size.y = tileSize * 5;
+
+        auto& controller = reg.emplace<ControllerMapping>(entity);
+        HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
     }
 
     
