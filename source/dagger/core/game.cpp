@@ -29,7 +29,7 @@ void dagger::Game::CoreSystemsSetup()
     engine.AddSystem<TransformSystem>();
 #if !defined(NDEBUG)
     engine.AddSystem<DiagnosticSystem>();
-    //engine.AddSystem<GUISystem>();
+    engine.AddSystem<GUISystem>();
     engine.AddSystem<ToolMenuSystem>();
     engine.AddSystem<ToolRenderSystem>();
 #endif //!defined(NDEBUG)

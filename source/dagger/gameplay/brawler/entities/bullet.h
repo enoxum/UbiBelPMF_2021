@@ -37,7 +37,7 @@ namespace brawler
         }
 
         static BulletEntity Create(
-            WeaponType weaponType,
+            WeaponType weaponType = WeaponType::BANANA,
             int size   = 3,
             int damage = 10,
             Vector2 position_ = { 0, 0 },

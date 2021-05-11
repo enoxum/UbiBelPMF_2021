@@ -50,6 +50,16 @@ void ShootingSystem::Run()
 
     view.each([](auto &sprite, auto &input, auto& player, auto& transform, auto& movable) {
         // TODO cooldown
+
+        auto& t = Engine::Registry().get<Transform>(player.currentWeapon);
+        auto& s = Engine::Registry().get<Sprite>(player.currentWeapon);
+
+        s.scale.x = sprite.scale.x;
+
+        t.position.x = transform.position.x;
+        t.position.y = transform.position.y;
+        t.position.z = 0.0f;
+        
         if (player.active_weapon_idx == -1)
             return;
         auto& weapon = player.weapons[player.active_weapon_idx];
@@ -83,7 +93,8 @@ void ShootingSystem::Run()
             player.active_weapon_idx = (player.active_weapon_idx + 1) % num_weapons;
             Weapon wp = player.weapons[player.active_weapon_idx];
             auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
-            //AssignSprite(weaponSprite, "brawler:" + wp.sprite());
+            weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
+            AssignSprite(weaponSprite, "brawler:" + wp.sprite());
             return;
         }
 
