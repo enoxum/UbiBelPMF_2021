@@ -95,11 +95,13 @@ void DebugGui::RenderDebugWindow()
 
     if (ImGui::CollapsingHeader("HUD"))
     {
-        ImGui::SliderFloat("Main weapon scale: ", &HUDSystem::s_mainWeaponScale, 0.0f, 10.0f);
-        ImGui::SliderFloat("Other weapons scale: ", &HUDSystem::s_otherWeaponsScale, 0.0f, 10.0f);
         ImGui::SliderFloat("Blip width: ", &HUDSystem::s_blipWidth, 0.0f, 10.0f);
-        ImGui::SliderFloat("Blip height: ", &HUDSystem::s_blipHeight, 0.0f, 50.0f);
-        ImGui::SliderFloat("Initial y offset: ", &HUDSystem::s_initialYOffset, -50.f, 0.0f);
+        ImGui::SliderFloat("Weapon width: ", &HUDSystem::s_weaponDim, 0, 100);
+        ImGui::SliderFloat("Active weapon indicator size: ", &HUDSystem::s_activeWeaponIndicatorSize, 0.0f, 100.0f);
+        ImGui::SliderFloat("Padding up: ", &HUDSystem::s_paddingUp, 0.0f, 50.0f);
+        ImGui::SliderFloat("Padding side: ", &HUDSystem::s_paddingSide, 0.0f, 50.0f);
+        ImGui::SliderInt("Player health: ", &HUDSystem::s_playerHealth, 0, 100);
+        
     }
      
     ImGui::End();

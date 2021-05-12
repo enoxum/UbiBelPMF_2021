@@ -13,11 +13,19 @@ namespace brawler {
     {
     public:
         static float s_mainWeaponScale;
-        static float s_otherWeaponsScale;
+        static float s_weaponDim;
         static float s_blipWidth;
         static float s_blipHeight;
 
-        static float s_initialYOffset;
+        static float s_activeWeaponIndicatorSize;
+        static float s_miscPadding;
+ 
+        static float s_paddingUp;
+        static float s_paddingSide;
+
+        // debug
+        static int   s_playerHealth;
+        
 
 
         static void CreateHealthBar(bool side);
@@ -37,6 +45,7 @@ namespace brawler {
         String SystemName() override {
             return "HUD System";
         }
+
 
         void Run() override;
 

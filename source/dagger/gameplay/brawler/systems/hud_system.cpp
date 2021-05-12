@@ -12,6 +12,7 @@
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/components/healthblip.h"
 #include "gameplay/brawler/components/weaponblip.h"
+#include "gameplay/brawler/components/weaponmarker.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/brawler_main.h"
 
@@ -19,13 +20,20 @@
 using namespace brawler;
 using namespace dagger;
 
-float HUDSystem::s_mainWeaponScale		= 1.0f;
-float HUDSystem::s_otherWeaponsScale	= 0.5f;
-float HUDSystem::s_blipWidth			= 1.0f;
-float HUDSystem::s_blipHeight			= 10.0f;
-float HUDSystem::s_initialYOffset		= -20.0f;
+float HUDSystem::s_mainWeaponScale				= 1.0f;
+float HUDSystem::s_weaponDim					= 20.0f;
+float HUDSystem::s_blipWidth					= 1.0f;
+float HUDSystem::s_blipHeight					= 10.0f;
+float HUDSystem::s_activeWeaponIndicatorSize	= 10.0f;
+float HUDSystem::s_miscPadding					= 10.0f;
 
-void brawler::HUDSystem::CreateHealthBar(bool side)
+float HUDSystem::s_paddingUp	 = 20;
+float HUDSystem::s_paddingSide	 = 20;
+
+int HUDSystem::s_playerHealth = 100;
+
+
+void HUDSystem::CreateHealthBar(bool side)
 {
 
 	for (int i = 0; i < 100; i++)
@@ -35,7 +43,6 @@ void brawler::HUDSystem::CreateHealthBar(bool side)
 		auto& transform			= Engine::Registry().emplace<Transform>(entity);
 		auto& healthBlip		= Engine::Registry().emplace<HealthBlip>(entity);
 
-		healthBlip.setRed();
 		healthBlip.idx = i;
 		healthBlip.side = side;
 		transform.position.z = 0;
@@ -66,8 +73,24 @@ void brawler::HUDSystem::CreateWeaponsRight()
 	HUDSystem::CreateWeapons(true);
 }
 
-void brawler::HUDSystem::CreateWeapons(bool side)
+void HUDSystem::CreateWeapons(bool side)
 {
+	auto leftMarker		= Engine::Registry().create();
+	auto rightMarker	= Engine::Registry().create();
+	auto& wml = Engine::Registry().emplace<WeaponMarker>(leftMarker);
+	auto& wmr = Engine::Registry().emplace<WeaponMarker>(rightMarker);
+	wml.side = false;
+	wmr.side = true;
+	Engine::Registry().emplace<Transform>(leftMarker);
+	auto& ls = Engine::Registry().emplace<Sprite>(leftMarker);
+	AssignSprite(ls, "brawler:marker");
+	Engine::Registry().emplace<Transform>(rightMarker);
+	auto& rs = Engine::Registry().emplace<Sprite>(rightMarker);
+	AssignSprite(rs, "brawler:marker");
+	
+	
+	ls.color = rs.color = { 1.0f, 1.0f, 1.0f, 0.0f };
+
 	for (int i = 0; i < 5; i++)
 	{
 		auto entity = Engine::Registry().create();
@@ -79,13 +102,12 @@ void brawler::HUDSystem::CreateWeapons(bool side)
 		weaponBlip.side = side;
 		transform.position.z = 0;
 
-
 		AssignSprite(sprite, "EmptyWhitePixel");
 		sprite.color = {1.0f, 1.0f, 1.0f, 0.0f};
 	}
 }
 
-void brawler::HUDSystem::CreateMainWeaponBlip(bool side)
+void HUDSystem::CreateMainWeaponBlip(bool side)
 {
 	auto entity = Engine::Registry().create();
 	auto& s = Engine::Registry().emplace<Sprite>(entity);
@@ -100,12 +122,12 @@ void brawler::HUDSystem::CreateMainWeaponBlip(bool side)
 	}
 }
 
-void brawler::HUDSystem::CreateLeftMainWeaponBlip()
+void HUDSystem::CreateLeftMainWeaponBlip()
 {
 	HUDSystem::CreateMainWeaponBlip(false);
 }
 
-void brawler::HUDSystem::CreateRightMainWeaponBlip()
+void HUDSystem::CreateRightMainWeaponBlip()
 {
 	HUDSystem::CreateMainWeaponBlip(true);
 }
@@ -120,10 +142,27 @@ void HUDSystem::Run()
 	auto playerLeft = Engine::Registry().get<Player>(Brawler::leftPlayer);
 	auto playerRight = Engine::Registry().get<Player>(Brawler::leftPlayer);
 
-	float offsetY = BulletSystem::s_CameraBoundUp + HUDSystem::s_initialYOffset;
+	playerLeft.health = HUDSystem::s_playerHealth;
 
+	if (playerLeft.active_weapon_idx == -1) {
+		Engine::Registry().view<WeaponMarker, Sprite, Transform>().each([&](WeaponMarker& wpMarker, Sprite& wpMarkerSprite, Transform& wpMarkerTransform) {
+			if (wpMarker.side)
+				return;
+			wpMarkerSprite.color = { 1.0f, 1.0f, 1.0f, 0.0f };
+		});
+	}
+
+	if (playerRight.active_weapon_idx == -1) {
+		Engine::Registry().view<WeaponMarker, Sprite, Transform>().each([&](WeaponMarker& wpMarker, Sprite& wpMarkerSprite, Transform& wpMarkerTransform) {
+			if (!wpMarker.side)
+				return;
+			wpMarkerSprite.color = { 1.0f, 1.0f, 1.0f, 0.0f };
+		});
+	}
+
+
+	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp;
 	
-
 	for (auto obj : healthBlips)
 	{
 		auto& t = healthBlips.get<Transform>(obj);
@@ -135,30 +174,36 @@ void HUDSystem::Run()
 		float offsetX = 0;
 		Player player;
 		if (!h.side) {
-			// 0 - cameraboundleft whenever i find out how to get it
-			offsetX = BulletSystem::s_CameraBoundLeft + HUDSystem::s_blipWidth * h.idx;
+			offsetX = BulletSystem::s_CameraBoundLeft +  HUDSystem::s_blipWidth * h.idx;
+			if (h.idx == 0) {
+				offsetX += HUDSystem::s_paddingSide;
+			}
 			player = playerLeft;
 		}
 		else {
-			offsetX = BulletSystem::s_CameraBoundRight - HUDSystem::s_blipWidth * (100 - h.idx);
+			offsetX = BulletSystem::s_CameraBoundRight - HUDSystem::s_blipWidth * (99 - h.idx);
 			player = playerRight;
+			if (h.idx == 99) {
+				offsetX -= HUDSystem::s_paddingSide;
+			}
 		}
 
-		if (h.idx <= player.health) {
-			h.setRed();
+		if ((!h.side && h.idx <= player.health)
+			|| (h.side && (99 - h.idx <= player.health))) {
+			s.color = { 1.0f, 0.0f, 0.0f, 1.0f };
 		}
 		else {
-			h.setWhite();
+			s.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		}
 
-		s.color = { h.color.x, h.color.y, h.color.z, 1.0f };
+
 
 		t.position.x = offsetX;
 		t.position.y = offsetY;
 		s.position = t.position;
 	}
 
-	offsetY -= HUDSystem::s_blipHeight;
+	offsetY -= HUDSystem::s_blipHeight + HUDSystem::s_paddingUp;
 	float totalHudWidth = 100 * HUDSystem::s_blipWidth;
 	float sideWeaponWidth = totalHudWidth / 5;
 
@@ -171,37 +216,71 @@ void HUDSystem::Run()
 		auto& s = weaponBlips.get<Sprite>(obj);
 		auto& w = weaponBlips.get<WeaponBlip>(obj);
 
-		
-		s.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		s.scale = { 1, 1 };
-		s.size = { sideWeaponWidth, HUDSystem::s_otherWeaponsScale };
-		
-		float offsetX = 0;
 		Player player;
+		float y = 0;
 		if (!w.side)
 		{
 			player = playerLeft;
-			offsetX = BulletSystem::s_CameraBoundLeft + sideWeaponWidth * w.idx;
+			y = offsetY - HUDSystem::s_weaponDim * w.idx;
 		}
 		else {
 			player = playerRight;
-			offsetX = BulletSystem::s_CameraBoundRight - sideWeaponWidth * (5 - w.idx);
+			//todo: y
+
 		}
 
+
+
 		if (w.idx >= player.weapons.size()) {
+			AssignSprite(s, "EmptyWhitePixel");
 			s.color = { 1.0f, 1.0f, 1.0f, 0.0f };
 			continue;
 		}
+		if (!w.side) {
+			t.position.x = BulletSystem::s_CameraBoundLeft + HUDSystem::s_paddingSide;
+		}
+		else {
+			t.position.x = BulletSystem::s_CameraBoundRight - HUDSystem::s_paddingSide;
+		}
+		
 
-		t.position.x = offsetX;
-		t.position.y = offsetY;
+		if (player.active_weapon_idx == w.idx)
+		{
+			
+			Engine::Registry().view<WeaponMarker, Sprite, Transform>().each([&](WeaponMarker& wpMarker, Sprite& wpMarkerSprite, Transform& wpMarkerTransform) {
+				if (wpMarker.side != w.side)
+					return;
+				wpMarkerSprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+				wpMarkerSprite.position = wpMarkerTransform.position = t.position;
+				wpMarkerSprite.scale = { (HUDSystem::s_activeWeaponIndicatorSize) / wpMarkerSprite.size.x , (HUDSystem::s_activeWeaponIndicatorSize) / wpMarkerSprite.size.y };
+			});
+			if (!w.side) {
+				t.position.x += HUDSystem::s_activeWeaponIndicatorSize + HUDSystem::s_paddingSide;
+			}
+			else {
+				t.position.x -= HUDSystem::s_activeWeaponIndicatorSize + HUDSystem::s_paddingSide;
+			}
+			
+		}
 
+		t.position.y = y;
 		AssignSprite(s, "brawler:" + player.weapons[w.idx].sprite());
+		s.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		s.position = t.position;
+		s.scale = { HUDSystem::s_weaponDim/s.size.x, HUDSystem::s_weaponDim/s.size.y };
 
 		
 
+	
+		
+		
+
+
 
 	}
+
+
+	
 
 
 

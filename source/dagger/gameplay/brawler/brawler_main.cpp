@@ -126,7 +126,7 @@ void Brawler::WorldSetup()
 
     HUDSystem::CreateHealthBarLeft();
     //HUDSystem::CreateHealthBarRight();
-    HUDSystem::CreateLeftMainWeaponBlip();
+    //HUDSystem::CreateLeftMainWeaponBlip();
     //HUDSystem::CreateRightMainWeaponBlip();
     HUDSystem::CreateWeaponsLeft();
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
