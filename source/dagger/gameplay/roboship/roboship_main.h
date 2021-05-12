@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "core/game.h"
+#include "core/engine.h"
 
 using namespace dagger;
 

@@ -1,6 +1,7 @@
 #include "gameplay/roboship/roboship_main.h"
 #include "gameplay/roboship/roboship_controller.h"
 #include "gameplay/roboship/roboship_camera_focus.h"
+#include "gameplay/roboship/roboship_createbackdrop.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -18,6 +19,8 @@
 #include "core/graphics/text.h"
 
 #include "tools/diagnostics.h"
+
+const int TERRAIN_HEIGHT = 30;
 
 using namespace dagger;
 using namespace roboship;
@@ -62,7 +65,7 @@ struct RCharacter
 
         auto chr = RCharacter::Get(entity);
 
-        chr.sprite.scale = { 0.1f, 0.1f };
+        chr.sprite.scale = { 0.2f, 0.2f };
         chr.sprite.position = { position_, 0.0f };
         //chr.sprite.color = { color_, 1.0f };
 
@@ -72,7 +75,7 @@ struct RCharacter
         if (input_ != "")
             chr.input.contexts.push_back(input_);
 
-        chr.character.speed = 50;
+        chr.character.speed = 300;
 
         return chr;
     }
@@ -83,58 +86,60 @@ void RoboshipSetCamera()
     auto* camera = Engine::GetDefaultResource<Camera>();
     camera->mode = ECameraMode::FixedResolution;
     camera->size = { 800, 600 };
-    camera->zoom = 2;
+    camera->zoom = 1;
     camera->position = { 0, 0, 0 };
     camera->Update();
 }
 
-void RoboshipCreateBackdrop()
-{
-    auto& reg = Engine::Registry();
-    auto* camera = Engine::GetDefaultResource<Camera>();
-
-    // Create terrain 
-    {
-        auto back = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(back);
-
-        AssignSprite(sprite, "EmptyWhitePixel");
-        sprite.color = { 0, 0, 0, 1 };
-        sprite.size = { 200, 30 };
-        sprite.scale = { 10, 1 };
-        sprite.position = { 0, -135, 1 };
-    }
-    
-
-    /* Put background image */ {
-        auto entity = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(entity);
-
-        AssignSprite(sprite, "robot:BACKGROUND:background1");
-        sprite.scale.x = 0.25f;
-        sprite.scale.y = 0.25f;
-        sprite.position.x = -20;
-        sprite.position.y = 5;
-        sprite.position.z = 10;
-    }
-
-    /*
-    {
-        auto ui = reg.create();
-        auto& text = reg.emplace<Text>(ui);
-        text.spacing = 0.6f;
-        text.Set("pixel-font", "Roboship game");
-    }
-    */
-}
+//void RoboshipCreateBackdrop()
+//{
+//    auto& reg = Engine::Registry();
+//    auto* camera = Engine::GetDefaultResource<Camera>();
+//
+//    // Create terrain 
+//    {
+//        auto back = reg.create();
+//        auto& sprite = reg.get_or_emplace<Sprite>(back);
+//
+//        AssignSprite(sprite, "EmptyWhitePixel");
+//        sprite.color = { 0, 0, 0, 1 };
+//        sprite.size = { 200, TERRAIN_HEIGHT };
+//        sprite.scale = { 10, 1 };
+//        sprite.position = { 0, -(camera->size.y - TERRAIN_HEIGHT) / 2, 1 };
+//    }
+//    
+//
+//    /* Put background image */
+//    {
+//        auto entity = reg.create();
+//        auto& sprite = reg.get_or_emplace<Sprite>(entity);
+//
+//        AssignSprite(sprite, "robot:BACKGROUND:background2_infinite");
+//        
+//        /*sprite.scale.x = 0.5f;
+//        sprite.scale.y = 0.5f;*/
+//        sprite.position.x = 0;
+//        sprite.position.y = 5;
+//        sprite.position.z = 10;
+//    }
+//
+//    /*
+//    {
+//        auto ui = reg.create();
+//        auto& text = reg.emplace<Text>(ui);
+//        text.spacing = 0.6f;
+//        text.Set("pixel-font", "Roboship game");
+//    }
+//    */
+//}
 
 
 void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
-    RoboshipCreateBackdrop();
+    RBackdrop::RoboshipCreateBackdrop(0,0);
 
-    auto sndChar = RCharacter::Create("Arrows", { 1, 0, 0 }, { -120, -95 });
+    auto sndChar = RCharacter::Create("Arrows", { 1, 0, 0 }, {0, -223 });
     Engine::Registry().emplace<RCameraFollowFocus>(sndChar.entity);
 }
 
