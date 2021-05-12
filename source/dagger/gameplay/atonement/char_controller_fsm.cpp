@@ -155,6 +155,8 @@ DEFAULT_EXIT(CharControllerFSM, JumpWinddown);
 
 void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& state_)
 {
+	static Float32 fallenInLastFrame = 0;
+
 	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
@@ -173,9 +175,12 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 	}
 
 	if (!character.grounded) {
-		transform.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		fallenInLastFrame = character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		transform.position.y -= fallenInLastFrame;
 	}
 	else if (character.fallingAnimationEnded) {
+		transform.position.y += fallenInLastFrame;
+		fallenInLastFrame = 0;
 		GoTo(ECharStates::Idle, state_);
 	}
 }
