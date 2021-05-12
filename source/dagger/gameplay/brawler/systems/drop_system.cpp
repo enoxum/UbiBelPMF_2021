@@ -22,9 +22,18 @@ void DropSystem::Run()
         if (EPSILON_NOT_ZERO(input.Get("drop_weapon")))
         {   
             if(player.pickedUpWeapons > 0){
+                
+                int x = -1;
+
+                if(player.active_weapon_idx == player.pickedUpWeapons-1){
+                    x = player.active_weapon_idx - 1; 
+                }
 
                 for(int i = player.active_weapon_idx; i < player.pickedUpWeapons-1; i++){
                     player.weapons[i] = player.weapons[i+1];
+                }
+                if(x != -1){
+                    player.active_weapon_idx = x;
                 }
                 player.pickedUpWeapons--;
                 player.weapons.pop_back();
