@@ -11,6 +11,7 @@
 #include "gameplay/brawler/entities/weaponpickup.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/components/player.h"
+#include "gameplay/brawler/systems/shooting_system.h"
 
 #include <iostream>
 
@@ -66,13 +67,12 @@ void WeaponPickupSystem::Run()
                 playerWeapons.push_back(pickedUpWeapon);
                 if (playerWeapons.size() == 1) {
                     player.active_weapon_idx = 0;
+                    
                     auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
                     int dir = weaponSprite.scale.x>=0.0f? 1 : -1;
-                    weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
-                    weaponSprite.scale = pickedUpWeapon.scale();
                     weaponSprite.position.x += pickedUpWeapon.translate().x * dir;
                     weaponSprite.position.y += pickedUpWeapon.translate().y;
-                    AssignSprite(weaponSprite, "brawler:" + pickedUpWeapon.sprite());
+                    ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
                 }
             }
             else {

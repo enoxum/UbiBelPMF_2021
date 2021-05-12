@@ -43,6 +43,13 @@ Bool ShootingSystem::isProjectile(WeaponType wp)
     }
 }
 
+void ShootingSystem::editSprite(Entity& currWp, Weapon& wp, double alpha){
+    auto& weaponSprite = Engine::Registry().get<Sprite>(currWp);
+    weaponSprite.color = {1.0f, 1.0f, 1.0f, alpha};
+    weaponSprite.scale = wp.scale();
+    AssignSprite(weaponSprite, "brawler:" + wp.sprite());
+}
+
 void ShootingSystem::Run()
 {
 
@@ -90,10 +97,7 @@ void ShootingSystem::Run()
 
             if(weapon.currentAmmoInClip() == 0){
                 if(isProjectile(weapon.weaponType())){
-                    auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
-                    weaponSprite.color = {1.0f, 1.0f, 1.0f, 0.0f};
-                    weaponSprite.scale = weapon.scale();
-                    AssignSprite(weaponSprite, "brawler:" + weapon.sprite());
+                    editSprite(player.currentWeapon, weapon, 0.0f);
                 }
             }
 
@@ -102,10 +106,7 @@ void ShootingSystem::Run()
 
         if (EPSILON_NOT_ZERO(input.Get("reload")))
         {   
-            auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
-            weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
-            weaponSprite.scale = weapon.scale();
-            AssignSprite(weaponSprite, "brawler:" + weapon.sprite());
+            editSprite(player.currentWeapon, weapon, 1.0f);
             weapon.reload();
             return;
         }
@@ -118,10 +119,7 @@ void ShootingSystem::Run()
 
             player.active_weapon_idx = (player.active_weapon_idx + 1) % num_weapons;
             Weapon wp = player.weapons[player.active_weapon_idx];
-            auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
-            weaponSprite.color = {1.0f, 1.0f, 1.0f, 1.0f};
-            weaponSprite.scale = wp.scale();
-            AssignSprite(weaponSprite, "brawler:" + wp.sprite());
+            editSprite(player.currentWeapon, wp, 1.0f);
             return;
         }
 

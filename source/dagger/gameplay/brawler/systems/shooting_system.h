@@ -20,6 +20,7 @@ public:
     void Run() override;
 
     static Bool isProjectile(WeaponType wp);
+    static void editSprite(Entity& wpSprite, Weapon& wp, double alpha);
 };
 
 }
