@@ -2,8 +2,8 @@
 
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
+#include "gameplay/brawler/components/weapon_spawner.h"
 #include "gameplay/brawler/systems/level_system.h"
-#include "core/graphics/sprite.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -29,18 +29,26 @@ void Level::Load(String map)
 		for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
 			if(level->tilemap[y][x] == -1) {
 				tiles[y].push_back(PlatformType::EMPTY);
+				// TODO load from map
+				if(x==8 && y==1) {
+					auto t2 = reg.create();
+					auto& spawner = reg.get_or_emplace<WeaponSpawner>(t2);
+					spawner.position = TileToWorld(x, y);
+				}
 				continue;
 			}
 			tiles[y].push_back(level->tileset[level->tilemap[y][x]].type);
 			if(getTile(x, y) == PlatformType::BLOCK || getTile(x, y) == PlatformType::ONEWAY) {
 				auto tile = reg.create();
-				auto& sprite = reg.get_or_emplace<Sprite>(tile);
+				auto& sprite = reg.emplace<Sprite>(tile);
 				auto texture = level->tileset[level->tilemap[y][x]].texture;
 				AssignSprite(sprite, texture.name);
 				sprite.color = { 1, 1, 1, 1 };
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
 				sprite.scale = { texture.scale, texture.scale };
 				sprite.position = { TileToWorld(x, y), 1 };
+			} else {
+				// TODO if EMPTY or spawner
 			}
 		}
 	}
