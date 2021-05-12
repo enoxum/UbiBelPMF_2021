@@ -1,5 +1,4 @@
 #include "shooting_system.h"
-#include "iostream"
 #include "core/engine.h"
 #include "core/input/inputs.h"
 #include "core/game/transforms.h"
@@ -20,14 +19,10 @@ Bool ShootingSystem::isConsumable(WeaponType wp)
     switch (wp)
     {
     case WeaponType::BANANA:
-        return true;
-        break;
     case WeaponType::MEDKIT:
         return true;
-        break;
     default:
         return false;
-        break;
     }
 }
 
@@ -36,20 +31,12 @@ Bool ShootingSystem::isProjectile(WeaponType wp)
     switch (wp)
     {
     case WeaponType::C4:
-        return true;
-        break;
     case WeaponType::GRANADE:
-        return true;
-        break;
     case WeaponType::FLASH:
-        return true;
-        break;
     case WeaponType::MINE:
         return true;
-        break;
     default:
         return false;
-        break;
     }
 }
 

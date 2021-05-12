@@ -113,18 +113,10 @@ void Brawler::WorldSetup()
     SetCamera();
     // CreateBackdrop();
 
-    BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
+    auto player = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
 
     // auto player2 = BrawlerCharacter::Create("Arrows", { 1, 0, 0 }, { 100, 0 });
     //Engine::Registry().emplace<CameraFollowFocus>(player2.entity);
-
-    // auto nzm = Engine::Registry().create();
-    // Engine::Registry().get_or_emplace<Transform>(nzm);
-    // auto& x = Engine::Registry().get_or_emplace<Sprite>(nzm);
-    // x.scale = { 1, 1 };
-    // x.position = { 0.0f, 0.0f, 0.0f };
-    // x.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-    // AssignSprite(x, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
 
 }
