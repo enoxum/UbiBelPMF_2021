@@ -8,6 +8,8 @@
 #include "core/graphics/animation.h"
 #include "core/game/transforms.h"
 
+#include "gameplay/atonement/components/marker_components.h"
+
 template<typename T>
 static JSON::json SerializeComponent(T& input_)
 {
@@ -64,6 +66,33 @@ template<>
     fill_.z = input_["z"];
     fill_.w = input_["w"];
 }
+
+ /*
+ //serialize bool
+
+ JSON::json SerializeComponent(bool& input_)
+ {
+     return JSON::json{ {"value", input_} };
+ }
+
+ void DeserializeComponent(JSON::json input_, bool& fill_)
+ {
+     fill_ = input_["value"];
+ }
+
+ //serialize int
+
+ JSON::json SerializeComponent(int& input_)
+ {
+     return JSON::json{ {"value", input_} };
+ }
+
+ void DeserializeComponent(JSON::json input_, int& fill_)
+ {
+     fill_ = input_["value"];
+ }
+ */
+
 
 // Serialize sprites
 
@@ -133,6 +162,9 @@ template<>
     AnimatorPlay(fill_, input_["name"]);
 }
 
+
+ //Serialize Simple Collisions
+
 template<>
  JSON::json SerializeComponent(SimpleCollision& collision_)
 {
@@ -148,3 +180,51 @@ template<>
     DeserializeComponent(input_["size"], fill_.size);
     DeserializeComponent(input_["pivot"], fill_.pivot);
 }
+
+ //Serialize Bouncy Marker Component
+
+ template<>
+ JSON::json SerializeComponent(BouncyComponent& input_)
+ {
+     JSON::json save{};
+     save["isBouncy"] = SerializeComponent(input_.isBouncy);
+     return save;
+ }
+
+ template<>
+ void DeserializeComponent(JSON::json input_, BouncyComponent& fill_)
+ {
+     DeserializeComponent(input_["isBouncy"], fill_.isBouncy);
+ }
+
+ //Serialize Deadly Marker Component
+
+ template<>
+ JSON::json SerializeComponent(DeadlyComponent& input_)
+ {
+     JSON::json save{};
+     save["isDeadly"] = SerializeComponent(input_.isDeadly);
+     return save;
+ }
+
+ template<>
+ void DeserializeComponent(JSON::json input_, DeadlyComponent& fill_)
+ {
+     DeserializeComponent(input_["isDeadly"], fill_.isDeadly);
+ }
+
+ //Serialize Interactable Component
+
+ template<>
+ JSON::json SerializeComponent(InteractableComponent& input_)
+ {
+     JSON::json save{};
+     save["id"] = SerializeComponent(input_.id);
+     return save;
+ }
+
+ template<>
+ void DeserializeComponent(JSON::json input_, InteractableComponent& fill_)
+ {
+     DeserializeComponent(input_["id"], fill_.id);
+ }

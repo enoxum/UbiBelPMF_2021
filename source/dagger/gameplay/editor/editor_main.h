@@ -63,6 +63,9 @@ namespace editor
         void GUIDrawTransformEditor();
         void GUIDrawAnimationEditor();
         void GUIDrawPhysicsEditor();
+        void GUIDrawBouncyEditor();
+        void GUIDrawDeadlyEditor();
+        void GUIDrawInteractableEditor();
         bool GUIDrawEntityFocusSelection(int& selectedItem);
 
     };
