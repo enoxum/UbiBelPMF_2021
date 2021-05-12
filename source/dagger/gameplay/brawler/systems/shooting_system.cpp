@@ -15,6 +15,22 @@
 using namespace brawler;
 using namespace dagger;
 
+Bool ShootingSystem::isConsumable(WeaponType wp)
+{
+    switch (wp)
+    {
+    case WeaponType::BANANA:
+        return true;
+        break;
+    case WeaponType::MEDKIT:
+        return true;
+        break;
+    default:
+        return false;
+        break;
+    }
+}
+
 Bool ShootingSystem::isProjectile(WeaponType wp)
 {
     switch (wp)
@@ -29,12 +45,6 @@ Bool ShootingSystem::isProjectile(WeaponType wp)
         return true;
         break;
     case WeaponType::MINE:
-        return true;
-        break;
-    case WeaponType::MEDKIT:
-        return true;
-        break;
-    case WeaponType::BANANA:
         return true;
         break;
     default:
@@ -82,21 +92,23 @@ void ShootingSystem::Run()
                 return;
             }
 
-            movable.speed.x -= sprite.scale.x * weapon.recoil();
-
-            if(!isProjectile(weapon.weaponType())){
+            if(isProjectile(weapon.weaponType())){
+                movable.speed.x -= sprite.scale.x * weapon.recoil();
+                Vector3 pos = {transform.position.x + trans_x, transform.position.y + trans_y, transform.position.z};
+                ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
+            }else if(isConsumable(weapon.weaponType())){
+        
+            }else{
+                movable.speed.x -= sprite.scale.x * weapon.recoil();
                 if(trans_y < 0){
                     trans_y *= -1;
                 }
                 Vector3 pos = {transform.position.x, transform.position.y + trans_y, transform.position.z};
-                BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
-            }else{
-                Vector3 pos = {transform.position.x + trans_x, transform.position.y + trans_y, transform.position.z};
-                ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
+                BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);        
             }
 
             if(weapon.currentAmmoInClip() == 0){
-                if(isProjectile(weapon.weaponType())){
+                if(isProjectile(weapon.weaponType()) || isConsumable(weapon.weaponType())){
                     editSprite(player.currentWeapon, weapon, 0.0f);
                 }
             }

@@ -80,9 +80,10 @@ namespace brawler
                     AssignSprite(bullet.sprite, "brawler:bullet");
                     bullet.sprite.scale = { 0.05, 0.05 };
             }
-
-            bullet.bullet.direction = (direction_ >= 0 ? 1 : -1);
+            int dir = direction_ >= 0 ? 1 : -1;
+            bullet.bullet.direction = dir;
             bullet.bullet.damage = damage;
+            bullet.sprite.scale.x *= dir;
 
             BulletSystem::s_ActiveBullets++;
 

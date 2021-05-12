@@ -73,14 +73,8 @@ namespace brawler
                 case WeaponType::MINE:
                     AssignSprite(projectile.sprite, "brawler:mine");
                     break;
-                case WeaponType::BANANA:
-                    AssignSprite(projectile.sprite, "brawler:banana");
-                    break;
                 case WeaponType::C4:
                     AssignSprite(projectile.sprite, "brawler:c4");
-                    break;
-                case WeaponType::MEDKIT:
-                    AssignSprite(projectile.sprite, "brawler:medkit");
                     break;
                 default:
                     AssignSprite(projectile.sprite, "brawler:bullet");
