@@ -113,7 +113,7 @@ void hotline_miami::SetupWorld()
         transform.position.z = zPos;
 
         auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Player:player_bazuka");
+        AssignSprite(sprite, "hotline_miami:Player:player_bazuka_down");
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
 

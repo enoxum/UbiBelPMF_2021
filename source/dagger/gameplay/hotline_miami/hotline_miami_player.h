@@ -13,12 +13,20 @@ namespace hotline_miami
         Float32 s_PlayerSpeed;
     };
 
-
     class HotlineMiamiPlayerObstacleCollisionSystem
         : public System
     {
     public:
         inline String SystemName() { return "HotlineMiami Player Obstacle Collision System"; }
+
+        void Run() override;
+    };
+
+    class HotlineMiamiPlayerShootingSystem
+        : public System
+    {
+    public:
+        inline String SystemName() { return "HotlineMiami Player Shooting System"; }
 
         void Run() override;
     };
