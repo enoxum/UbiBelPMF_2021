@@ -18,15 +18,15 @@ void CharacterCollisionsSystem::Run()
         auto& charTransform = view.get<Transform>(character);
 
         //resetujemo sve kolizije koje su postojale u proslom frejmu
-        charCollision.colidedLeft = false;
-        charCollision.colidedRight = false;
-        charCollision.colidedUp = false;
-        charCollision.colidedDown = false;
+        charCollision.collidedLeft = false;
+        charCollision.collidedRight = false;
+        charCollision.collidedUp = false;
+        charCollision.collidedDown = false;
 
-        charCollision.colidedWithLeft = entt::null;
-        charCollision.colidedWithRight = entt::null;
-        charCollision.colidedWithUp = entt::null;
-        charCollision.colidedWithDown = entt::null;
+        charCollision.collidedWithLeft = entt::null;
+        charCollision.collidedWithRight = entt::null;
+        charCollision.collidedWithUp = entt::null;
+        charCollision.collidedWithDown = entt::null;
 
         //svi ostali entiteti sa kolizijom
         auto simpleView = Engine::Registry().view<SimpleCollision, Transform>();
@@ -39,20 +39,20 @@ void CharacterCollisionsSystem::Run()
             
             switch (collisionDetection) {
                 case CollisionSide::Left: 
-                    charCollision.colidedLeft = true;
-                    charCollision.colidedWithLeft = entity;
+                    charCollision.collidedLeft = true;
+                    charCollision.collidedWithLeft = entity;
                     break;
                 case CollisionSide::Right:
-                    charCollision.colidedRight = true;
-                    charCollision.colidedWithRight = entity;
+                    charCollision.collidedRight = true;
+                    charCollision.collidedWithRight = entity;
                     break;
                 case CollisionSide::Up:
-                    charCollision.colidedUp = true;
-                    charCollision.colidedWithUp = entity;
+                    charCollision.collidedUp = true;
+                    charCollision.collidedWithUp = entity;
                     break;
                 case CollisionSide::Down:
-                    charCollision.colidedDown = true;
-                    charCollision.colidedWithDown = entity;
+                    charCollision.collidedDown = true;
+                    charCollision.collidedWithDown = entity;
                     break;
                 default: break;
             }
