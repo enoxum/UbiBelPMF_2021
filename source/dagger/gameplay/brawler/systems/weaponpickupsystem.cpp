@@ -1,5 +1,7 @@
 #include "weaponpickupsystem.h"
 
+#include "iostream"
+
 #include "core/engine.h"
 #include "core/input/inputs.h"
 #include "core/game/transforms.h"
@@ -31,7 +33,7 @@ void WeaponPickupSystem::Run()
             auto rand_x = static_cast<float>((rand() % (175 + 1 + 175)));
             WeaponPickupEntity::Create(Vector2{ rand_x, 60.0f}, static_cast<WeaponType>(rand() % 3));
         }
-        });
+    });
 
     auto wpColView = Engine::Registry().view<WeaponPickup, Transform, SimpleCollision>();
     auto playerColView = Engine::Registry().view<Player, Transform, SimpleCollision>();
@@ -51,9 +53,13 @@ void WeaponPickupSystem::Run()
             const auto& playerCol = playerColView.get<SimpleCollision>(playerColEntity);
             if (!playerCol.colided || playerCol.colidedWith != wpColEntity)
                 continue;
+
             auto& player = playerColView.get<Player>(playerColEntity);
             auto& playerWeapons = player.weapons;
             auto& pickedUpWeapon = wpData.weaponPickup.weapon;
+
+            if (player.pickedUpWeapons == player.maxWeapons)
+                continue;
 
             auto existingWeaponIt 
                 = std::find_if(std::begin(playerWeapons),
@@ -63,6 +69,7 @@ void WeaponPickupSystem::Run()
                               });
             if (existingWeaponIt == std::end(playerWeapons)) {
                 playerWeapons.push_back(pickedUpWeapon);
+                player.pickedUpWeapons++;
                 if (playerWeapons.size() == 1) {
                     player.active_weapon_idx = 0;
                     

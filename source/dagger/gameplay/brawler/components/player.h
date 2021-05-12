@@ -15,9 +15,11 @@ namespace brawler
 {
 	struct Player
 	{
-		Vector2 startPosition{ 0.0f, 0.0f };
-		int startDirection{ 1 };
-		
+
+		int 					maxWeapons = 5;
+		int 					pickedUpWeapons = 0;
+		Vector2 				startPosition{ 0.0f, 0.0f };
+		int 					startDirection{ 1 };
 		std::vector<Weapon>		weapons;
 		int						active_weapon_idx{ -1 };
 		Entity 					currentWeapon;
