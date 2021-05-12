@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "deque": "cpp",
+        "iterator": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "queue": "cpp",
+        "set": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp",
+        "istream": "cpp",
+        "memory": "cpp",
+        "type_traits": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "utility": "cpp"
+    }
+}

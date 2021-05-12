@@ -1,5 +1,4 @@
 #pragma once
-
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/game/finite_state_machine.h"
@@ -12,6 +11,7 @@
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/entities/character_fsm.h"
+#include "gameplay/brawler/entities/bullet.h"
 
 using namespace dagger;
 
@@ -59,10 +59,12 @@ namespace brawler
             chr.sprite.position = { 0.0f, 0.0f, 0.0f };
             chr.sprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+            chr.col.size = chr.sprite.size;
+
             AssignSprite(chr.sprite, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
             AnimatorPlay(chr.animator, "Gunner_Green:IDLE");
 
-            chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 0.0f };
+            chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 1.0f };
 
             if (input_ != "")
                 chr.input.contexts.push_back(input_);
@@ -72,8 +74,15 @@ namespace brawler
             chr.character.startPosition = position_;
             chr.character.startDirection = isLeft_ ? -1 : 1;
 
+            chr.character.currentWeapon = Engine::Registry().create();
+            reg.get_or_emplace<Transform>(chr.character.currentWeapon);
+            auto& x = reg.get_or_emplace<Sprite>(chr.character.currentWeapon);
+            x.scale = { 1, 1 };
+            x.position = { 0.0f, 0.0f, 0.0f };
+            x.color = { 0.0f, 0.0f, 0.0f, 0.0f };
+            AssignSprite(x, "EmptyWhitePixel");
+
             return chr;
         }
     };
-
 }

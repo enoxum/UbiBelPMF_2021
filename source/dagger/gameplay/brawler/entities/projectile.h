@@ -1,5 +1,4 @@
 #pragma once
-#include "iostream"
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/game/transforms.h"
@@ -17,27 +16,31 @@ using namespace dagger;
 namespace brawler
 {
 
-    struct BulletEntity
+    struct ProjectileEntity
     {
         Entity entity;
         Bullet& bullet;
+        Movable& mov;
         Transform& transform;
         SimpleCollision& col;
         Sprite& sprite;
+        Animator& animator;
 
-        static BulletEntity Get(Entity entity)
+        static ProjectileEntity Get(Entity entity)
         {
             auto& reg = Engine::Registry();
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
+            auto& mov = reg.get_or_emplace<Movable>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& col = reg.get_or_emplace<SimpleCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
+            auto& animator = reg.get_or_emplace<Animator>(entity);
 
-            return BulletEntity{ entity, bullet, transform, col, sprite };
+            return ProjectileEntity{ entity, bullet, mov, transform, col, sprite, animator };
         }
 
-        static BulletEntity Create(
-            WeaponType weaponType = WeaponType::BANANA,
+        static ProjectileEntity Create(
+            WeaponType weaponType,
             int size   = 3,
             int damage = 10,
             Vector2 position_ = { 0, 0 },
@@ -46,48 +49,43 @@ namespace brawler
             auto& reg = Engine::Registry();
             auto entity = reg.create();
 
-            auto bullet = BulletEntity::Get(entity);
+            auto projectile = ProjectileEntity::Get(entity);
 
-            bullet.transform.position = { position_, 0.0f };
+            projectile.mov.speed = {150*direction_, 250};
 
-            bullet.sprite.position = { position_, 0.0f };
-            bullet.sprite.size = { 1, 1 };
-            bullet.bullet.type = 0;
+            projectile.transform.position = { position_, 0.0f };
+
+            projectile.sprite.position = { position_, 0.0f };
+            projectile.sprite.size = { 1, 1 };
+            projectile.bullet.type = 1;
 
             switch(weaponType){
                 case WeaponType::BAZOOKA:
-                    AssignSprite(bullet.sprite, "brawler:bazookaAmmo");
+                    AssignSprite(projectile.sprite, "brawler:bazookaAmmo");
                     break;
                 case WeaponType::FLASH:
-                    AssignSprite(bullet.sprite, "brawler:flash");
+                    AssignSprite(projectile.sprite, "brawler:flash");
                     break;
                 case WeaponType::GRANADE:
-                    AssignSprite(bullet.sprite, "brawler:granade");
+                    AssignSprite(projectile.sprite, "brawler:granade");
                     break;
                 case WeaponType::MINE:
-                    AssignSprite(bullet.sprite, "brawler:mine");
-                    break;
-                case WeaponType::BANANA:
-                    AssignSprite(bullet.sprite, "brawler:banana");
+                    AssignSprite(projectile.sprite, "brawler:mine");
                     break;
                 case WeaponType::C4:
-                    AssignSprite(bullet.sprite, "brawler:c4");
-                    break;
-                case WeaponType::MEDKIT:
-                    AssignSprite(bullet.sprite, "brawler:medkit");
+                    AssignSprite(projectile.sprite, "brawler:c4");
                     break;
                 default:
-                    AssignSprite(bullet.sprite, "brawler:bullet");
-                    bullet.sprite.scale = { 0.05, 0.05 };
+                    AssignSprite(projectile.sprite, "brawler:bullet");
+                    projectile.sprite.scale = { 0.05, 0.05 };
             }
-            int dir = direction_ >= 0 ? 1 : -1;
-            bullet.bullet.direction = dir;
-            bullet.bullet.damage = damage;
-            bullet.sprite.scale.x *= dir;
+
+            projectile.bullet.direction = (direction_ >= 0 ? 1 : -1);
+            projectile.bullet.damage = damage;
 
             BulletSystem::s_ActiveBullets++;
 
-            return bullet;
+            return projectile;
         }
     };
 

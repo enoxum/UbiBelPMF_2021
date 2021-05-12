@@ -28,6 +28,7 @@
 #include "gameplay/brawler/systems/level_system.h"
 #include "gameplay/brawler/systems/map_collision_system.h"
 #include "gameplay/brawler/level.h"
+#include "gameplay/brawler/systems/weaponpickupsystem.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -44,10 +45,12 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<ShootingSystem>();
     engine.AddPausableSystem<BulletSystem>();
+    engine.AddPausableSystem<WeaponPickupSystem>();
     
     // Debug Systems
     engine.AddSystem<CameraControlSystem>();
     engine.AddSystem<DebugGui>();
+
 }
 
 void Brawler::SetCamera()

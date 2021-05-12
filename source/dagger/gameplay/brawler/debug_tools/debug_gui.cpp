@@ -80,11 +80,24 @@ void DebugGui::RenderDebugWindow()
 		ImGui::SliderFloat("Recoil Speed", &BulletSystem::s_PlayerRecoil, 0.0f, 100.0f);
 	}
 
-	ImGui::Separator();
-	ImGui::Text("Cam bound left: %f", BulletSystem::s_CameraBoundLeft);
-	ImGui::Text("Cam bound right: %f", BulletSystem::s_CameraBoundRight);
-	ImGui::Text("Cam bound up: %f", BulletSystem::s_CameraBoundUp);
-	ImGui::Text("Cam bound down: %f", BulletSystem::s_CameraBoundDown);
+	if (ImGui::CollapsingHeader("Weapons"))
+	{
+		Engine::Registry().view<Player>().each([&](Player& player) {
+			ImGui::Text("Player one:");
+			for (int i = 0; i < player.weapons.size(); i++) {
+				const auto& weapon = player.weapons[i];
+				ImGui::Text("\t%s%s : x%d [%d]", (i == player.active_weapon_idx ? "> " : ""), weapon.name().c_str(), weapon.currentAmmoInClip(), weapon.numClips());
+			}
+			ImGui::Separator();
+		});
+	}
+
+	// Removed these because they are wrong anyway
+	//ImGui::Separator();
+	//ImGui::Text("Cam bound left: %f", BulletSystem::s_CameraBoundLeft);
+	//ImGui::Text("Cam bound right: %f", BulletSystem::s_CameraBoundRight);
+	//ImGui::Text("Cam bound up: %f", BulletSystem::s_CameraBoundUp);
+	//ImGui::Text("Cam bound down: %f", BulletSystem::s_CameraBoundDown);
 	 
 	ImGui::End();
 }

@@ -3,4 +3,6 @@
 struct Bullet
 {
 	int direction;
+	int damage;
+	int type;
 };
