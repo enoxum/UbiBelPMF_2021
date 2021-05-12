@@ -120,7 +120,12 @@ void ShootingSystem::Run()
 
             player.active_weapon_idx = (player.active_weapon_idx + 1) % num_weapons;
             Weapon wp = player.weapons[player.active_weapon_idx];
-            editSprite(player.currentWeapon, wp, 1.0f);
+            
+            if(wp.currentAmmoInClip() == 0){
+                editSprite(player.currentWeapon, wp, 0.0f);
+            } else {
+                editSprite(player.currentWeapon, wp, 1.0f);
+            } 
             return;
         }
 
