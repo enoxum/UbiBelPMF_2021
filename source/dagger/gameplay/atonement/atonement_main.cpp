@@ -15,6 +15,7 @@
 #include "tools/diagnostics.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/common/camera_focus.h"
 #include "gameplay/editor/savegame_system.h"
 #include "core/savegame.h"
 #include <iostream>
@@ -25,6 +26,8 @@
 #include "gameplay/atonement/systems/groundedness_detection_system.h"
 #include "gameplay/atonement/systems/collision_handler_system.h"
 #include "gameplay/atonement/systems/character_collisions.h"
+#include "gameplay/atonement/systems/atonement_pause_system.h"
+#include "gameplay/atonement/systems/cooldown_manager.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -98,6 +101,7 @@ void AtonementGame::CoreSystemsSetup()
     engine.AddSystem<TextureSystem>();
     engine.AddSystem<SpriteRenderSystem>();
     engine.AddSystem<AtonementPauseSystem>();
+
     engine.AddPausableSystem<TransformSystem>();
     engine.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
@@ -117,7 +121,8 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
     engine.AddPausableSystem<GroundednessDetectionSystem>();
     engine.AddPausableSystem<CollisionHandlerSystem>();
-
+    engine.AddPausableSystem<CooldownManager>();
+    engine.AddSystem<CameraFollowSystem>();
 
 #if defined(DAGGER_DEBUG)
 #endif //defined(DAGGER_DEBUG)
@@ -139,9 +144,9 @@ void AtonementGame::WorldSetup()
         //SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
 
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 140});
-    mainChar.sprite.scale = { 0.5, 0.5 };
-    //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {70, 176});
+    mainChar.sprite.scale = { 0.6, 0.6 };
+    Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
 
 
