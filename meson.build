@@ -66,6 +66,7 @@ sources = [
     'source/dagger/gameplay/brawler/systems/physics.cpp',
     'source/dagger/gameplay/brawler/systems/bullet_system.cpp',
     'source/dagger/gameplay/brawler/systems/shooting_system.cpp',
+    'source/dagger/gameplay/brawler/systems/drop_system.cpp',
     'source/dagger/gameplay/brawler/systems/level_system.cpp',
     'source/dagger/gameplay/brawler/systems/map_collision_system.cpp',
     'source/dagger/gameplay/brawler/level.cpp',

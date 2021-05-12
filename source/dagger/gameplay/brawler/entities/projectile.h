@@ -83,6 +83,8 @@ namespace brawler
             projectile.bullet.direction = (direction_ >= 0 ? 1 : -1);
             projectile.bullet.damage = damage;
 
+            projectile.col.size = {projectile.sprite.size.x-5, projectile.sprite.size.y-2};
+
             BulletSystem::s_ActiveBullets++;
 
             return projectile;
