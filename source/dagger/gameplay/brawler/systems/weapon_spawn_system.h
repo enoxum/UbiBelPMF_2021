@@ -17,6 +17,8 @@ public:
 
     void Run() override;
 
+    void SpawnAll();
+
 };
 
 }

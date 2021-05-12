@@ -12,7 +12,7 @@ void WeaponSpawnSystem::Run()
 {
     auto& reg = Engine::Registry();
 
-    auto objects = reg.view< WeaponSpawner>();
+    auto objects = reg.view<WeaponSpawner>();
     for (auto object : objects)
     {
         auto& s = reg.get<WeaponSpawner>(object);
@@ -27,8 +27,26 @@ void WeaponSpawnSystem::Run()
             {
                 auto weapon = WeaponPickupEntity::Create(s.position);
                 s.weapon = weapon.entity;
-                s.cooldown = TOTAL_COOLDOWN;
+                s.cooldown = s.spawnInteval;
             }
+        }
+    }
+}
+
+void WeaponSpawnSystem::SpawnAll()
+{
+    auto& reg = Engine::Registry();
+
+    auto objects = reg.view<WeaponSpawner>();
+    for (auto object : objects)
+    {
+        auto& s = reg.get<WeaponSpawner>(object);
+
+        if(!reg.valid(s.weapon))
+        {
+            auto weapon = WeaponPickupEntity::Create(s.position);
+            s.weapon = weapon.entity;
+            s.cooldown = s.spawnInteval;
         }
     }
 }

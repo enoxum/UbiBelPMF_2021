@@ -8,13 +8,14 @@ using namespace dagger;
 namespace brawler
 {
 
-constexpr Float32 TOTAL_COOLDOWN = 5.0f;
+constexpr Float32 DEFAULT_WEAPON_SPAWN_INTERVAL = 5.0f;
 
 struct WeaponSpawner
 {
     Vector2 position {0.0f, 0.0f};
     Entity weapon {entt::null};
-    Float32 cooldown {TOTAL_COOLDOWN};
+    Float32 spawnInteval {DEFAULT_WEAPON_SPAWN_INTERVAL};
+    Float32 cooldown {0};
 };
 
 }
