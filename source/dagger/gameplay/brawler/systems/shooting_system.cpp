@@ -106,8 +106,10 @@ void ShootingSystem::Run()
 
         if (EPSILON_NOT_ZERO(input.Get("reload")))
         {   
-            editSprite(player.currentWeapon, weapon, 1.0f);
-            weapon.reload();
+            if(weapon.numClips() != 0){
+                editSprite(player.currentWeapon, weapon, 1.0f);
+                weapon.reload();
+            }
             return;
         }
 
