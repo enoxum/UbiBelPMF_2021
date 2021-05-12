@@ -1,9 +1,9 @@
 #include "physics.h"
 
-#include "core/engine.h"
 #include "core/game/transforms.h"
-#include "../components/movable.h"
-#include "core/graphics/sprite.h"
+
+#include "gameplay/brawler/components/movable.h"
+#include "gameplay/common/simple_collisions.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -18,16 +18,16 @@ float PhysicsSystem::s_AirMobility = 0.9f;
 
 void PhysicsSystem::Run()
 {
-    auto objects = Engine::Registry().view<Transform, Movable, Sprite>();
+    auto objects = Engine::Registry().view<Transform, Movable, SimpleCollision>();
     for (auto obj : objects)
     {
         auto& t = objects.get<Transform>(obj);
         auto& m = objects.get<Movable>(obj);
-        auto& s = objects.get<Sprite>(obj);
+        auto& c = objects.get<SimpleCollision>(obj);
 
+        // Update previous frame data
         m.prevPosition = t.position;
         m.prevSpeed = m.speed;
-        m.wasOnGround = m.isOnGround;
 
         // Drag
         if(EPSILON_ZERO(m.speed.x)) {
@@ -39,7 +39,7 @@ void PhysicsSystem::Run()
         }
 
         // Gravity
-        if(s_UseGravity)
+        if(s_UseGravity && !m.isOnGround)
             m.speed.y -= PhysicsSystem::s_Gravity * Engine::DeltaTime();
 
         // Clamp speed
@@ -51,19 +51,5 @@ void PhysicsSystem::Run()
         // Update position
         t.position.x += m.speed.x * Engine::DeltaTime();
         t.position.y += m.speed.y * Engine::DeltaTime();
-
-        // Simple y=0 platform collision
-        if (t.position.y < 0)
-        {
-            t.position.y = 0;
-            m.isOnGround = true;
-            if(m.speed.y < 0)
-                m.speed.y = 0;
-        }
-        else
-        {
-            m.isOnGround = false;
-        }
-
     }
 }

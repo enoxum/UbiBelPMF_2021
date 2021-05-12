@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/engine.h"
 #include "core/game/finite_state_machine.h"
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"

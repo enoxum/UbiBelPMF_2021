@@ -16,7 +16,8 @@ struct Movable
 	Vector2 prevSpeed{ 0, 0 };
 
 	Bool isOnGround{ true };
-	Bool wasOnGround{ true };
+
+	Bool canDrop{ false };
 };
 
 }

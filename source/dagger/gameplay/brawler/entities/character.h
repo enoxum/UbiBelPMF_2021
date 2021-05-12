@@ -45,8 +45,8 @@ namespace brawler
 
         static BrawlerCharacter Create(
             String input_ = "",
-            ColorRGB color_ = { 1, 1, 1 },
-            Vector2 position_ = { 0, 0 })
+            Vector2 position_ = { 0, 0 },
+            Bool isLeft_ = false)
         {
             auto& reg = Engine::Registry();
             auto entity = reg.create();
@@ -55,17 +55,22 @@ namespace brawler
 
             auto chr = BrawlerCharacter::Get(entity);
 
-            chr.transform.position = { position_, 0.0f };
-
-            chr.sprite.scale = { 1, 1 };
+            chr.sprite.scale = { isLeft_? -1 : 1, 1 };
             chr.sprite.position = { 0.0f, 0.0f, 0.0f };
-            chr.sprite.color = { color_, 1.0f };
+            chr.sprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
             AssignSprite(chr.sprite, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
             AnimatorPlay(chr.animator, "Gunner_Green:IDLE");
 
+            chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 0.0f };
+
             if (input_ != "")
                 chr.input.contexts.push_back(input_);
+
+            chr.col.size = { 24.0f, 30.0f };
+
+            chr.character.startPosition = position_;
+            chr.character.startDirection = isLeft_ ? -1 : 1;
 
             return chr;
         }

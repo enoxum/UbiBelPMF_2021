@@ -18,12 +18,16 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/brawler/debug_tools/camera_control_system.h"
+#include "gameplay/brawler/debug_tools/debug_gui.h"
 #include "gameplay/brawler/entities/character.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/character_controller.h"
-#include "gameplay/brawler/systems/debug_gui.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
+#include "gameplay/brawler/systems/level_system.h"
+#include "gameplay/brawler/systems/map_collision_system.h"
+#include "gameplay/brawler/level.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -31,13 +35,18 @@ using namespace brawler;
 void Brawler::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
-    engine.AddPausableSystem<CharacterControllerSystem>();
-    engine.AddPausableSystem<ShootingSystem>();
+    engine.AddSystem<LevelSystem>();
+    
     engine.AddPausableSystem<PhysicsSystem>();
+    engine.AddPausableSystem<CharacterControllerSystem>();
+    engine.AddPausableSystem<MapCollisionSystem>();
+
+    engine.AddPausableSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<ShootingSystem>();
     engine.AddPausableSystem<BulletSystem>();
-    engine.AddSystem<SimpleCollisionsSystem>();
-    //engine.AddSystem<ParallaxSystem>();
-    //engine.AddSystem<CameraFollowSystem>();
+    
+    // Debug Systems
+    engine.AddSystem<CameraControlSystem>();
     engine.AddSystem<DebugGui>();
 }
 
@@ -47,72 +56,12 @@ void Brawler::SetCamera()
     camera->mode = ECameraMode::FixedResolution;
     camera->size = { 800, 600 };
     camera->zoom = 2;
-    camera->position = { 0, 100, 0 };
+    camera->position = { 200, 150, 0 };
     camera->Update();
-}
-
-void Brawler::CreateBackdrop()
-{
-    auto& reg = Engine::Registry();
-    auto* camera = Engine::GetDefaultResource<Camera>();
-
-    /* Create terrain */ {
-        auto back = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(back);
-
-        AssignSprite(sprite, "EmptyWhitePixel");
-        sprite.color = { 0, 0, 0, 1 };
-        sprite.size = { 200, 200 };
-        sprite.scale = { 10, 1 };
-        sprite.position = { 0, -125, 1 };
-    }
-
-    /* Put background image */ {
-        auto entity = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(entity);
-
-        AssignSprite(sprite, "souls_like_knight_character:BACKGROUND:Background");
-        sprite.position.z = 10;
-    }
-
-    ///* Put grass */ {
-    //    auto entity = reg.create();
-    //    auto& sprite = reg.get_or_emplace<Sprite>(entity);
-    //    auto& parallax = reg.get_or_emplace<Parallax>(entity);
-    //    parallax.lastCameraPosition = camera->position;
-    //    parallax.strength = 0.5f;
-
-    //    AssignSprite(sprite, "souls_like_knight_character:BACKGROUND:Grass");
-    //    sprite.position = { 0, -25, 5 };
-    //}
-
-    ///* Put trees */ {
-    //    auto entity = reg.create();
-    //    auto& sprite = reg.get_or_emplace<Sprite>(entity);
-    //    auto& parallax = reg.get_or_emplace<Parallax>(entity);
-    //    parallax.lastCameraPosition = camera->position;
-    //    parallax.strength = 0.25f;
-
-    //    AssignSprite(sprite, "souls_like_knight_character:BACKGROUND:Tree");
-    //    sprite.position = { 0, 30, 7 };
-    //}
-
-    //{
-    //    auto ui = reg.create();
-    //    auto& text = reg.emplace<Text>(ui);
-    //    text.spacing = 0.6f;
-    //    text.Set("pixel-font", "hello world");
-    //}
 }
 
 void Brawler::WorldSetup()
 {
     SetCamera();
-    // CreateBackdrop();
-
-    auto player1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
-    //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
-
-    // auto player2 = BrawlerCharacter::Create("Arrows", { 1, 0, 0 }, { 100, 0 });
-    //Engine::Registry().emplace<CameraFollowFocus>(player2.entity);
+    Level::Load("default");
 }

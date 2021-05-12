@@ -1,7 +1,5 @@
 #include "character_fsm.h"
 
-#include "core/core.h"
-#include "core/engine.h"
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
@@ -13,6 +11,7 @@
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/physics.h"
+#include "gameplay/brawler/level.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -33,6 +32,12 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 
 	if (!movable.isOnGround)
 	{
+		GoTo(ECharacterStates::Jumping, state_);
+		return;
+	}
+
+	if (EPSILON_NOT_ZERO(input.Get("down")) && movable.canDrop) {
+		transform.position.y -= Level::DROPDOWN_OFFSET;
 		GoTo(ECharacterStates::Jumping, state_);
 		return;
 	}
@@ -68,6 +73,12 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 
 	if (!movable.isOnGround)
 	{
+		GoTo(ECharacterStates::Jumping, state_);
+		return;
+	}
+
+	if (EPSILON_NOT_ZERO(input.Get("down")) && movable.canDrop) {
+		transform.position.y -= Level::DROPDOWN_OFFSET;
 		GoTo(ECharacterStates::Jumping, state_);
 		return;
 	}
