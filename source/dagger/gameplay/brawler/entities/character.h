@@ -12,7 +12,6 @@
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/entities/character_fsm.h"
 #include "gameplay/brawler/entities/bullet.h"
-#include "gameplay/brawler/components/drop.h"
 
 using namespace dagger;
 
@@ -26,7 +25,6 @@ namespace brawler
         Animator& animator;
         InputReceiver& input;
         Player& character;
-        Drop& drop;
         Transform& transform;
         Movable& movable;
         SimpleCollision& col;
@@ -38,12 +36,11 @@ namespace brawler
             auto& anim = reg.get_or_emplace<Animator>(entity);
             auto& input = reg.get_or_emplace<InputReceiver>(entity);
             auto& character = reg.get_or_emplace<Player>(entity);
-            auto& drop = reg.get_or_emplace<Drop>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& movable = reg.get_or_emplace<Movable>(entity);
             auto& col = reg.get_or_emplace<SimpleCollision>(entity);
 
-            return BrawlerCharacter{ entity, sprite, anim, input, character, drop, transform, movable, col };
+            return BrawlerCharacter{ entity, sprite, anim, input, character, transform, movable, col };
         }
 
         static BrawlerCharacter Create(

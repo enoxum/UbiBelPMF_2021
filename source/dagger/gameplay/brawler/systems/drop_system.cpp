@@ -2,7 +2,6 @@
 #include "core/input/inputs.h"
 #include "core/game/transforms.h"
 #include "gameplay/brawler/components/player.h"
-#include "gameplay/brawler/components/drop.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 
 using namespace dagger;
@@ -10,7 +9,7 @@ using namespace brawler;
 
 void DropSystem::Run()
 {
-    auto View = Engine::Registry().view<Player, Drop, InputReceiver>();
+    auto View = Engine::Registry().view<Player, InputReceiver>();
 
     for(auto entity : View){
 

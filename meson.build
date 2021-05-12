@@ -53,7 +53,6 @@ sources = [
 	'source/dagger/gameplay/brawler/weapon.cpp',
     'source/dagger/gameplay/brawler/components/movable.cpp',
     'source/dagger/gameplay/brawler/components/player.cpp',
-    'source/dagger/gameplay/brawler/components/drop.cpp',
     'source/dagger/gameplay/brawler/components/bullet.cpp',
     'source/dagger/gameplay/brawler/debug_tools/camera_control_system.cpp',
     'source/dagger/gameplay/brawler/debug_tools/debug_gui.cpp',
