@@ -36,6 +36,8 @@ namespace atonement {
 		void OnAnimationEnd(ViewPtr<Animation> animation);
 
 		static Bool canDash(Entity entityID);
+
+		Float32 fallenInLastFrame{ 0 };
 	};
 
 }

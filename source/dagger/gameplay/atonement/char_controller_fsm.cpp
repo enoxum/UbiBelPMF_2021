@@ -173,9 +173,11 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 	}
 
 	if (!character.grounded) {
-		transform.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		fallenInLastFrame = character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		transform.position.y -= fallenInLastFrame;
 	}
 	else if (character.fallingAnimationEnded) {
+		transform.position.y += fallenInLastFrame;
 		GoTo(ECharStates::Idle, state_);
 	}
 }
