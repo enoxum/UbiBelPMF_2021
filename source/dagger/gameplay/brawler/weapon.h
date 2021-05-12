@@ -26,12 +26,12 @@ namespace brawler {
 	public:
 		static Weapon Pistol(int numClips)
 		{
-			return Weapon(WeaponType::PISTOL, "Pistol", 2, 20, 3, 7, numClips, "pistol", {5.0, 2.0}, {0.8, 0.8});
+			return Weapon(WeaponType::PISTOL, "Pistol", 2, 10, 3, 7, numClips, "pistol", {5.0, 2.0}, {0.8, 0.8});
 		}
 
 		static Weapon MachineGun(int numClips)
 		{
-			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 15, 4, 70, numClips, "machinegun", {1.0, 1.0}, {0.8, 0.8});
+			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 20, 4, 70, numClips, "machinegun", {1.0, 1.0}, {0.8, 0.8});
 		}
 
 		static Weapon M4A1(int numClips)
@@ -51,7 +51,7 @@ namespace brawler {
 
 		static Weapon Sniper(int numClips)
 		{
-			return Weapon(WeaponType::SNIPER, "Sniper", 20, 20, 3, 5, numClips, "sniper", {1.0, 1.0}, {0.6, 0.7}); 
+			return Weapon(WeaponType::SNIPER, "Sniper", 20, 30, 3, 5, numClips, "sniper", {1.0, 1.0}, {0.6, 0.7}); 
 		}
 
 		static Weapon Uzi(int numClips)
@@ -61,37 +61,37 @@ namespace brawler {
 
 		static Weapon Bazooka(int numClips)
 		{
-			return Weapon(WeaponType::BAZOOKA, "Bazooka", 50, 20, 5, 1, numClips, "bazooka", {-4.0, 1.0}, {0.7, 0.7}); 
+			return Weapon(WeaponType::BAZOOKA, "Bazooka", 50, 30, 5, 1, numClips, "bazooka", {-4.0, 1.0}, {0.7, 0.7}); 
 		}
 
 		static Weapon C4(int numClips)
 		{
-			return Weapon(WeaponType::C4, "C4", 50, 20, 5, 1, numClips, "c4", {1.0, 1.0}, {0.5, 0.7}); 
+			return Weapon(WeaponType::C4, "C4", 50, 0, 5, 1, numClips, "c4", {1.0, 1.0}, {0.5, 0.7}); 
 		}
 
 		static Weapon Granade(int numClips)
 		{
-			return Weapon(WeaponType::GRANADE, "Granade", 25, 12, 3, 1, numClips, "granade", {1.0, 1.0}, {0.8, 0.8}); 
+			return Weapon(WeaponType::GRANADE, "Granade", 25, 0, 3, 1, numClips, "granade", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon Flash(int numClips)
 		{
-			return Weapon(WeaponType::FLASH, "Flash", 0, 12, 3, 1, numClips, "flash", {1.0, 1.0}, {0.8, 0.8}); 
+			return Weapon(WeaponType::FLASH, "Flash", 0, 0, 3, 1, numClips, "flash", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon Mine(int numClips)
 		{
-			return Weapon(WeaponType::MINE, "Mine", 50, 12, 3, 1, numClips, "mine", {1.0, 1.0}, {0.7, 0.8}); 
+			return Weapon(WeaponType::MINE, "Mine", 50, 0, 3, 1, numClips, "mine", {1.0, 1.0}, {0.7, 0.8}); 
 		}
 
 		static Weapon Medkit(int numClips)
 		{
-			return Weapon(WeaponType::MEDKIT, "Medkit", 0, 12, 3, 1, numClips, "medkit", {1.0, 1.0}, {0.5, 0.7}); 
+			return Weapon(WeaponType::MEDKIT, "Medkit", 0, 0, 3, 1, numClips, "medkit", {1.0, 1.0}, {0.5, 0.7}); 
 		}
 
 		static Weapon Banana(int numClips)
 		{
-			return Weapon(WeaponType::BANANA, "Banana", 0, 12, 3, 3, numClips, "banana", {1.0, 1.0}, {0.8, 0.8}); 
+			return Weapon(WeaponType::BANANA, "Banana", 0, 0, 3, 3, numClips, "banana", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
 		static Weapon CreateRandom() {
