@@ -1,5 +1,6 @@
 #include "gameplay/roboship/roboship_main.h"
 #include "gameplay/roboship/roboship_controller.h"
+#include "gameplay/roboship/roboship_camera_focus.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -25,8 +26,8 @@ void Roboship::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
 
-
     engine.AddSystem<RoboshipControllerSystem>();
+    engine.AddSystem<RCameraFollowSystem>();
 }
 
 
@@ -112,7 +113,7 @@ void RoboshipCreateBackdrop()
         AssignSprite(sprite, "robot:BACKGROUND:background1");
         sprite.scale.x = 0.25f;
         sprite.scale.y = 0.25f;
-        sprite.position.x = 0;
+        sprite.position.x = -20;
         sprite.position.y = 5;
         sprite.position.z = 10;
     }
@@ -134,6 +135,6 @@ void Roboship::WorldSetup()
     RoboshipCreateBackdrop();
 
     auto sndChar = RCharacter::Create("Arrows", { 1, 0, 0 }, { -120, -95 });
-    //Engine::Registry().emplace<CameraFollowFocus>(sndChar.entity);
+    Engine::Registry().emplace<RCameraFollowFocus>(sndChar.entity);
 }
 
