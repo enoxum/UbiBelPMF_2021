@@ -5,8 +5,6 @@
 #include "gameplay/brawler/components/drop.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 
-#include "iostream"
-
 using namespace dagger;
 using namespace brawler;
 
