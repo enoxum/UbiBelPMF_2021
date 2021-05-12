@@ -3,12 +3,15 @@
 #include "core/core.h"
 #include "core/game.h"
 
+
 using namespace dagger;
+
 
 namespace roboship
 {
     class Roboship : public Game
     {
+
         String GetIniFile() override
         {
             return "roboship.ini";
@@ -18,3 +21,5 @@ namespace roboship
         void WorldSetup() override;
     };
 }
+
+void RoboshipCreateBackdrop();

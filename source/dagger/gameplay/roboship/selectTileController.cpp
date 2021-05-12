@@ -37,6 +37,22 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
             {
                 ctrl_.input.y -= 1;
             }
+            else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed && moveFirst == true)
+            {
+                moveFirst = false;
+                moveSecond = true;
+                x = ctrl_.input.x;
+                y = ctrl_.input.y;
+                printf("%d %d", x, y);
+            }
+            else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed && moveFirst == false)
+            {
+                moveFirst = true;
+                moveSecond = false;
+                swapX = ctrl_.input.x;
+                swapY = ctrl_.input.y;
+                printf("%d %d", swapX, swapY);
+            }
 
         });
 }
@@ -47,12 +63,26 @@ void SelectedTileInputSystem::Run()
     auto view = Engine::Registry().view<Transform, ControllerMapping>();
     for (auto entity : view)
     {
+ 
         auto& t = view.get<Transform>(entity);
-        auto& ctrl = view.get<ControllerMapping>(entity);
 
-        t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
-        t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
-        
+        if(t.position.z == 2.f && moveSecond)
+        {
+            auto& ctrl = view.get<ControllerMapping>(entity);
+
+            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+
+        }
+
+        if (t.position.z == 1.f && moveFirst)
+        {
+            auto& ctrl = view.get<ControllerMapping>(entity);
+
+            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+
+        }
 
 
 

@@ -12,16 +12,25 @@ namespace robo_game
         EDaggerKeyboard rightKey = EDaggerKeyboard::KeyD;
         EDaggerKeyboard upKey = EDaggerKeyboard::KeyW;
         EDaggerKeyboard downKey = EDaggerKeyboard::KeyS;
+        EDaggerKeyboard spaceKey = EDaggerKeyboard::KeySpace;
 
 
         Vector4 input{ 0, 0, 0, 0};
     };
+
+
 
     class SelectedTileInputSystem
         : public System
     {
     public:
         inline String SystemName() { return "Selected Tile Input System"; }
+        int x;
+        int y;
+        int swapX;
+        int swapY;
+        bool moveFirst = true;
+        bool moveSecond = true;
 
         void SpinUp() override;
         void WindDown() override;
@@ -31,4 +40,5 @@ namespace robo_game
 
         void OnKeyboardEvent(KeyboardEvent kEvent_);
     };
+
 }
