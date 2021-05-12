@@ -1,0 +1,32 @@
+{
+	"animation-name": "EXPLOSION",
+	"animation-length-ms": 2600,
+	"animation-frames": 
+	[
+		{ "texture-name": "brawler:EXPLOSION:1" },
+        { "texture-name": "brawler:EXPLOSION:2" },
+        { "texture-name": "brawler:EXPLOSION:3" },
+        { "texture-name": "brawler:EXPLOSION:4" },
+        { "texture-name": "brawler:EXPLOSION:5" },
+        { "texture-name": "brawler:EXPLOSION:6" },
+        { "texture-name": "brawler:EXPLOSION:7" },
+        { "texture-name": "brawler:EXPLOSION:8" },
+        { "texture-name": "brawler:EXPLOSION:9" },
+        { "texture-name": "brawler:EXPLOSION:10" },
+        { "texture-name": "brawler:EXPLOSION:11" },
+        { "texture-name": "brawler:EXPLOSION:12" },
+        { "texture-name": "brawler:EXPLOSION:13" },
+        { "texture-name": "brawler:EXPLOSION:14" },
+        { "texture-name": "brawler:EXPLOSION:15" },
+        { "texture-name": "brawler:EXPLOSION:16" },
+        { "texture-name": "brawler:EXPLOSION:17" },
+        { "texture-name": "brawler:EXPLOSION:18" },
+        { "texture-name": "brawler:EXPLOSION:19" },
+        { "texture-name": "brawler:EXPLOSION:20" },
+        { "texture-name": "brawler:EXPLOSION:21" },
+        { "texture-name": "brawler:EXPLOSION:22" },
+        { "texture-name": "brawler:EXPLOSION:23" },
+        { "texture-name": "brawler:EXPLOSION:24" },
+        { "texture-name": "brawler:EXPLOSION:25" }
+	]
+}

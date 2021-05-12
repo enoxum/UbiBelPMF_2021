@@ -11,8 +11,7 @@
 #include "gameplay/brawler/entities/weaponpickup.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/components/player.h"
-
-#include <iostream>
+#include "gameplay/brawler/systems/shooting_system.h"
 
 using namespace brawler;
 using namespace dagger;
@@ -66,6 +65,12 @@ void WeaponPickupSystem::Run()
                 playerWeapons.push_back(pickedUpWeapon);
                 if (playerWeapons.size() == 1) {
                     player.active_weapon_idx = 0;
+                    
+                    auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
+                    int dir = weaponSprite.scale.x>=0.0f? 1 : -1;
+                    weaponSprite.position.x += pickedUpWeapon.translate().x * dir;
+                    weaponSprite.position.y += pickedUpWeapon.translate().y;
+                    ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
                 }
             }
             else {

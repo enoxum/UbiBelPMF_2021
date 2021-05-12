@@ -46,11 +46,11 @@ namespace brawler
             wp.transform.position = { position_, 0.0f };
             wp.sprite.position = { position_, 0.0f };
             wp.sprite.size = { 1, 1 };
-            wp.sprite.scale = { 10, 10 };
+            wp.sprite.scale = { 1, 1 };
             
             wp.col.size = wp.sprite.size;    
 
-            AssignSprite(wp.sprite, "EmptyWhitePixel");
+            AssignSprite(wp.sprite, "brawler:" + wp.weaponPickup.weapon.sprite());
 
             return wp;
         }
