@@ -128,9 +128,21 @@ void TankMovement::Run()
 
         if (col.colided)
         {
-        	// kad se dodaju metkovi ovo vrv treba izmeniti
-        	t.position = tank.pos;
-            col.colided = false;
+        	auto viewBullet = Engine::Registry().view<TankBullet, Transform, SimpleCollision>();
+
+            bool tankDestroyed = false;
+
+            for (auto entityBullet : viewBullet){
+                if (col.colidedWith == entityBullet){
+                    Engine::Registry().destroy(entity);
+                    tankDestroyed = true; 
+                }
+            }
+            
+            if(!tankDestroyed){
+                t.position = tank.pos;
+                col.colided = false;
+            }
         }
         else 
         {
