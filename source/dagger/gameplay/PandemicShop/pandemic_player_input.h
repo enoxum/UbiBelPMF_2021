@@ -7,54 +7,21 @@ using namespace dagger;
 
 namespace pandemic_shop
 {
-    struct ControllerMapping
+    struct GameStats
     {
-        EDaggerKeyboard up_key;
-        EDaggerKeyboard down_key;
-        EDaggerKeyboard right_key;
-        EDaggerKeyboard left_key;
-        
-        Vector2 input{ 0, 0};
-    };
+        Float32 BorderUp;
+        Float32 BorderDown;
+        Float32 BorderRight;
+        Float32 BorderLeft;
+        Float32 PlayerSpeed;
 
-    class PandemicShopPlayerInputSystem
-        : public System
-    {
-        static Float32 s_BoarderUp;
-        static Float32 s_BoarderDown;
-        static Float32 s_BoarderRight;
-        static Float32 s_BoarderLeft;
-
-    public:
-
-        static Float32 s_PlayerSpeed;
-
-    public:
-        inline String SystemName() { return "PandemicShop Player Input System"; }
-
-        void SpinUp() override;
-        void WindDown() override;
-        void Run() override;
-
-        static void SetupPlayerInput(ControllerMapping& controllerMapping_)
+        inline void SetupPlayerBorders(Float32 borderUp_, Float32 borderDown_,
+            Float32 borderRight_, Float32 borderLeft_)
         {
-            controllerMapping_.up_key = EDaggerKeyboard::KeyW;
-            controllerMapping_.down_key = EDaggerKeyboard::KeyS;
-            controllerMapping_.right_key = EDaggerKeyboard::KeyD;
-            controllerMapping_.left_key = EDaggerKeyboard::KeyA;
+            BorderUp = borderUp_;
+            BorderDown = borderDown_;
+            BorderRight = borderRight_;
+            BorderLeft = borderLeft_;
         }
-
-        static void SetupPlayerBoarders(Float32 boarderUp_, Float32 boarderDown_,
-                                        Float32 boarderRight_, Float32 boarderLeft_)
-        {
-            s_BoarderUp = boarderUp_;
-            s_BoarderDown = boarderDown_;
-            s_BoarderRight = boarderRight_;
-            s_BoarderLeft = boarderLeft_;
-        }
-
-    private:
-
-        void OnKeyboardEvent(KeyboardEvent kEvent_);
     };
 }

@@ -13,16 +13,21 @@
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
+#include "core/game/transforms.h"
 
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/ping_pong/pingpong_ball.h"
 #include "gameplay/ping_pong/player_scores.h"
-#include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/ping_pong/pingpong_tools.h"
+#include "gameplay/PandemicShop/pandemic_player_input.h"
+#include "gameplay/PandemicShop/pandemic_tools.h"
+#include "gameplay/PandemicShop/pandemic_character_controller.h";
 
 
 using namespace dagger;
 using namespace pandemic_shop;
+//---------------------------
+using namespace pandemic;
 
 
 void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
@@ -36,6 +41,7 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
     engine_.AddSystem<DiagnosticSystem>();
+    // engine_.AddSystem<CollisionDetectionSystem>();
     engine_.AddSystem<GUISystem>();
     engine_.AddSystem<ToolMenuSystem>();
 #endif //!defined(NDEBUG)
@@ -44,9 +50,10 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
 void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
-    engine_.AddPausableSystem<PandemicShopPlayerInputSystem>();
+    engine_.AddPausableSystem<PandemicControllerSystem>();
+    engine_.AddPausableSystem<CollisionDetectionSystem>();
 #if defined(DAGGER_DEBUG)
-    engine_.AddPausableSystem<PingPongTools>();
+    engine_.AddPausableSystem<ping_pong::PingPongTools>();
 #endif //defined(DAGGER_DEBUG)
 }
 
@@ -61,6 +68,59 @@ void PandemicShopGame::WorldSetup(Engine& engine_)
 
     SetupWorld(engine_);
 }
+//---------------------------------------------------------
+struct Character {
+  Entity entity;
+  Sprite &sprite;
+  Animator &animator;
+  InputReceiver &input;
+  PandemicCharacter &character;
+  Transform &transform;
+  SimpleCollision &collision;
+
+  static Character Get(Entity entity) {
+    auto &reg = Engine::Registry();
+    auto &sprite = reg.get_or_emplace<Sprite>(entity);
+    auto &anim = reg.get_or_emplace<Animator>(entity);
+    auto &input = reg.get_or_emplace<InputReceiver>(entity);
+    auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
+    auto &transform = reg.get_or_emplace<Transform>(entity);
+    auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
+
+    
+    //return Character{entity, sprite, anim, input};
+    return Character{entity, sprite, anim, input, character, transform, collision};
+  }
+
+  static Character Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
+                          Vector2 position_ = {0, 0}) {
+    auto &reg = Engine::Registry();
+    auto entity = reg.create();
+
+    ATTACH_TO_FSM(PandemicCharacterControllerFSM, entity);
+
+    auto chr = Character::Get(entity);
+
+    chr.transform.position = {position_, 0.0f};
+
+    chr.collision.size = {32, 32};
+
+    chr.sprite.scale = {2, 2};
+    chr.sprite.position = {position_, 0.0f};
+    chr.sprite.color = {color_, 1.0f};
+
+    AssignSprite(chr.sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
+    AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");
+
+    if (input_ != "")
+      chr.input.contexts.push_back(input_);
+
+    chr.character.speed = 200;
+
+    return chr;
+  }
+};
+//--------------------------------------------
 
 void pandemic_shop::SetupWorld(Engine& engine_)
 {
@@ -79,8 +139,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     float zPos = 1.f;
 
     constexpr float Space = 0.1f;
+
     for (int i = 0; i < height; i++)
     {
+        
         for (int j = 0; j < width; j++)
         {
             auto entity = reg.create();
@@ -99,6 +161,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 sprite.color.r = 0.6f;
                 sprite.color.g = 0.6f;
                 sprite.color.b = 0.6f;
+                
             }
 
             if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
@@ -107,9 +170,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 sprite.color.g = 0.0f;
                 sprite.color.b = 0.0f;
 
-                //auto& col = reg.emplace<SimpleCollision>(entity);
-                //col.size.x = TileSize;
-                //col.size.y = TileSize;
+                auto &col = reg.emplace<SimpleCollision>(entity);
+                col.size.x = tileSize;
+                col.size.y = tileSize;
+                
             }
 
             auto& transform = reg.emplace<Transform>(entity);
@@ -160,8 +224,6 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             transform.position.x = (0.5f - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
             transform.position.y = 0;
             transform.position.z = zPos;
-
-            
         }
 
         // right
@@ -179,38 +241,23 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         }
     }
 
-    
-    // player controller setup
     const Float32 playerSize = tileSize;
-    PandemicShopPlayerInputSystem::SetupPlayerBoarders((height - 2)* (tileSize + Space) / 2.f , 
-                                                        -(height - 2)* (tileSize + Space) / 2.f, 
-                                                        (width - 2)* (tileSize + Space) / 2.f,
-                                                        -(width - 2)* (tileSize + Space) / 2.f);
-    PandemicShopPlayerInputSystem::s_PlayerSpeed = tileSize * 14.f;
-    //1st player
+
+    // player controller setup
     {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = playerSize;
-        col.size.y = playerSize;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = (2.5f - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
-        transform.position.y = 0;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "EmptyWhitePixel");
-        sprite.size.x = playerSize;
-        sprite.size.y = playerSize;
-        sprite.color.r = 1.0f;
-        sprite.color.g = 0.0f;
-        sprite.color.b = 0.0f;
-
-        auto& controller = reg.emplace<ControllerMapping>(entity);
-        PandemicShopPlayerInputSystem::SetupPlayerInput(controller);
+        auto* stats = new pandemic_shop::GameStats;
+        stats->SetupPlayerBorders((height - 2)* (tileSize + Space + 5) / 2.f,
+            -(height - 2) * (tileSize + Space + 5) / 2.f,
+            (width - 2)* (tileSize + Space + 5) / 2.f,
+            -(width - 2) * (tileSize + Space + 5) / 2.f);
+        stats->PlayerSpeed = tileSize * 14.f;
+        Engine::Instance().PutDefaultResource<pandemic_shop::GameStats>(stats);
     }
 
-    // // add score system to count scores for left and right collisions
-    // PlayerScoresSystem::SetFieldSize(width, height, tileSize * (1 + Space));
+    //1st player
+    {
+        Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+        
+    }
+
 }
