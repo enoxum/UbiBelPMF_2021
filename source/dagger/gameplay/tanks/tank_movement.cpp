@@ -134,6 +134,9 @@ void TankMovement::Run()
 
             for (auto entityBullet : viewBullet){
                 if (col.colidedWith == entityBullet){
+                    tank.health -= 25;   
+                }
+                if(tank.health <= 0){
                     Engine::Registry().destroy(entity);
                     tankDestroyed = true; 
                 }

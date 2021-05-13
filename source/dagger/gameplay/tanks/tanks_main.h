@@ -14,6 +14,7 @@ namespace tanks
 		Float32 speed;
 		Float32 angle;
 		Vector3 pos{0,0,0}; // last good position before collision
+        int health{100};
 	};
 	
     void SetupWorld(Engine& engine_);
