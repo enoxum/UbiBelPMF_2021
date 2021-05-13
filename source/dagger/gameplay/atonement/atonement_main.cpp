@@ -73,11 +73,11 @@ struct Character
         auto chr = Character::Get(entity);
 
         chr.sprite.scale = { 1, 1 };
-        chr.sprite.position = { position_, 5.0f };
+        chr.sprite.position = { position_, 15.0f };
         chr.sprite.color = { color_, 1.0f };
 
         chr.collision.size = collision_size_;
-        chr.transform.position = { position_, 5.0f };
+        chr.transform.position = { position_, 15.0f };
 
         AssignSprite(chr.sprite, "BlueWizard:IDLE:idle1");
         AnimatorPlay(chr.animator, "BlueWizard:IDLE");
@@ -145,7 +145,7 @@ void AtonementGame::WorldSetup()
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
 
                                                    //bilo je -100 -200
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { 2665, -535 }, {70, 176});
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { 4150, 720 }, {70, 176});
     mainChar.sprite.scale = { 0.6, 0.6 };
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
@@ -182,6 +182,24 @@ ECommonSaveArchetype AtonementGame::Save(Entity entity_, JSON::json& saveTo_)
         archetype = archetype | ECommonSaveArchetype::Physics;
     }
 
+    if (registry.has<BouncyComponent>(entity_))
+    {
+        saveTo_["bouncy_component"] = SerializeComponent<BouncyComponent>(registry.get<BouncyComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Bouncy;
+    }
+
+    if (registry.has<DeadlyComponent>(entity_))
+    {
+        saveTo_["deadly_component"] = SerializeComponent<DeadlyComponent>(registry.get<DeadlyComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Deadly;
+    }
+
+    if (registry.has<InteractableComponent>(entity_))
+    {
+        saveTo_["interactable_component"] = SerializeComponent<InteractableComponent>(registry.get<InteractableComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Interactable;
+    }
+
     // todo: add new if-block here and don't forget to change archetype
 
     return archetype;
@@ -202,6 +220,15 @@ void AtonementGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::
 
     if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Physics))
         DeserializeComponent<SimpleCollision>(loadFrom_["simple_collision"], registry.emplace<SimpleCollision>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Bouncy))
+        DeserializeComponent<BouncyComponent>(loadFrom_["bouncy_component"], registry.emplace<BouncyComponent>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Deadly))
+        DeserializeComponent<DeadlyComponent>(loadFrom_["deadly_component"], registry.emplace<DeadlyComponent>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Interactable))
+        DeserializeComponent<InteractableComponent>(loadFrom_["interactable_component"], registry.emplace<InteractableComponent>(entity_));
 
     // todo: add new if-block here and don't forget to change archetype
 }
