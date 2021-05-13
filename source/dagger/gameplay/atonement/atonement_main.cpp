@@ -99,7 +99,7 @@ void AtonementGame::CoreSystemsSetup()
     engine.AddSystem<ShaderSystem>();
     engine.AddSystem<TextureSystem>();
     engine.AddSystem<SpriteRenderSystem>();
-    engine.AddPausableSystem<TransformSystem>();
+    engine.AddSystem<TransformSystem>();
     engine.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
     engine.AddSystem<DiagnosticSystem>();
@@ -161,8 +161,10 @@ void atonement::SetUpWorld()
 
     auto& transform = reg.emplace<Transform>(entity);
 
-        transform.position.x = (1.0f + 1 + 1 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform.position.y = (1.0f + 2 + 2 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+        //transform.position.x = (200.0f + 1 + 1 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        //transform.position.y = (1.0f + 2 + 2 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+        transform.position.x = (2.0f) * tileSize;
+        transform.position.y = tileSize/2;
         transform.position.z = 0.f;
 
         auto& controller = reg.emplace<SelectionMapping>(entity);
@@ -174,8 +176,8 @@ void atonement::SetUpWorld()
         
         auto& transform2 = reg.emplace<Transform>(entity2);
 
-        transform2.position.x = (1.0f+1 + 1 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform2.position.y = (1.0f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+        transform2.position.x = (1.9365f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform2.position.y = (1.265f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
         transform2.position.z = 1.f;
     }
 
