@@ -7,8 +7,6 @@
 
 #include "gameplay/brawler/entities/weaponpickup.h"
 
-
-
 using namespace dagger;
 
 namespace brawler
