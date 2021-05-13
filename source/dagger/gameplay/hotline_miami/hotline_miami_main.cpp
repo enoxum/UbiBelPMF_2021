@@ -47,12 +47,12 @@ void HotlineMiamiGame::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
 
+    engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileSystem>();
-    //engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
-    engine.AddPausableSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiDeleteEntitySystem>();
 }
 
@@ -85,25 +85,6 @@ void hotline_miami::SetupWorld()
 
     float zPos = 1.f;
 
-    // for orientation
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize;
-        col.size.y = tileSize;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 0;
-        transform.position.y = 0;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "EmptyWhitePixel");
-        sprite.size.x = tileSize;
-        sprite.size.y = tileSize;
-
-    }
-    
     // player
     {
         auto entity = reg.create();

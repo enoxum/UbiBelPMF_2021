@@ -12,7 +12,7 @@ using namespace hotline_miami;
 
 void HotlineMiamiDeleteEntitySystem::Run()
 {
-    auto& view = Engine::Registry().view<HotlineMiamiDeleteEntity>();
+    auto view = Engine::Registry().view<HotlineMiamiDeleteEntity>();
     for (auto entity : view)
     {
         Engine::Registry().destroy(entity);

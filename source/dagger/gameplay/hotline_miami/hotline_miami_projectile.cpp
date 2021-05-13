@@ -32,9 +32,7 @@ void HotlineMiamiProjectileObstacleCollisionSystem::Run()
     auto view = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiProjectile>();
     for (auto entity : view)
     {
-        auto& t = view.get<Transform>(entity);
         auto& col = view.get<SimpleCollision>(entity);
-        auto& projectile = view.get<HotlineMiamiProjectile>(entity);
 
         if (col.colided)
         {

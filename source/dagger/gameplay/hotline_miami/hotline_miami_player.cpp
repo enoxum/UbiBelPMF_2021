@@ -15,8 +15,8 @@ using namespace hotline_miami;
 
 void HotlineMiamiPlayerObstacleCollisionSystem::Run()
 {
-    auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision>();
-    auto view = Engine::Registry().view<HotlineMiamiPlayer, Transform, SimpleCollision>();
+    auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiObstacle>();
+    auto view = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiPlayer>();
     for (auto entity : view)
     {
         auto& t = view.get<Transform>(entity);

@@ -42,7 +42,7 @@ namespace hotline_miami
             {
                 HotlineMiamiProjectile_.direction = { -1, 0, 0 };
             }
-            else if (look_direction = RIGHT)
+            else if (look_direction == RIGHT)
             {
                 HotlineMiamiProjectile_.direction = { 1, 0, 0 };
             }
