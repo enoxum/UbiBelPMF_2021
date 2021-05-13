@@ -74,6 +74,10 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
 				tileData.type = PlatformType::ONEWAY;
 				tileData.texture = LoadTexture(tile);
 				break;
+			case 3:
+				tileData.type = PlatformType::SPAWNER;
+				tileData.spawnInterval = tile.value("interval", 30.0f);
+				break;
 			default:
 				tileData.type = PlatformType::EMPTY;
 				break;

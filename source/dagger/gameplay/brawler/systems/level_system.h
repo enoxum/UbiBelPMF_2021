@@ -19,6 +19,7 @@ struct TileData
 {
 	PlatformType type;
 	TextureData texture;
+	Float32 spawnInterval;
 };
 
 struct PlayerData

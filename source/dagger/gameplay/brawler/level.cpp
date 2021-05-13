@@ -29,12 +29,6 @@ void Level::Load(String map)
 		for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
 			if(level->tilemap[y][x] == -1) {
 				tiles[y].push_back(PlatformType::EMPTY);
-				// TODO load from map
-				if(x==8 && y==1) {
-					auto t2 = reg.create();
-					auto& spawner = reg.get_or_emplace<WeaponSpawner>(t2);
-					spawner.position = TileToWorld(x, y);
-				}
 				continue;
 			}
 			tiles[y].push_back(level->tileset[level->tilemap[y][x]].type);
@@ -47,8 +41,11 @@ void Level::Load(String map)
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
 				sprite.scale = { texture.scale, texture.scale };
 				sprite.position = { TileToWorld(x, y), 1 };
-			} else {
-				// TODO if EMPTY or spawner
+			} else if (getTile(x, y) == PlatformType::SPAWNER){
+				auto tile = reg.create();
+				auto& spawner = reg.get_or_emplace<WeaponSpawner>(tile);
+				spawner.position = TileToWorld(x, y);
+				spawner.spawnInteval = level->tileset[level->tilemap[y][x]].spawnInterval;
 			}
 		}
 	}
