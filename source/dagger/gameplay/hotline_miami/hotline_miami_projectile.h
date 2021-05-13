@@ -28,24 +28,35 @@ namespace hotline_miami
 
         static void SetupProjectileStats(HotlineMiamiProjectile& HotlineMiamiProjectile_, int look_direction)
         {
-            HotlineMiamiProjectile_.projectile_speed = 40.f;
+            HotlineMiamiProjectile_.projectile_speed = 500.f;
 
             if (look_direction == DOWN)
             {
-                HotlineMiamiProjectile_.direction = { 0, 1, 0 };
+                HotlineMiamiProjectile_.direction = { 0, -1, 0 };
             }
             else if (look_direction == TOP)
             {
-                HotlineMiamiProjectile_.direction = { 0, -1, 0 };
+                HotlineMiamiProjectile_.direction = { 0, 1, 0 };
             }
             else if (look_direction == LEFT)
             {
                 HotlineMiamiProjectile_.direction = { -1, 0, 0 };
             }
-            else
+            else if (look_direction = RIGHT)
             {
                 HotlineMiamiProjectile_.direction = { 1, 0, 0 };
             }
         }
+    };
+
+    class HotlineMiamiProjectileObstacleCollisionSystem
+        : public System
+    {
+    public:
+
+        inline String SystemName() { return "HotlineMiami Projectile Obstacle Collision System"; }
+
+        void Run() override;
+       
     };
 }

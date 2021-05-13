@@ -102,19 +102,23 @@ void HotlineMiamiPlayerInputSystem::Run()
         {
             // make a projectile
             {
-                constexpr float tileSize = 10.f;
+                constexpr float tileSize = 15.f;
                 float zPos = 1.f;
 
                 auto& engine = Engine::Instance();
                 auto& reg = engine.Registry();
                 auto entity = reg.create();
 
+                auto& collision = reg.emplace<SimpleCollision>(entity);
+                collision.size.x = tileSize;
+                collision.size.y = tileSize;
+
                 auto& transform = reg.emplace<Transform>(entity);
-                if (ctrl.look_direction == DOWN)
+                if (ctrl.look_direction == TOP)
                 {
                     transform.position = t.position + Vector3{ 0, tileSize + 5.f, 0 };
                 }
-                else if (ctrl.look_direction == TOP)
+                else if (ctrl.look_direction == DOWN)
                 {
                     transform.position = t.position + Vector3{ 0, -tileSize - 5.f, 0 };
                 }
@@ -122,14 +126,15 @@ void HotlineMiamiPlayerInputSystem::Run()
                 {
                     transform.position = t.position + Vector3{ -tileSize - 5.f, 0, 0 };
                 }
-                else if (ctrl.look_direction == TOP)
+                else if (ctrl.look_direction == RIGHT)
                 {
                     transform.position = t.position + Vector3{ tileSize + 5.f, 0, 0 };
                 }
                 transform.position.z = zPos;
 
                 auto& sprite = reg.emplace<Sprite>(entity);
-                AssignSprite(sprite, "hotline_miami:Projectile:gun1");
+                AssignSprite(sprite, "hotline_miami:Projectile:pistol_gun_1");
+                sprite.rotation = ctrl.look_direction * 90.f;
                 sprite.size.x = tileSize;
                 sprite.size.y = tileSize;
 

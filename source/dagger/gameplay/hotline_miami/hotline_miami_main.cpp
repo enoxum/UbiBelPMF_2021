@@ -2,6 +2,8 @@
 #include "hotline_miami_obstacle.h"
 #include "hotline_miami_player.h"
 #include "gameplay/hotline_miami/hotline_miami_projectile.h"
+#include "gameplay/hotline_miami/hotline_miami_tools.h"
+#include "gameplay/hotline_miami/hotline_miami_player_input.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -17,7 +19,6 @@
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
 
-#include "gameplay/hotline_miami/hotline_miami_player_input.h"
 #include "gameplay/common/simple_collisions.h"
 
 using namespace dagger;
@@ -49,8 +50,10 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
-    engine.AddPausableSystem< HotlineMiamiProjectileSystem>();
+    engine.AddPausableSystem<HotlineMiamiProjectileSystem>();
+    //engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<HotlineMiamiDeleteEntitySystem>();
 }
 
 void HotlineMiamiGame::WorldSetup()
@@ -105,8 +108,8 @@ void hotline_miami::SetupWorld()
     {
         auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize;
-        col.size.y = tileSize;
+        col.size.x = tileSize * 2;
+        col.size.y = tileSize * 2;
 
         auto& transform = reg.emplace<Transform>(entity);
         transform.position.x = 100;
@@ -115,8 +118,8 @@ void hotline_miami::SetupWorld()
 
         auto& sprite = reg.emplace<Sprite>(entity);
         AssignSprite(sprite, "hotline_miami:Player:player_bazuka");
-        sprite.size.x = tileSize;
-        sprite.size.y = tileSize;
+        sprite.size.x = tileSize * 2;
+        sprite.size.y = tileSize * 2;
 
         auto& player = reg.emplace<HotlineMiamiPlayer>(entity);
 

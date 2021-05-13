@@ -10,8 +10,8 @@ namespace hotline_miami
    
     struct HotlineMiamiPlayer
     {
-        bool isPlayer{ true };
-        Float32 player_speed = 30.f;
+        bool is_player{ true };
+        Float32 player_speed = 100.f;
     };
 
     class HotlineMiamiPlayerObstacleCollisionSystem

@@ -57,6 +57,7 @@ sources = [
     'source/dagger/gameplay/hotline_miami/hotline_miami_obstacle.cpp',
     'source/dagger/gameplay/hotline_miami/hotline_miami_projectile.cpp',
     'source/dagger/gameplay/hotline_miami/hotline_miami_weapon.cpp',
+    'source/dagger/gameplay/hotline_miami/hotline_miami_tools.cpp',
     'source/dagger/gameplay/ping_pong/ping_pong_main.cpp',
     'source/dagger/gameplay/ping_pong/pingpong_ball.cpp',
     'source/dagger/gameplay/ping_pong/pingpong_playerinput.cpp',
