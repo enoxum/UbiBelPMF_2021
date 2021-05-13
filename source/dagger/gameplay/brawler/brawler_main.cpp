@@ -25,10 +25,11 @@
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 #include "gameplay/brawler/systems/weaponpickupsystem.h"
-#include "gameplay/brawler/systems/hud_system.h""
+#include "gameplay/brawler/systems/hud_system.h"
 
 using namespace dagger;
 using namespace brawler;
+
 
 Entity Brawler::leftPlayer{ entt::null };
 Entity Brawler::rightPlayer{ entt::null };

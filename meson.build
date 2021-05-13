@@ -56,6 +56,7 @@ sources = [
     'source/dagger/gameplay/brawler/components/bullet.cpp',
 	'source/dagger/gameplay/brawler/components/weaponpickup.cpp',
 	'source/dagger/gameplay/brawler/components/healthblip.cpp',
+	'source/dagger/gameplay/brawler/components/healthbar.cpp',
 	'source/dagger/gameplay/brawler/components/weaponblip.cpp',
     'source/dagger/gameplay/brawler/entities/bullet.cpp',
     'source/dagger/gameplay/brawler/entities/projectile.cpp',

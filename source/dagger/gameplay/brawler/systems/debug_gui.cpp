@@ -95,6 +95,10 @@ void DebugGui::RenderDebugWindow()
 
     if (ImGui::CollapsingHeader("HUD"))
     {
+        ImGui::Text("Cam left: %f", BulletSystem::s_CameraBoundLeft);
+        ImGui::Text("Cam right: %f", BulletSystem::s_CameraBoundRight);
+        ImGui::Text("Cam up: %f", BulletSystem::s_CameraBoundUp);
+        ImGui::Text("Cam down: %f", BulletSystem::s_CameraBoundDown);
         ImGui::SliderFloat("Blip width: ", &HUDSystem::s_blipWidth, 0.0f, 5.0f);
         ImGui::SliderFloat("Blip height: ", &HUDSystem::s_blipHeight, 0.0f, 100.0f);
         ImGui::SliderFloat("Weapon dim: ", &HUDSystem::s_weaponDim, 0, 100);

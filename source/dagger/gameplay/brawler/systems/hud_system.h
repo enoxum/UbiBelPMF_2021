@@ -28,7 +28,6 @@ namespace brawler {
         static int   s_leftPlayerHealth;
         static int   s_rightPlayerHealth;
 
-
         static      Entity leftMarker;
         static      Entity rightMarker;
         static      Entity leftText;

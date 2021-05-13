@@ -12,6 +12,7 @@
 #include "gameplay/brawler/entities/weaponpickup.h"
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/components/healthblip.h"
+#include "gameplay/brawler/components/healthbar.h"
 #include "gameplay/brawler/components/weaponblip.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/brawler_main.h"
@@ -31,7 +32,7 @@ float HUDSystem::s_paddingSide		= 12;
 float HUDSystem::s_midPaddingUp		= 7.5f;
 float HUDSystem::s_midPaddingSide	= 7.5f;
 
-int HUDSystem::s_leftPlayerHealth = 100;
+int HUDSystem::s_leftPlayerHealth = 60;
 int HUDSystem::s_rightPlayerHealth = 100;
 
 Entity HUDSystem::leftMarker{ entt::null };
@@ -39,10 +40,45 @@ Entity HUDSystem::rightMarker{ entt::null };
 Entity HUDSystem::leftText{ entt::null };
 Entity HUDSystem::rightText{ entt::null };
 
+
 void HUDSystem::CreateHealthBar(bool side)
 {
 
-	for (int i = 0; i < 100; i++)
+	auto lr = Engine::Registry().create();
+	auto lw = Engine::Registry().create();
+	auto rr = Engine::Registry().create();
+	auto rw = Engine::Registry().create();
+
+	//Engine::Registry().emplace<Transform>(lr);
+	auto& lrh = Engine::Registry().emplace<HealthBar>(lr);
+	lrh.side = false;
+	lrh.color = true;
+
+	//Engine::Registry().emplace<Transform>(lw);
+	auto& lwh = Engine::Registry().emplace<HealthBar>(lw);
+	lwh.side = false;
+	lwh.color = false;
+
+	//Engine::Registry().emplace<Transform>(rr);
+	auto& rrh = Engine::Registry().emplace<HealthBar>(rr);
+	rrh.side = true;
+	rrh.color = true;
+
+	//Engine::Registry().emplace<Transform>(rw);
+	auto& rwh = Engine::Registry().emplace<HealthBar>(rw);
+	rwh.side = true;
+	rwh.color = false;
+
+	auto& lrs = Engine::Registry().emplace<Sprite>(lr);
+	AssignSprite(lrs, "EmptyWhitePixel");
+	auto& lws = Engine::Registry().emplace<Sprite>(lw);
+	AssignSprite(lws, "EmptyWhitePixel");
+	auto& rrs = Engine::Registry().emplace<Sprite>(rr);
+	AssignSprite(rrs, "EmptyWhitePixel");
+	auto& rws = Engine::Registry().emplace<Sprite>(rw);
+	AssignSprite(rws, "EmptyWhitePixel");
+
+	/*for (int i = 0; i < 100; i++)
 	{
 		auto entity				= Engine::Registry().create();
 		auto& sprite			= Engine::Registry().emplace<Sprite>(entity);
@@ -56,6 +92,7 @@ void HUDSystem::CreateHealthBar(bool side)
 		AssignSprite(sprite, "EmptyWhitePixel");
 
 	}
+	*/
 
 }
 
@@ -130,8 +167,6 @@ void brawler::HUDSystem::CreateMarkersAndTexts()
 void HUDSystem::Run()
 {
 
-	auto healthBlips = Engine::Registry().view<Sprite, Transform, HealthBlip>();
-
 	auto playerLeft = Engine::Registry().get<Player>(Brawler::leftPlayer);
 	auto playerRight = Engine::Registry().get<Player>(Brawler::rightPlayer);
 
@@ -159,40 +194,47 @@ void HUDSystem::Run()
 
 
 	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp;
-	
-	for (auto obj : healthBlips)
-	{
-		auto& t = healthBlips.get<Transform>(obj);
-		auto& s = healthBlips.get<Sprite>(obj);
-		auto& h = healthBlips.get<HealthBlip>(obj);
-		s.scale = {HUDSystem::s_blipWidth / s.size.x, HUDSystem::s_blipHeight / s.size.y};
+	Engine::Registry().view<HealthBar, Sprite>().each([&](HealthBar& hb, Sprite& hbSprite) {
+		
+		float whitePartWidth = 100 * HUDSystem::s_blipWidth;;
+		float whiteX = 0;
 
-		float offsetX = 0;
-		Player player;
-		if (!h.side) {
-			offsetX = BulletSystem::s_CameraBoundLeft +  HUDSystem::s_blipWidth * h.idx;
-			player = playerLeft;
+
+		float redPartWidth = 0;
+		float redX   = 0;
+		
+		
+		if (!hb.side)
+		{
+			redPartWidth = playerLeft.health * HUDSystem::s_blipWidth;
+			redX = BulletSystem::s_CameraBoundLeft + redPartWidth / 2;
+			whiteX = BulletSystem::s_CameraBoundLeft + whitePartWidth / 2;
 		}
 		else {
-			offsetX = BulletSystem::s_CameraBoundRight - HUDSystem::s_blipWidth * (99 - h.idx);
-			player = playerRight;
-			
+			redPartWidth = playerRight.health * HUDSystem::s_blipWidth;
+			redX = BulletSystem::s_CameraBoundRight - redPartWidth / 2;
+			whiteX = BulletSystem::s_CameraBoundRight - whitePartWidth / 2;
 		}
 
-		if ((!h.side && h.idx <= player.health - 1)
-			|| (h.side && (99 - h.idx <= player.health - 1))) {
-			s.color = { 1.0f, 0.0f, 0.0f, 1.0f };
+		if (hb.color)
+		{
+			// Red
+			hbSprite.scale = { redPartWidth / hbSprite.size.x, HUDSystem::s_blipHeight / hbSprite.size.y};
+			hbSprite.color = { 1.0f, 0.0f, 0.0f, 1.0f };
+			hbSprite.position = { redX, offsetY, 0.0f };
 		}
 		else {
-			s.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			// White
+			hbSprite.scale = { whitePartWidth / hbSprite.size.x , HUDSystem::s_blipHeight  / hbSprite.size.y};
+			hbSprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			hbSprite.position = { whiteX, offsetY, 1.0f };
+
 		}
+		
+		
 
+	});
 
-
-		t.position.x = offsetX;
-		t.position.y = offsetY;
-		//s.position = t.position;
-	}
 
 	offsetY -= HUDSystem::s_blipHeight + HUDSystem::s_midPaddingUp;
 	float totalHudWidth = 100 * HUDSystem::s_blipWidth;
