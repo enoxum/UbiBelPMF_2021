@@ -154,7 +154,7 @@ void atonement::SetUpWorld()
 
     auto entity = reg.create();
     auto& sprite = reg.emplace<Sprite>(entity);
-    AssignSprite(sprite, "start_test");
+    AssignSprite(sprite, "selected");
 
     sprite.size.x = tileSize;
     sprite.size.y = tileSize/2;
@@ -172,12 +172,12 @@ void atonement::SetUpWorld()
     for (int i = 0; i < 2; i++){
         auto entity2 = reg.create();
         auto& sprite2 = reg.emplace<Sprite>(entity2);
-        AssignSprite(sprite2, "start_test2");
+        AssignSprite(sprite2, "start_test");
         
         auto& transform2 = reg.emplace<Transform>(entity2);
 
-        transform2.position.x = (1.9365f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform2.position.y = (1.265f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+        transform2.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform2.position.y = (1.277f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
         transform2.position.z = 1.f;
     }
 
@@ -193,7 +193,7 @@ void AtonementGame::WorldSetup(){
     camera->zoom = 1;
     camera->position = { 0, 0, 0 };
     camera->Update();
-
+    Engine::ToggleSystemsPause(true);
     atonement::SetUpWorld();
 }
 
