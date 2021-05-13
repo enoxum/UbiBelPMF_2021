@@ -25,33 +25,33 @@ void SimpleCollisionsSystem::Run()
             // processing one collision per frame for each colider
             if (collision.IsCollided(transform.position, col, tr.position))
             {
-                collision.colided = true;
-                collision.colidedWith = *it2;
-                
-                col.colided = true;
+                collision.colidedWith = *it2;   
                 col.colidedWith = *it;
                 
                 if (collision.GetCollisionSides(transform.position, col, tr.position).x == 1){
                     transform.position.x = transform.position.x - collision.size.x/10.f;
-                    collision.colided = false;
-                    col.colided = false;
+                    collision.colided = true;
+                    col.colided = true;
                 }
                 else if(collision.GetCollisionSides(transform.position, col, tr.position).x == -1){
                     transform.position.x = transform.position.x + collision.size.x/10.f;
-                    collision.colided = false;
-                    col.colided = false;
+                    collision.colided = true;
+                    col.colided = true;
                 }
                 else if(collision.GetCollisionSides(transform.position, col, tr.position).y == 1){
                     transform.position.y = transform.position.y - collision.size.y/10.f;
-                    collision.colided = false;
-                    col.colided = false;
+                    collision.colided = true;
+                    col.colided = true;
                 }
                 else if(collision.GetCollisionSides(transform.position, col, tr.position).y == -1){
                     transform.position.y = transform.position.y + collision.size.y/10.f;
-                    collision.colided = false;
-                    col.colided = false;
+                    collision.colided = true;
+                    col.colided = true;
                 }
                 
+                col.colided = false;
+                collision.colided = false;
+
             }
             it2++;
         }
