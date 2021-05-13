@@ -22,8 +22,8 @@ static inline EDirection GetDirectionFromVector(const Vector2 hv_)
     else if (hv_.x == 1 && hv_.y == 0) return EDirection::Right;
     else if (hv_.x == -1 && hv_.y == 0) return EDirection::Left;
     else if (hv_.x == 0 && hv_.y == 1) return EDirection::Down;
-    else if (hv_.y == -1) return EDirection::Down;
-    else if (hv_.y == 1) return EDirection::Up;
+    else if (hv_.y == -1) return EDirection::Up;
+    else if (hv_.y == 1) return EDirection::Down;
     else if (hv_.x == -1) return EDirection::Left;
     else if (hv_.x == 1) return EDirection::Right;
 }
