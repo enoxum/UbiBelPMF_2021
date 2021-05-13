@@ -13,7 +13,6 @@
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
 #include "tools/diagnostics.h"
-#include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/editor/savegame_system.h"
 #include "core/savegame.h"
@@ -27,6 +26,7 @@
 #include "gameplay/atonement/systems/character_collisions.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/atonement/systems/atonement_start_menu.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -99,15 +99,12 @@ void AtonementGame::CoreSystemsSetup()
     engine.AddSystem<ShaderSystem>();
     engine.AddSystem<TextureSystem>();
     engine.AddSystem<SpriteRenderSystem>();
-    engine.AddSystem<AtonementPauseSystem>();
-
     engine.AddPausableSystem<TransformSystem>();
     engine.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
     engine.AddSystem<DiagnosticSystem>();
     engine.AddSystem<GUISystem>();
     engine.AddSystem<ToolMenuSystem>();
-    //engine.AddPausableSystem<test_system>();
 #endif //!defined(NDEBUG)
 }
 
@@ -115,6 +112,7 @@ void AtonementGame::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
 
+    engine.AddSystem<AtonementStartMenu>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<CharacterCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
@@ -122,15 +120,14 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<GroundednessDetectionSystem>();
     engine.AddPausableSystem<CollisionHandlerSystem>();
     engine.AddPausableSystem<CooldownManager>();
+    engine.AddSystem<AtonementPauseSystem>();
 
 
 #if defined(DAGGER_DEBUG)
 #endif //defined(DAGGER_DEBUG)
 }
 
-
-
-void AtonementGame::WorldSetup()
+void atonement::SetUpWorld()
 {
     auto* camera = Engine::GetDefaultResource<Camera>();
     camera->mode = ECameraMode::FixedResolution;
@@ -141,11 +138,61 @@ void AtonementGame::WorldSetup()
 
     //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
-        SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
 
+    
+    
+    SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
     auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
     mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
+
+    auto& reg = Engine::Registry();
+    constexpr int width = 4;
+    constexpr int height = 2;
+    float tileSize = 300.f;
+    constexpr float Space = 0.3f;
+
+    auto entity = reg.create();
+    auto& sprite = reg.emplace<Sprite>(entity);
+    AssignSprite(sprite, "start_test");
+
+    sprite.size.x = tileSize;
+    sprite.size.y = tileSize/2;
+
+    auto& transform = reg.emplace<Transform>(entity);
+
+        transform.position.x = (1.0f + 1 + 1 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform.position.y = (1.0f + 2 + 2 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+        transform.position.z = 0.f;
+
+        auto& controller = reg.emplace<SelectionMapping>(entity);
+
+    for (int i = 0; i < 2; i++){
+        auto entity2 = reg.create();
+        auto& sprite2 = reg.emplace<Sprite>(entity2);
+        AssignSprite(sprite2, "start_test2");
+        
+        auto& transform2 = reg.emplace<Transform>(entity2);
+
+        transform2.position.x = (1.0f+1 + 1 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform2.position.y = (1.0f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+        transform2.position.z = 1.f;
+    }
+
+}
+
+void AtonementGame::WorldSetup(){
+
+
+
+     auto* camera = Engine::GetDefaultResource<Camera>();
+    camera->mode = ECameraMode::FixedResolution;
+    camera->size = { 800, 600 };
+    camera->zoom = 1;
+    camera->position = { 0, 0, 0 };
+    camera->Update();
+
+    atonement::SetUpWorld();
 }
 
 

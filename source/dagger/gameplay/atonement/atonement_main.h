@@ -13,6 +13,8 @@ using namespace dagger;
 
 namespace atonement
 {
+    void SetUpWorld();
+
     class AtonementGame : public Game, public SaveLoadProcess<ECommonSaveArchetype>
     {
         inline String GetIniFile() override
