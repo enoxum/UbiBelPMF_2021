@@ -7,7 +7,7 @@ using namespace dagger;
 
 namespace hotline_miami
 {
-    enum DIRECTION { look_down, look_right, look_top, look_left };
+    enum DIRECTION { DOWN, RIGHT, TOP, LEFT };
 
     struct ControllerMapping
     {
@@ -25,6 +25,7 @@ namespace hotline_miami
 
         // shooting
         EDaggerKeyboard shoot_key;
+        bool shoot = { false };
 
         // moving input
         Vector2 input{ 0, 0 };
@@ -56,7 +57,7 @@ namespace hotline_miami
 
             controllerMapping_.shoot_key = EDaggerKeyboard::KeySpace;
 
-            controllerMapping_.look_direction = look_down;
+            controllerMapping_.look_direction = DOWN;
         }
 
     private:

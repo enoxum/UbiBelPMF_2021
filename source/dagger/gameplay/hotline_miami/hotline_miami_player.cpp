@@ -38,20 +38,20 @@ void HotlineMiamiPlayerObstacleCollisionSystem::Run()
                    
                     if (collisionSides.x > 0)
                     {
-                        t.position.x -= player.s_PlayerSpeed * dt;
+                        t.position.x -= player.player_speed * dt;
                     }
                     else if (collisionSides.x < 0)
                     {
-                        t.position.x += player.s_PlayerSpeed * dt;
+                        t.position.x += player.player_speed * dt;
                     }
 
                     if (collisionSides.y > 0)
                     {
-                        t.position.y -= player.s_PlayerSpeed * dt;
+                        t.position.y -= player.player_speed * dt;
                     }
                     else if (collisionSides.y < 0)
                     {
-                        t.position.y += player.s_PlayerSpeed * dt;
+                        t.position.y += player.player_speed * dt;
                     }
 
                 } while (col.IsCollided(t.position, collision, transform.position));
