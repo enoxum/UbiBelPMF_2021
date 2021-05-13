@@ -255,27 +255,8 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     //1st player
     {
-     /*   auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = playerSize;
-        col.size.y = playerSize;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = (2.5f - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
-        transform.position.y = 0;
-        transform.position.z = zPos;
-
-         // player 
-        
-        auto &sprite = reg.emplace<Sprite>(entity);
-       AssignSprite(sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
-        float ratio = sprite.size.y / sprite.size.x;
-        sprite.size = {2 * tileSize, 2 * tileSize * ratio};
-        */
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
         
     }
 
-    // // add score system to count scores for left and right collisions
-    // PlayerScoresSystem::SetFieldSize(width, height, tileSize * (1 + Space));
 }
