@@ -30,6 +30,7 @@ class DebugGui
 		bool debugActive { true };
 
 		bool resetPosition { false };
+		bool activateSpawners { false };
 };
 
 }

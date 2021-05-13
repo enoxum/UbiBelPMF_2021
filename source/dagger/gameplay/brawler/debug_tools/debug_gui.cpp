@@ -7,6 +7,7 @@
 #include "gameplay/brawler/entities/character.h"
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/bullet_system.h"
+#include "gameplay/brawler/systems/weapon_spawn_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -82,6 +83,9 @@ void DebugGui::RenderDebugWindow()
 
 	if (ImGui::CollapsingHeader("Weapons"))
 	{
+		if(ImGui::Button("Activate all spawners", ImVec2(ImGui::GetWindowSize().x, 0.0f)))
+			activateSpawners = true;
+		
 		Engine::Registry().view<Player>().each([&](Player& player) {
 			ImGui::Text("Player one:");
 			for (int i = 0; i < player.weapons.size(); i++) {
@@ -120,5 +124,10 @@ void DebugGui::OnEndOfFrame()
 				s.scale.x = p.startDirection;
 			});
 		resetPosition = false;
+	}
+
+	if(activateSpawners) {
+		Engine::GetDefaultResource<WeaponSpawnSystem>()->SpawnAll();
+		activateSpawners = false;
 	}
 }

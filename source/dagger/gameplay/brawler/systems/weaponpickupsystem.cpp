@@ -3,7 +3,6 @@
 #include "iostream"
 
 #include "core/engine.h"
-#include "core/input/inputs.h"
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 
@@ -11,7 +10,6 @@
 
 #include "gameplay/brawler/components/weaponpickup.h"
 #include "gameplay/brawler/entities/weaponpickup.h"
-#include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/systems/shooting_system.h"
 
@@ -21,32 +19,22 @@ using namespace dagger;
 void WeaponPickupSystem::Run()
 {
 
-    auto viewInputDebug = Engine::Registry().view<InputReceiver>();
-
-    viewInputDebug.each([](auto& input) {
-        if (EPSILON_NOT_ZERO(input.Get("spawn_weapon_debug")))
-        {
-            // TODO: This will need to include platforms as well
-            // TODO: Also need to check whether pickups overlap with each other
-            // TODO: Generate between camera bounds instead of hardcode
-            // That's a lot of TODOs :D
-            auto rand_x = static_cast<float>((rand() % (175 + 1 + 175)));
-            WeaponPickupEntity::Create(Vector2{ rand_x, 60.0f}, static_cast<WeaponType>(rand() % 3));
-        }
-    });
+    auto wpSpriteView = Engine::Registry().view<WeaponPickup, Transform, Sprite>();
+    for (auto wpEntity: wpSpriteView)
+    {
+        auto wpData = WeaponPickupEntity::Get(wpEntity);
+        wpData.sprite.position.y = wpData.transform.position.y + std::sin((Engine::CurrentTime() - wpData.weaponPickup.spawnTime).count()/200000000.0f);
+    }
 
     auto wpColView = Engine::Registry().view<WeaponPickup, Transform, SimpleCollision>();
     auto playerColView = Engine::Registry().view<Player, Transform, SimpleCollision>();
-
-    auto wpColIt = wpColView.begin();
-
    
     for (auto wpColEntity: wpColView)
     {
         auto wpData = WeaponPickupEntity::Get(wpColEntity);
         auto& wpCol = wpData.col;
 
-        if (wpData.weaponPickup.pickedUp || !wpCol.colided)
+        if (!wpCol.colided)
             continue;
         for (auto playerColEntity : playerColView)
         {
@@ -80,20 +68,14 @@ void WeaponPickupSystem::Run()
                     ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
                 }
             }
-            else {
+            else
+            {
                 existingWeaponIt->transferAmmo(pickedUpWeapon);
             }
 
-            wpData.weaponPickup.pickedUp = true;
+            Engine::Registry().destroy(wpColEntity);
             
         }
     }
 
-    for (auto wpColEntity : wpColView)
-    {
-        if (WeaponPickupEntity::Get(wpColEntity).weaponPickup.pickedUp)
-        {
-            Engine::Registry().destroy(wpColEntity);
-        }
-    }
 }

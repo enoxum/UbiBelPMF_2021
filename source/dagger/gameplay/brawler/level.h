@@ -13,7 +13,8 @@ namespace brawler {
 	{
 		EMPTY,
 		BLOCK,
-		ONEWAY
+		ONEWAY,
+		SPAWNER
 	};
 
 	using Tilemap = std::vector<std::vector<PlatformType>>;

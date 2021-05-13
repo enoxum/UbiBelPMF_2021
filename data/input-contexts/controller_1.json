@@ -12,7 +12,6 @@
 		{ "command-name": "attack", "trigger": "KeyX" , "event": "Released"},
 		{ "command-name": "reload", "trigger": "KeyR" , "event": "Reload"},
 		{ "command-name": "cycle_weapons", "trigger": "KeyE" , "event": "Cycle weapons"},
-		{ "command-name": "spawn_weapon_debug", "trigger": "KeyV" , "event": "Released"},
 		{ "command-name": "drop_weapon", "trigger": "KeyQ" , "event": "Released"}
 	]
 }

@@ -43,14 +43,13 @@ namespace brawler
 
             auto wp = WeaponPickupEntity::Get(entity);
             wp.weaponPickup.weapon = Weapon::CreateRandom();
-            wp.transform.position = { position_, 0.0f };
-            wp.sprite.position = { position_, 0.0f };
-            wp.sprite.size = { 1, 1 };
-            wp.sprite.scale = { 1, 1 };
+            wp.weaponPickup.spawnTime = Engine::CurrentTime();
+            wp.transform.position = { position_.x, position_.y, 0.0f };
+            wp.sprite.position = { position_.x, position_.y, 0.0f };
             
-            wp.col.size = wp.sprite.size;    
-
             AssignSprite(wp.sprite, "brawler:" + wp.weaponPickup.weapon.sprite());
+
+            wp.col.size = wp.sprite.size;    
 
             return wp;
         }
