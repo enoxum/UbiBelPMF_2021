@@ -9,7 +9,6 @@ namespace hotline_miami
 {
     struct HotlineMiamiObstacle
     {
-
         bool isObstacle{ true };
     };
 

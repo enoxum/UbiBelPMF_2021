@@ -1,6 +1,7 @@
 #include "hotline_miami_main.h"
 #include "hotline_miami_obstacle.h"
 #include "hotline_miami_player.h"
+#include "gameplay/hotline_miami/hotline_miami_projectile.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -18,7 +19,6 @@
 
 #include "gameplay/hotline_miami/hotline_miami_player_input.h"
 #include "gameplay/common/simple_collisions.h"
-
 
 using namespace dagger;
 using namespace hotline_miami;
@@ -49,6 +49,7 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
+    engine.AddPausableSystem< HotlineMiamiProjectileSystem>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
 }
 
@@ -118,7 +119,6 @@ void hotline_miami::SetupWorld()
         sprite.size.y = tileSize;
 
         auto& player = reg.emplace<HotlineMiamiPlayer>(entity);
-        player.s_PlayerSpeed = 30.f;
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
         HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
