@@ -5,7 +5,7 @@ namespace brawler {
 	struct WeaponPickup
 	{
 		Weapon weapon;
-		bool pickedUp{ false };
+		TimePoint spawnTime;
 	};
 }
 

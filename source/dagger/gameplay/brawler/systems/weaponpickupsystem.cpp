@@ -35,18 +35,22 @@ void WeaponPickupSystem::Run()
         }
     });
 
+    auto wpSpriteView = Engine::Registry().view<WeaponPickup, Transform, Sprite>();
+    for (auto wpEntity: wpSpriteView)
+    {
+        auto wpData = WeaponPickupEntity::Get(wpEntity);
+        wpData.sprite.position.y = wpData.transform.position.y + std::sin((Engine::CurrentTime() - wpData.weaponPickup.spawnTime).count()/200000000.0f);
+    }
+
     auto wpColView = Engine::Registry().view<WeaponPickup, Transform, SimpleCollision>();
     auto playerColView = Engine::Registry().view<Player, Transform, SimpleCollision>();
-
-    auto wpColIt = wpColView.begin();
-
    
     for (auto wpColEntity: wpColView)
     {
         auto wpData = WeaponPickupEntity::Get(wpColEntity);
         auto& wpCol = wpData.col;
 
-        if (wpData.weaponPickup.pickedUp || !wpCol.colided)
+        if (!wpCol.colided)
             continue;
         for (auto playerColEntity : playerColView)
         {
@@ -84,16 +88,9 @@ void WeaponPickupSystem::Run()
                 existingWeaponIt->transferAmmo(pickedUpWeapon);
             }
 
-            wpData.weaponPickup.pickedUp = true;
+            Engine::Registry().destroy(wpColEntity);
             
         }
     }
 
-    for (auto wpColEntity : wpColView)
-    {
-        if (WeaponPickupEntity::Get(wpColEntity).weaponPickup.pickedUp)
-        {
-            Engine::Registry().destroy(wpColEntity);
-        }
-    }
 }
