@@ -35,6 +35,9 @@ void DropSystem::Run()
                 player.pickedUpWeapons--;
                 player.weapons.pop_back();
 
+                if(player.weapons.size() == 0)
+                    player.active_weapon_idx = -1;
+
                 auto& sprite = Engine::Registry().get<Sprite>(player.currentWeapon);
 
                 if(player.pickedUpWeapons == 0){
