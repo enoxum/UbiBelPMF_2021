@@ -187,14 +187,14 @@ template<>
  JSON::json SerializeComponent(BouncyComponent& input_)
  {
      JSON::json save{};
-     save["isBouncy"] = SerializeComponent(input_.isBouncy);
+     save["isBouncy"] = input_.isBouncy;
      return save;
  }
 
  template<>
  void DeserializeComponent(JSON::json input_, BouncyComponent& fill_)
  {
-     DeserializeComponent(input_["isBouncy"], fill_.isBouncy);
+     fill_.isBouncy = input_["isBouncy"];
  }
 
  //Serialize Deadly Marker Component
@@ -203,14 +203,14 @@ template<>
  JSON::json SerializeComponent(DeadlyComponent& input_)
  {
      JSON::json save{};
-     save["isDeadly"] = SerializeComponent(input_.isDeadly);
+     save["isDeadly"] = input_.isDeadly;
      return save;
  }
 
  template<>
  void DeserializeComponent(JSON::json input_, DeadlyComponent& fill_)
  {
-     DeserializeComponent(input_["isDeadly"], fill_.isDeadly);
+     fill_.isDeadly = input_["isDeadly"];
  }
 
  //Serialize Interactable Component
@@ -219,12 +219,12 @@ template<>
  JSON::json SerializeComponent(InteractableComponent& input_)
  {
      JSON::json save{};
-     save["id"] = SerializeComponent(input_.id);
+     save["id"] = input_.id;
      return save;
  }
 
  template<>
  void DeserializeComponent(JSON::json input_, InteractableComponent& fill_)
  {
-     DeserializeComponent(input_["id"], fill_.id);
+     fill_.id = input_["id"];
  }
