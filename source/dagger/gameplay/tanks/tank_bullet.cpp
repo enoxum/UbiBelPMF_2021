@@ -30,6 +30,9 @@ void TankBulletSystem::Run()
 
             //std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
 
+            Engine::Registry().destroy(entity);
+
+            /*
             if (Engine::Registry().valid(col.colidedWith))
             {
                 SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
@@ -63,6 +66,7 @@ void TankBulletSystem::Run()
                     ball.speed.y *= -1;
                 }
             }
+            */
 
             col.colided = false;
         }
