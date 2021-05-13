@@ -258,13 +258,6 @@ void HUDSystem::Run()
 		//s.position = t.position;
 		s.scale = { HUDSystem::s_weaponDim/s.size.x, HUDSystem::s_weaponDim/s.size.y };
 
-
-	
-		
-		
-
-
-
 	}
 
 

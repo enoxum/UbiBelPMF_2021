@@ -30,10 +30,8 @@
 using namespace dagger;
 using namespace brawler;
 
-Entity Brawler::leftPlayer = {};
-Entity Brawler::rightPlayer = {};
-Entity Brawler::leftMainWeaponBlip = {};
-Entity Brawler::rightMainWeaponBlip = {};
+Entity Brawler::leftPlayer{ entt::null };
+Entity Brawler::rightPlayer{ entt::null };
 
 void Brawler::GameplaySystemsSetup()
 {

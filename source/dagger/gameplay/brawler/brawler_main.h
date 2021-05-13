@@ -26,7 +26,5 @@ namespace brawler
     public:
         static Entity leftPlayer;
         static Entity rightPlayer;
-        static Entity leftMainWeaponBlip;
-        static Entity rightMainWeaponBlip;
     };
 }
