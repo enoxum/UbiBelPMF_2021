@@ -20,7 +20,7 @@
 #include "gameplay/ping_pong/player_scores.h"
 #include "gameplay/ping_pong/pingpong_tools.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
-#include "gameplay/PandemicShop/pandemic_tools.h"
+// #include "gameplay/PandemicShop/pandemic_tools.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h";
 
 
@@ -41,7 +41,7 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
     engine_.AddSystem<DiagnosticSystem>();
-    engine_.AddSystem<CollisionDetectionSystem>();
+    // engine_.AddSystem<CollisionDetectionSystem>();
     engine_.AddSystem<GUISystem>();
     engine_.AddSystem<ToolMenuSystem>();
 #endif //!defined(NDEBUG)
@@ -273,6 +273,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         sprite.size = {2 * tileSize, 2 * tileSize * ratio};
         */
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+        
     }
 
     // // add score system to count scores for left and right collisions

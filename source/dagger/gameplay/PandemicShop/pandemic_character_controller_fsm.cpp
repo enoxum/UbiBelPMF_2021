@@ -16,7 +16,7 @@ using namespace pandemic;
 void PandemicCharacterControllerFSM::Idle::Enter(
     PandemicCharacterControllerFSM::StateComponent &state_) {
 
-    auto& [animator, character] = Engine::Registry().get<Animator, pandemic::PandemicCharacter>(state_.entity);
+    auto&& [animator, character] = Engine::Registry().get<Animator, pandemic::PandemicCharacter>(state_.entity);
     AnimatorPlay(animator, "PandemicShop:IDLE" + GetNameFromDirection(character.direction));
 }
 

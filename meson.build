@@ -54,7 +54,6 @@ sources = [
     'source/dagger/gameplay/platformer/camera_focus.cpp',
     'source/dagger/gameplay/platformer/parallax.cpp',
     'source/dagger/gameplay/platformer/platformer_controller.cpp',
-    'source/dagger/gameplay/platformer/platformer_main.cpp',
     'source/dagger/gameplay/platformer/character_controller_fsm.cpp',
     'source/dagger/gameplay/racing/racing_car.cpp',
     'source/dagger/gameplay/racing/racing_game_logic.cpp',
