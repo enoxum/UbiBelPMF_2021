@@ -150,7 +150,11 @@ namespace brawler {
 		int		clipSize() const;
 		int		numClips() const;
 		int		currentAmmoInClip() const;
+
+
+		String  ammoRepr() const;
 		String  sprite() const;
+
 
 
 		bool	reload();

@@ -84,7 +84,7 @@ void DebugGui::RenderDebugWindow()
     if (ImGui::CollapsingHeader("Weapons"))
     {
         Engine::Registry().view<Player>().each([&](Player& player) {
-            ImGui::Text("Player one:");
+            ImGui::Text("Player %s:", player.side? "right": "left");
             for (int i = 0; i < player.weapons.size(); i++) {
                 const auto& weapon = player.weapons[i];
                 ImGui::Text("\t%s%s : x%d [%d]", (i == player.active_weapon_idx ? "> " : ""), weapon.name().c_str(), weapon.currentAmmoInClip(), weapon.numClips());
@@ -95,12 +95,16 @@ void DebugGui::RenderDebugWindow()
 
     if (ImGui::CollapsingHeader("HUD"))
     {
-        ImGui::SliderFloat("Blip width: ", &HUDSystem::s_blipWidth, 0.0f, 10.0f);
-        ImGui::SliderFloat("Weapon width: ", &HUDSystem::s_weaponDim, 0, 100);
+        ImGui::SliderFloat("Blip width: ", &HUDSystem::s_blipWidth, 0.0f, 5.0f);
+        ImGui::SliderFloat("Blip height: ", &HUDSystem::s_blipHeight, 0.0f, 100.0f);
+        ImGui::SliderFloat("Weapon dim: ", &HUDSystem::s_weaponDim, 0, 100);
         ImGui::SliderFloat("Active weapon indicator size: ", &HUDSystem::s_activeWeaponIndicatorSize, 0.0f, 100.0f);
         ImGui::SliderFloat("Padding up: ", &HUDSystem::s_paddingUp, 0.0f, 50.0f);
         ImGui::SliderFloat("Padding side: ", &HUDSystem::s_paddingSide, 0.0f, 50.0f);
-        ImGui::SliderInt("Player health: ", &HUDSystem::s_playerHealth, 0, 100);
+        ImGui::SliderFloat("Mid padding up: ", &HUDSystem::s_midPaddingUp, 0.0f, 50.0f);
+        ImGui::SliderFloat("Mid padding side: ", &HUDSystem::s_midPaddingSide, 0.0f, 50.0f);
+        ImGui::SliderInt("Left player health: ", &HUDSystem::s_leftPlayerHealth, 0, 100);
+        ImGui::SliderInt("Right player health: ", &HUDSystem::s_rightPlayerHealth, 0, 100);
         
     }
      

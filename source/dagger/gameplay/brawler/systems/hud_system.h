@@ -12,19 +12,27 @@ namespace brawler {
     class HUDSystem : public System
     {
     public:
-        static float s_mainWeaponScale;
         static float s_weaponDim;
         static float s_blipWidth;
         static float s_blipHeight;
 
         static float s_activeWeaponIndicatorSize;
-        static float s_miscPadding;
  
         static float s_paddingUp;
         static float s_paddingSide;
 
+        static float s_midPaddingUp;
+        static float s_midPaddingSide;
+
         // debug
-        static int   s_playerHealth;
+        static int   s_leftPlayerHealth;
+        static int   s_rightPlayerHealth;
+
+
+        static      Entity leftMarker;
+        static      Entity rightMarker;
+        static      Entity leftText;
+        static      Entity rightText;
         
 
 
@@ -36,9 +44,8 @@ namespace brawler {
         static void CreateWeaponsRight();
         static void CreateWeapons(bool side);
 
-        static void CreateMainWeaponBlip(bool side);
-        static void CreateLeftMainWeaponBlip();
-        static void CreateRightMainWeaponBlip();
+
+        static void CreateMarkersAndTexts();
 
     public:
 
@@ -48,7 +55,6 @@ namespace brawler {
 
 
         void Run() override;
-
 
     };
 

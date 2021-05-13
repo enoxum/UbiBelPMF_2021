@@ -64,6 +64,7 @@ namespace brawler
             chr.sprite.color = { color_, 1.0f };
 
             chr.col.size = chr.sprite.size;
+            chr.character.side = side;
 
             AssignSprite(chr.sprite, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
             AnimatorPlay(chr.animator, "Gunner_Green:IDLE");

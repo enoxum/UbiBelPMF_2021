@@ -119,16 +119,25 @@ void Brawler::WorldSetup()
     SetCamera();
     // CreateBackdrop();
 
-    auto c1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
-    //auto c2 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 });
+    auto c1 = BrawlerCharacter::Create("controller_1", { 1, 1, 1 }, { 0, 0 }, false);
     Brawler::leftPlayer = c1.entity;
-    //Brawler::rightPlayer = c2.entity;
-
     HUDSystem::CreateHealthBarLeft();
-    //HUDSystem::CreateHealthBarRight();
-    //HUDSystem::CreateLeftMainWeaponBlip();
-    //HUDSystem::CreateRightMainWeaponBlip();
     HUDSystem::CreateWeaponsLeft();
+
+    auto c2 = BrawlerCharacter::Create("Arrows", { 1, 1, 1 }, { 0, 0 }, true);
+    Brawler::rightPlayer = c2.entity;
+    HUDSystem::CreateHealthBarRight();
+    HUDSystem::CreateWeaponsRight();
+
+
+    HUDSystem::CreateMarkersAndTexts();
+    
+    
+
+    
+    
+    
+    
     //Engine::Registry().emplace<CameraFollowFocus>(player1.entity);
 
     // auto player2 = BrawlerCharacter::Create("Arrows", { 1, 0, 0 }, { 100, 0 });
