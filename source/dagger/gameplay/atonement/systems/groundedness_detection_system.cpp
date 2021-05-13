@@ -27,7 +27,7 @@ void GroundednessDetectionSystem::Run()
         {
                 bool tmp = char_.grounded;
 
-                if(collision_.colidedDown)
+                if(collision_.collidedDown)
                 {
                     char_.grounded = true;
                     char_.dashJumped = false;

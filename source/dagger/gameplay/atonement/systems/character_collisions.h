@@ -22,14 +22,14 @@ namespace atonement {
         Vector2 size;
         Vector2 pivot{ -0.5f, -0.5f };
 
-        bool colidedLeft = false;
-        entt::entity colidedWithLeft = entt::null;
-        bool colidedRight = false;
-        entt::entity colidedWithRight = entt::null;
-        bool colidedUp = false;
-        entt::entity colidedWithUp = entt::null;
-        bool colidedDown = false;
-        entt::entity colidedWithDown = entt::null;
+        bool collidedLeft = false;
+        entt::entity collidedWithLeft = entt::null;
+        bool collidedRight = false;
+        entt::entity collidedWithRight = entt::null;
+        bool collidedUp = false;
+        entt::entity collidedWithUp = entt::null;
+        bool collidedDown = false;
+        entt::entity collidedWithDown = entt::null;
         
         CollisionSide IsCollided(const Vector3& pos_, const Vector3& posOther_, const SimpleCollision& colOther_);
 

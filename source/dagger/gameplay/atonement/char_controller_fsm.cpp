@@ -83,7 +83,7 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 			sprite.scale.x *= -1;
 		}
 
-		if((collision.colidedLeft && sprite.scale.x < 0) || (collision.colidedRight && sprite.scale.x > 0)){
+		if((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)){
 			transform.position.x -= movedInLastFrame;
 			movedInLastFrame = 0;
 		}
@@ -141,7 +141,7 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 			sprite.scale.x *= -1;
 		}
 
-		if ((collision.colidedLeft && sprite.scale.x < 0) || (collision.colidedRight && sprite.scale.x > 0)) {
+		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 			transform.position.x -= movedInLastFrame;
 			movedInLastFrame = 0;
 		}
@@ -151,12 +151,12 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 		}
 	}
 
-	if (character.jumpedHeight < character.jumpHeight && !collision.colidedUp) {
+	if (character.jumpedHeight < character.jumpHeight && !collision.collidedUp) {
 		Float32 tmp = character.jumpSpeed * sprite.scale.y * Engine::DeltaTime();
 		transform.position.y += tmp;
 		character.jumpedHeight += tmp;
 	}
-	else if (collision.colidedUp) {
+	else if (collision.collidedUp) {
 		transform.position.y -= jumpedInLastFrame;
 		jumpedInLastFrame = 0;
 		character.jumpedHeight = 0;
@@ -204,7 +204,7 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 			sprite.scale.x *= -1;
 		}
 
-		if ((collision.colidedLeft && sprite.scale.x < 0) || (collision.colidedRight && sprite.scale.x > 0)) {
+		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 			transform.position.x -= movedInLastFrame;
 			movedInLastFrame = 0;
 		}
@@ -247,7 +247,7 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 
 	auto&& [transform, sprite, character, collision] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
 
-	Bool collided = (collision.colidedLeft && sprite.scale.x < 0) || (collision.colidedRight && sprite.scale.x > 0);
+	Bool collided = (collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0);
 
 	if (collided) {
 		transform.position.x -= dashedInLastFrame;

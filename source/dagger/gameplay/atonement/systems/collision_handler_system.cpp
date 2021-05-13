@@ -22,17 +22,17 @@ void CollisionHandlerSystem::Run()
 
             auto& col = view.get<CharacterCollision>(entity);
             
-            /*if (col.colidedLeft) {
-                std::cout << "Collided LEFT " << int(entity) << " " << int(col.colidedWithLeft) << std::endl;
+            /*if (col.collidedLeft) {
+                std::cout << "Collided LEFT " << int(entity) << " " << int(col.collidedWithLeft) << std::endl;
             }
-            if (col.colidedRight) {
-                std::cout << "Collided RIGHT " << int(entity) << " " << int(col.colidedWithRight) << std::endl;
+            if (col.collidedRight) {
+                std::cout << "Collided RIGHT " << int(entity) << " " << int(col.collidedWithRight) << std::endl;
             }
-            if (col.colidedUp) {
-                std::cout << "Collided UP " << int(entity) << " " << int(col.colidedWithUp) << std::endl;
+            if (col.collidedUp) {
+                std::cout << "Collided UP " << int(entity) << " " << int(col.collidedWithUp) << std::endl;
             }
-            if (col.colidedDown) {
-                std::cout << "Collided DOWN " << int(entity) << " " << int(col.colidedWithDown) << std::endl;
+            if (col.collidedDown) {
+                std::cout << "Collided DOWN " << int(entity) << " " << int(col.collidedWithDown) << std::endl;
             }*/
 
         }
