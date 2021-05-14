@@ -28,7 +28,7 @@ namespace hotline_miami
 
         static void SetupProjectileStats(HotlineMiamiProjectile& HotlineMiamiProjectile_, int look_direction)
         {
-            HotlineMiamiProjectile_.projectile_speed = 500.f;
+            HotlineMiamiProjectile_.projectile_speed = 600.f;
 
             if (look_direction == DOWN)
             {

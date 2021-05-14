@@ -1,4 +1,4 @@
-project('dagger', 'c', 'cpp', default_options : ['cpp_std=c++17' ])
+4project('dagger', 'c', 'cpp', default_options : ['cpp_std=c++17' ])
 
 deps = [
     dependency('glfw3'),
@@ -58,6 +58,7 @@ sources = [
     'source/dagger/gameplay/hotline_miami/hotline_miami_projectile.cpp',
     'source/dagger/gameplay/hotline_miami/hotline_miami_weapon.cpp',
     'source/dagger/gameplay/hotline_miami/hotline_miami_tools.cpp',
+    'source/dagger/gameplay/hotline_miami/hotline_miami_camera_focus.cpp',
     'source/dagger/gameplay/ping_pong/ping_pong_main.cpp',
     'source/dagger/gameplay/ping_pong/pingpong_ball.cpp',
     'source/dagger/gameplay/ping_pong/pingpong_playerinput.cpp',
