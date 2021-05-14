@@ -20,8 +20,8 @@ using namespace brawler;
 
 void BrawlerCharacterFSM::Idle::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
-	auto&& [sprite, input, animator] = Engine::Registry().get<Sprite, InputReceiver, Animator>(state_.entity);
-	AnimatorPlay(animator, "gunner:green:IDLE");
+	auto&& [player, animator] = Engine::Registry().get<Player, Animator>(state_.entity);
+	AnimatorPlay(animator, "gunner:" + player.color + ":IDLE");
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Idle);
@@ -59,8 +59,8 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 
 void BrawlerCharacterFSM::Running::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "gunner:green:RUN");
+	auto&& [player, animator] = Engine::Registry().get<Player, Animator>(state_.entity);
+	AnimatorPlay(animator, "gunner:" + player.color + ":RUN");
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Running);
@@ -108,8 +108,8 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 
 void BrawlerCharacterFSM::Jumping::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
-	auto& animator = Engine::Registry().get<Animator>(state_.entity);
-	AnimatorPlay(animator, "gunner:green:JUMP");
+	auto&& [player, animator] = Engine::Registry().get<Player, Animator>(state_.entity);
+	AnimatorPlay(animator, "gunner:" + player.color + ":JUMP");
 }
 
 DEFAULT_EXIT(BrawlerCharacterFSM, Jumping);

@@ -60,10 +60,18 @@ void Level::Load(String map)
 		backgroundZ--;
 	}
 
-	auto player1 = BrawlerCharacter::Create("controller_1", 
-		{ TileToWorldX(level->player1.x), TileToWorldY(level->player1.y) }, level->player1.isLeft);
-	// auto player2 = BrawlerCharacter::Create("controller_2",
-	// 	{ TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, level->player2.isLeft);
+	auto player1 = BrawlerCharacter::Create(
+		"Player 1",
+		"controller_1", 
+		{ TileToWorldX(level->player1.x), TileToWorldY(level->player1.y) },
+		level->player1.isLeft,
+		"blue");
+	// auto player2 = BrawlerCharacter::Create(
+	// 	"Player 2",
+	// 	"controller_2",
+	// 	{ TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, 
+	// 	level->player2.isLeft,
+	// 	"red");
 }
 
 std::optional<float> Level::getGround(Transform& t, Movable& m, SimpleCollision& c) {
