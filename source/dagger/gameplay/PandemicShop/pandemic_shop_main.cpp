@@ -69,6 +69,41 @@ void PandemicShopGame::WorldSetup(Engine& engine_)
     SetupWorld(engine_);
 }
 //---------------------------------------------------------
+struct Item {
+    Entity entity;
+    Sprite &sprite;
+    Transform &transform;
+    SimpleCollision &collision;
+    
+    static Item Get(Entity entity) {
+        auto &reg = Engine::Registry();
+        auto &sprite = reg.get_or_emplace<Sprite>(entity);
+        auto &transform = reg.get_or_emplace<Transform>(entity);
+        auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
+    return Item{entity, sprite, transform, collision};
+  }
+
+    static Item Create(String sprite_ = "", ColorRGB color_ = {1, 1, 1},
+                          Vector2 position_ = {0, 0}) {
+    auto &reg = Engine::Registry();
+    auto entity = reg.create();
+
+    auto item = Item::Get(entity);
+
+    item.transform.position = {position_, 0.0f};
+    item.collision.size = {16, 16};
+
+    item.sprite.scale = {1, 1};
+    item.sprite.position = {position_, 0.0f};
+    item.sprite.color = {color_, 1.0f};
+
+    AssignSprite(item.sprite, sprite_);
+
+    
+    return item;
+  }
+
+};
 struct Character {
   Entity entity;
   Sprite &sprite;
@@ -77,6 +112,7 @@ struct Character {
   PandemicCharacter &character;
   Transform &transform;
   SimpleCollision &collision;
+
 
   static Character Get(Entity entity) {
     auto &reg = Engine::Registry();
@@ -257,7 +293,9 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     //1st player
     {
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
-        
+        Item::Create("spritesheets:pixel_mart:american_cheese_p", {1, 1, 1}, {64, 64});    
     }
+    
+    
 
 }
