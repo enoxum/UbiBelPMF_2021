@@ -341,9 +341,9 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 	else {
 		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
 		if (cdManager->isOnCooldown(state_.entity, "boost")) {
-			movedInLastFrame = character.speed * sprite.scale.x * Engine::DeltaTime();
+			movedInLastFrame = character.boostSide * sprite.scale.x * Engine::DeltaTime();
 			transform.position.x += movedInLastFrame;
-			fallenInLastFrame = character.jumpSpeed * sprite.scale.y * Engine::DeltaTime();
+			fallenInLastFrame = character.boostUp * sprite.scale.y * Engine::DeltaTime();
 			transform.position.y += fallenInLastFrame;
 
 			if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
