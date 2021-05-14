@@ -8,6 +8,7 @@
 #include <gameplay/atonement/atonement_controller.h>
 
 #include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/atonement/systems/character_collisions.h"
 
 #include <iostream>
 
@@ -66,7 +67,9 @@ void CharControllerFSM::Walking::Exit(CharControllerFSM::StateComponent& state_)
 
 void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
+	static Float32 movedInLastFrame = 0;
+
+	auto&& [transform, sprite, input, character, collision] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
 
 	Float32 walk = input.Get("walk");
 
@@ -79,7 +82,16 @@ void CharControllerFSM::Walking::Run(CharControllerFSM::StateComponent& state_)
 		if((sprite.scale.x < 0 && walk > 0) || (sprite.scale.x > 0 && walk < 0)){
 			sprite.scale.x *= -1;
 		}
-		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+
+		if((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)){
+			transform.position.x -= movedInLastFrame;
+			movedInLastFrame = 0;
+		}
+		else {
+			movedInLastFrame = character.speed * sprite.scale.x * Engine::DeltaTime();
+			transform.position.x += movedInLastFrame;
+		}
+
 	}
 
 	if (EPSILON_NOT_ZERO(input.Get("jump")))
@@ -110,7 +122,10 @@ DEFAULT_EXIT(CharControllerFSM, JumpWindup);
 
 void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
+	static Float32 movedInLastFrame = 0;
+	static Float32 jumpedInLastFrame = 0;
+
+	auto&& [transform, sprite, input, character, collision] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
@@ -121,18 +136,34 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 	Float32 walk = input.Get("walk");
 
 	if (!(EPSILON_ZERO(walk))) {
+
 		if ((sprite.scale.x < 0 && walk > 0) || (sprite.scale.x > 0 && walk < 0)) {
 			sprite.scale.x *= -1;
 		}
-		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+
+		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
+			transform.position.x -= movedInLastFrame;
+			movedInLastFrame = 0;
+		}
+		else {
+			movedInLastFrame = character.speed * sprite.scale.x * Engine::DeltaTime();
+			transform.position.x += movedInLastFrame;
+		}
 	}
 
-	if (character.jumpedHeight < character.jumpHeight) {
+	if (character.jumpedHeight < character.jumpHeight && !collision.collidedUp) {
 		Float32 tmp = character.jumpSpeed * sprite.scale.y * Engine::DeltaTime();
 		transform.position.y += tmp;
 		character.jumpedHeight += tmp;
 	}
+	else if (collision.collidedUp) {
+		transform.position.y -= jumpedInLastFrame;
+		jumpedInLastFrame = 0;
+		character.jumpedHeight = 0;
+		GoTo(ECharStates::JumpWinddown, state_);
+	}
 	else {
+		jumpedInLastFrame = 0;
 		character.jumpedHeight = 0;
 		GoTo(ECharStates::JumpWinddown, state_);
 	}
@@ -155,7 +186,10 @@ DEFAULT_EXIT(CharControllerFSM, JumpWinddown);
 
 void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [transform, sprite, input, character] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter>(state_.entity);
+	static Float32 movedInLastFrame = 0;
+	static Float32 fallenInLastFrame = 0;
+
+	auto&& [transform, sprite, input, character, collision] = Engine::Registry().get<Transform, Sprite, InputReceiver, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
 
 	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
@@ -169,13 +203,24 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 		if ((sprite.scale.x < 0 && walk > 0) || (sprite.scale.x > 0 && walk < 0)) {
 			sprite.scale.x *= -1;
 		}
-		transform.position.x += character.speed * sprite.scale.x * Engine::DeltaTime();
+
+		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
+			transform.position.x -= movedInLastFrame;
+			movedInLastFrame = 0;
+		}
+		else {
+			movedInLastFrame = character.speed * sprite.scale.x * Engine::DeltaTime();
+			transform.position.x += movedInLastFrame;
+		}
 	}
 
 	if (!character.grounded) {
-		transform.position.y -= character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		fallenInLastFrame = character.fallSpeed * sprite.scale.y * Engine::DeltaTime();
+		transform.position.y -= fallenInLastFrame;
 	}
 	else if (character.fallingAnimationEnded) {
+		transform.position.y += fallenInLastFrame;
+		fallenInLastFrame = 0;
 		GoTo(ECharStates::Idle, state_);
 	}
 }
@@ -198,11 +243,22 @@ DEFAULT_EXIT(CharControllerFSM, Dashing);
 
 void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 {
-	auto&& [transform, sprite, character] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter>(state_.entity);
-	
-	transform.position.x += character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
+	static Float32 dashedInLastFrame = 0;
 
-	if (character.dashingAnimationEnded) {
+	auto&& [transform, sprite, character, collision] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
+
+	Bool collided = (collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0);
+
+	if (collided) {
+		transform.position.x -= dashedInLastFrame;
+		dashedInLastFrame = 0;
+	}
+	else {
+		dashedInLastFrame = character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
+		transform.position.x += dashedInLastFrame;
+	}
+
+	if (character.dashingAnimationEnded || collided) {
 		if (!character.grounded) {
 			GoTo(ECharStates::JumpWinddown, state_);
 		}
