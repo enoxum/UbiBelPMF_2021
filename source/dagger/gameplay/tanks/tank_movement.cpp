@@ -106,6 +106,8 @@ void TankMovement::Run()
         
         tank.angle += ctrl.rotation * Engine::DeltaTime() * 30.0;
         s.rotation = {-90.0f + tank.angle};
+        Float32 rad = tank.angle * PI / 180.0f;
+        col.angle = rad;
         
         if (ctrl.fire) {
             ctrl.fire = 0;
@@ -150,8 +152,8 @@ void TankMovement::Run()
         else 
         {
         	tank.pos = t.position;
-        	t.position.x += cos(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
-        	t.position.y += sin(tank.angle * PI / 180.0f) * ctrl.move * tank.speed * Engine::DeltaTime();
+        	t.position.x += cos(rad) * ctrl.move * tank.speed * Engine::DeltaTime();
+        	t.position.y += sin(rad) * ctrl.move * tank.speed * Engine::DeltaTime();
         }
     }
 }
