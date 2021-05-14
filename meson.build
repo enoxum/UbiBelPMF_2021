@@ -1,4 +1,4 @@
-4project('dagger', 'c', 'cpp', default_options : ['cpp_std=c++17' ])
+project('dagger', 'c', 'cpp', default_options : ['cpp_std=c++17' ])
 
 deps = [
     dependency('glfw3'),
