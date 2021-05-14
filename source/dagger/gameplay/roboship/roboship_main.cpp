@@ -24,7 +24,7 @@
 using namespace dagger;
 using namespace roboship;
 using namespace robo_game;
-using namespace inventory;
+
 
 void Roboship::GameplaySystemsSetup()
 {
@@ -62,7 +62,8 @@ void RoboshipCreateBackdrop()
     }
 
 
-    /* Put background image */ {
+    /* Put background image */ 
+    {
         auto entity = reg.create();
         auto& sprite = reg.get_or_emplace<Sprite>(entity);
 
@@ -74,17 +75,17 @@ void RoboshipCreateBackdrop()
         sprite.position.z = 10;
     }
 
-    Inventory* inv = new Inventory();
+    // Inventory matrix - has data - positions of the parts
+    {
+        auto entity = reg.create();
+        auto& matInv = reg.emplace<InventoryMatrix>(entity);
+    }
 
+    Inventory* inv = new Inventory();
     inv->InventoryPositionsSetup();
     inv->SelectedTileSetup();
-    MatrixInv matrix = inv->makeMatrix();
-    printf("%f", matrix[1][2]);
-    inv->FillInventory(matrix);
-    
-    inv->SwapMatrix(matrix, 1, 2, 2, 3);
-
-
+    inv->makeMatrix();
+    inv->FillInventory();
 
     /*
     {
@@ -94,8 +95,11 @@ void RoboshipCreateBackdrop()
         text.Set("pixel-font", "Roboship game");
     }
     */
-    
 
+}
+
+void Roboship::RoboshipCreateInventory()
+{
 
 }
 
@@ -104,7 +108,7 @@ void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
     RoboshipCreateBackdrop();
-
+    RoboshipCreateInventory();
     //Engine::Registry().emplace<CameraFollowFocus>(sndChar.entity);
 }
 

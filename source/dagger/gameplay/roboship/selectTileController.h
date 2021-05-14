@@ -18,7 +18,9 @@ namespace robo_game
         Vector4 input{ 0, 0, 0, 0};
     };
 
-
+    struct Tile
+    {
+    };
 
     class SelectedTileInputSystem
         : public System
@@ -31,6 +33,7 @@ namespace robo_game
         int swapY;
         bool moveFirst = true;
         bool moveSecond = true;
+        bool swap = false;
 
         void SpinUp() override;
         void WindDown() override;

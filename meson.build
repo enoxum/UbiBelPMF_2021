@@ -68,6 +68,7 @@ sources = [
     'source/dagger/gameplay/tiles_example/tiles_example_main.cpp',
     'source/dagger/gameplay/roboship/roboship_main.cpp',
     'source/dagger/gameplay/roboship/selectTileController.cpp',
+    'source/dagger/gameplay/roboship/inventorySetup.cpp',
     'source/dagger/tools/FileBrowser/imgui_demo.cpp',
     'source/dagger/tools/FileBrowser/ImGuiFileBrowser.cpp',
     'source/dagger/tools/console.cpp',

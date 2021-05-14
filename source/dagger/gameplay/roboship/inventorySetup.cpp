@@ -1,5 +1,6 @@
 #include "gameplay/roboship/inventorySetup.h"
 #include "gameplay/roboship/selectTileController.h"
+#include "gameplay/roboship/roboship_main.h"
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/audio.h"
@@ -64,11 +65,7 @@ void inventory::Inventory::InventoryPositionsSetup()
         transform.position.x = (-1.5f - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
         transform.position.y = (2.65f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
         transform.position.z = zPos;
-
-
     }
-
-
 }
 
 
@@ -93,15 +90,17 @@ void inventory::Inventory::SelectedTileSetup()
         transform.position.z = 1.f;
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
-
+        reg.emplace<Tile>(entity);
     }
+
+    tileSize = 30.f;
     
     {
         auto entity = reg.create();
 
         auto& sprite = reg.emplace<Sprite>(entity);
 
-        AssignSprite(sprite, "robot:INVENTORY:SpecialTile2");
+        AssignSprite(sprite, "robot:INVENTORY:SelectedTile");
 
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
@@ -109,18 +108,21 @@ void inventory::Inventory::SelectedTileSetup()
         auto& transform = reg.emplace<Transform>(entity);
 
         transform.position.x = (-1.0f + 0 + 0 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform.position.y = (2.5f + 3 + 3 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
-        transform.position.z = 2.f;
-
-        auto& controller = reg.emplace<ControllerMapping>(entity);
+        transform.position.y = (2.5f + 0 + 0 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+        transform.position.z = 4.f;
+        reg.emplace<Tile>(entity);
     }
 }
 
-void inventory::Inventory::FillInventory(MatrixInv m)
+void inventory::Inventory::FillInventory()
 {
     tileSize = 30.f;
 
     auto& reg = Engine::Registry();
+
+    auto entityM = reg.view<InventoryMatrix>()[0];
+    auto& matrix = reg.get<InventoryMatrix>(entityM);
+
 
     for (int i = 0; i < 4; i++)
     {
@@ -129,7 +131,7 @@ void inventory::Inventory::FillInventory(MatrixInv m)
             auto entity = reg.create();
             auto& sprite = reg.emplace<Sprite>(entity);
             
-            AssignSprite(sprite, fmt::format("robot:INVENTORY:part_{}", m[i][j]));
+            AssignSprite(sprite, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[i][j]));
 
             sprite.size.x = 15.f;
             sprite.size.y = 15.f;
@@ -142,24 +144,99 @@ void inventory::Inventory::FillInventory(MatrixInv m)
     }
 }
 
-MatrixInv inventory::Inventory::SwapMatrix(MatrixInv m, int x, int y, int a, int b)
+void inventory::Inventory::SwapMatrix(int x, int y, int a, int b)
 {
-    int tmp = m[x][y];
-    m[x][y] = m[a][b];
-    m[a][b] = tmp;
-    FillInventory(m);
-    return m;
+    auto entity = Engine::Registry().view<InventoryMatrix>()[0];
+    auto& matrix = Engine::Registry().get<InventoryMatrix>(entity);
+    printf("SWAP MATRIX");
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+            printf("%d ", matrix.matrix[i][j]);
+
+        printf("\n");
+    }
+
+    int tmp = matrix.matrix[x][y];
+    matrix.matrix[x][y] = matrix.matrix[a][b];
+    matrix.matrix[a][b] = tmp;
+    printf("-----------------");
+    SwapSprites(x, y, a, b);
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+            printf("%d ", matrix.matrix[i][j]);
+
+        printf("\n");
+    }
 }
 
-MatrixInv inventory::Inventory::makeMatrix()
+void inventory::Inventory::makeMatrix()
 {
-    MatrixInv m;
-    m.resize(4);
+    auto entity = Engine::Registry().view<InventoryMatrix>()[0];
+
+    auto& matrix = Engine::Registry().get<InventoryMatrix>(entity);
+
+    matrix.matrix.resize(4);
     for (int i = 0; i < 4; i++)
-        m[i].resize(4);
+        matrix.matrix[i].resize(4);
 
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            m[i][j] = 1 + (rand() % 5);
-    return m;
+            matrix.matrix[i][j] = 1 + rand() % 5;
+
+    printf("make matrix");
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+            printf("%d ", matrix.matrix[i][j]);
+
+        printf("\n");
+    }
+}
+
+void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
+{
+    auto view = Engine::Registry().view<Transform, Sprite>();
+    auto entityM = Engine::Registry().view<InventoryMatrix>()[0];
+    auto& matrix = Engine::Registry().get<InventoryMatrix>(entityM);
+
+    tileSize = 30;
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+            printf("%d ", matrix.matrix[i][j]);
+
+        printf("\n");
+    }
+
+    float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+
+    float posA = (-1.0f + a + a * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    float posB = (2.5f + b + b * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+
+    for (auto entity : view)
+    {
+        if (Engine::Registry().has<ControllerMapping>(entity))
+            continue;
+
+        auto& t = view.get<Transform>(entity);
+        auto& s = view.get<Sprite>(entity);
+
+        if (t.position.x == posX && t.position.y == posY && s.size.x == 15.f)
+        {
+            AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[x][y]));
+            s.size.x = 15.f;
+            s.size.y = 15.f;
+        }
+
+        if (t.position.x == posA && t.position.y == posB && s.size.x == 15.f)
+        {
+            AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[a][b]));
+            s.size.x = 15.f;
+            s.size.y = 15.f;
+        }
+    }
 }

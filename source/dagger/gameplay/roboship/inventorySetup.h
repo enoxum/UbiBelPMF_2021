@@ -2,7 +2,6 @@
 
 #include "core/core.h"
 #include "core/game.h"
-#include "gameplay/roboship/roboship_main.h"
 #include "gameplay/roboship/selectTileController.h"
 
 #include "core/core.h"
@@ -25,18 +24,22 @@
 #include "tools/diagnostics.h"
 
 using namespace dagger;
-using namespace roboship;
 
 using MatrixInv = std::vector<std::vector<int>>;
 
 namespace inventory
 {
+    struct InventoryMatrix
+    {
+        MatrixInv matrix;
+    };
+
     class Inventory
     {
         
         int height = 4;
         int width = 4;
-        float tileSize = 30.f;// / static_cast<float>(Width);
+        float tileSize = 30.f;//  static_cast<float>(Width);
 
         float zPos = 1.f;
 
@@ -45,8 +48,9 @@ namespace inventory
     public:
         void InventoryPositionsSetup();
         void SelectedTileSetup();
-        void FillInventory(MatrixInv m);
-        MatrixInv SwapMatrix(MatrixInv m, int x, int y, int a, int b);
-        MatrixInv makeMatrix();
+        void FillInventory();
+        void SwapMatrix(int x, int y, int a, int b);
+        void makeMatrix();
+        void SwapSprites(int x, int y, int a, int b);
     };
 }
