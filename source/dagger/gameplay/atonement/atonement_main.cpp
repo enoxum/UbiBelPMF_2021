@@ -144,8 +144,7 @@ void AtonementGame::WorldSetup()
         //SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
 
-                                                   //bilo je -100 -200
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { 4150, 720 }, {70, 176});
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, - 200 }, {70, 176});
     mainChar.sprite.scale = { 0.6, 0.6 };
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
