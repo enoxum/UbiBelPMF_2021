@@ -304,8 +304,19 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 		GoTo(ECharStates::Dashing, state_);
 	}
 
-	if (!jumping) {
+	if (EPSILON_NOT_ZERO(input.Get("wall")) && !jumping)
+	{
+		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+		if(!cdManager->isOnCooldown(state_.entity, "boost")){
+			cdManager->registerCooldown(state_.entity, "boost", 0.3);
+			auto&& animator = Engine::Registry().get<Animator>(state_.entity);
+			AnimatorPlayOnce(animator, "BlueWizard:JUMP_WINDUP");
+			sprite.scale.x *= -1;
+			jumping = true;
+		}
+	}
 
+	if(!jumping) {
 		if (!((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0))) {
 			movedInLastFrame = character.speed * sprite.scale.x * Engine::DeltaTime();
 			transform.position.x += movedInLastFrame;
@@ -328,7 +339,21 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 		}
 	}
 	else {
-		//TODO: jump
+		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+		if (cdManager->isOnCooldown(state_.entity, "boost")) {
+			movedInLastFrame = character.speed * sprite.scale.x * Engine::DeltaTime();
+			transform.position.x += movedInLastFrame;
+			fallenInLastFrame = character.jumpSpeed * sprite.scale.y * Engine::DeltaTime();
+			transform.position.y += fallenInLastFrame;
+
+			if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
+				jumping = false;
+			}
+		}
+		else {
+			jumping = false;
+			GoTo(ECharStates::JumpWindup, state_);
+		}
 	}
 }
 
