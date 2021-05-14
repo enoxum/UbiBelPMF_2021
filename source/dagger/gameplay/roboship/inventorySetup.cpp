@@ -137,15 +137,27 @@ void inventory::Inventory::FillInventory()
             sprite.size.y = 15.f;
 
             auto& transform = reg.emplace<Transform>(entity);
-            transform.position.x = (-1.0f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-            transform.position.y = (2.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+            transform.position.x = (-1.0f + i + i * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+            transform.position.y = (2.5f + j + j * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
             transform.position.z = 0.f;
+
+
         }
+    }
+    printf("Pocetna\n");
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+            printf("%d ", matrix.matrix[i][j]);
+
+        printf("\n");
     }
 }
 
 void inventory::Inventory::SwapMatrix(int x, int y, int a, int b)
 {
+    printf("Swap \n");
+    printf("%d %d %d %d\n", x, y, a, b);
     auto entity = Engine::Registry().view<InventoryMatrix>()[0];
     auto& matrix = Engine::Registry().get<InventoryMatrix>(entity);
     printf("SWAP MATRIX");

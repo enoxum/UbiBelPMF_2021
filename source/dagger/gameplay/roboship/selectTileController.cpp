@@ -90,12 +90,11 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         s2.size.y = 40;
 
                         auto& t = Engine::Registry().get<Transform>(entity2);
+
                         t.position.z = 1.f;
 
                         auto& controller = Engine::Registry().emplace<ControllerMapping>(entity2);
 
-                        ctrl_.input.x = 0;
-                        ctrl_.input.y = 0;
                     }
 
                     Engine::Registry().remove<ControllerMapping>(entity);
@@ -105,7 +104,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 {
                     swapX = ctrl_.input.x;
                     swapY = ctrl_.input.y;
-                    printf("%d %d %d %d", x, y, swapX, swapY);
+                    
+                    printf("%d %d %d %d\n", x, y, swapX, swapY);
                     printf("---------");
                     Inventory* inv = new Inventory();
                     inv->SwapMatrix(x, y, swapX, swapY);
