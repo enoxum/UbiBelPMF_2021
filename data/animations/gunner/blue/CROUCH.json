@@ -1,0 +1,10 @@
+{
+	"animation-name": "gunner:blue:CROUCH",
+	"animation-length-ms": 600,
+	"animation-frames": 
+	[
+		{ "texture-name": "spritesheets:gunner:blue:crouch:1" },
+		{ "texture-name": "spritesheets:gunner:blue:crouch:2" },
+		{ "texture-name": "spritesheets:gunner:blue:crouch:3" }
+	]
+}

@@ -1,0 +1,13 @@
+{
+	"animation-name": "gunner:yellow:RUN",
+	"animation-length-ms": 600,
+	"animation-frames": 
+	[
+		{ "texture-name": "spritesheets:gunner:yellow:run:1" },
+		{ "texture-name": "spritesheets:gunner:yellow:run:2" },
+		{ "texture-name": "spritesheets:gunner:yellow:run:3" },
+		{ "texture-name": "spritesheets:gunner:yellow:run:4" },
+		{ "texture-name": "spritesheets:gunner:yellow:run:5" },
+		{ "texture-name": "spritesheets:gunner:yellow:run:6" }
+	]
+}

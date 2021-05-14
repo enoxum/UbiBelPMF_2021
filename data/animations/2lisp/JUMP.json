@@ -1,9 +1,0 @@
-{
-	"animation-name": "Gunner_Green:JUMP",
-	"animation-length-ms": 600,
-	"animation-frames": 
-	[
-		{ "texture-name": "spritesheets:2lisp:Gunner_Green_Jump:jump:1" },
-		{ "texture-name": "spritesheets:2lisp:Gunner_Green_Jump:jump:2" }
-	]
-}

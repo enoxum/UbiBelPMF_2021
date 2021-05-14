@@ -1,0 +1,10 @@
+{
+	"animation-name": "gunner:blue:DEATH",
+	"animation-length-ms": 600,
+	"animation-frames": 
+	[
+		{ "texture-name": "spritesheets:gunner:blue:death:1" },
+		{ "texture-name": "spritesheets:gunner:blue:death:2" },
+		{ "texture-name": "spritesheets:gunner:blue:death:3" }
+	]
+}

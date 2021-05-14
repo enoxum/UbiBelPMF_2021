@@ -61,8 +61,8 @@ namespace brawler
 
             chr.col.size = chr.sprite.size;
 
-            AssignSprite(chr.sprite, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
-            AnimatorPlay(chr.animator, "Gunner_Green:IDLE");
+            AssignSprite(chr.sprite, "spritesheets:gunner:green:idle:1");
+            AnimatorPlay(chr.animator, "gunner:green:IDLE");
 
             chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 1.0f };
 
