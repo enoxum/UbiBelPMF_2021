@@ -57,9 +57,18 @@ void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM
 	}
 	else
 	{
-		sprite.scale.x = run*0.2f;
-		sprite.position.x += character.speed * run * Engine::DeltaTime();
+		for (REnemy* enemy : character.enemies)
+		{
+			printf("%d %lf %lf\n", enemy->sprite.scale.x, run, sprite.position.x);
 
+			if (enemy->sprite.scale.x * run < 0)
+			{
+				enemy->sprite.scale.x *= -1.0f;
+			}
+		}
+
+		sprite.scale.x = run * 0.2f;
+		sprite.position.x += character.speed * run * Engine::DeltaTime();
 
 		printf("%lf\n", sprite.position.x);
 		if (abs(sprite.position.x - 800) <= 0.2 && iteration == 1)

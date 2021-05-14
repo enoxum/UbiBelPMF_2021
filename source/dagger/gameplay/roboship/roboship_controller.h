@@ -2,7 +2,10 @@
 
 #include "core/core.h"
 #include "core/system.h"
+#include "gameplay/roboship/roboship_main.h"
 #include "gameplay/roboship/roboship_character_controller_fsm.h"
+
+#include <vector>
 
 using namespace dagger;
 
@@ -11,6 +14,7 @@ namespace roboship
 	struct RoboshipCharacter
 	{
 		int speed{ 1 };
+		std::vector<REnemy*> enemies;
 	};
 
 	class RoboshipControllerSystem

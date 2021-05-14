@@ -18,6 +18,7 @@
 #include "core/graphics/gui.h"
 #include "core/graphics/text.h"
 
+#include <chrono>
 #include "tools/diagnostics.h"
 
 const int TERRAIN_HEIGHT = 30;
@@ -81,6 +82,34 @@ struct RCharacter
     }
 };
 
+REnemy* REnemy::Get(Entity entity)
+{
+    auto& reg = Engine::Registry();
+    auto& sprite = reg.get_or_emplace<Sprite>(entity);
+    auto& anim = reg.get_or_emplace<Animator>(entity);
+
+    return new REnemy{ entity, sprite, anim };
+}
+
+REnemy* REnemy::Create(
+    ColorRGB color_ = { 1, 1, 1 },
+    Vector2 position_ = { 0, 0 })
+{
+    auto& reg = Engine::Registry();
+    auto entity = reg.create();
+
+    REnemy *chr = REnemy::Get(entity);
+
+    chr->sprite.scale = { -0.15f, 0.15f };
+    chr->sprite.position = { position_, 0.0f };
+    //chr.sprite.color = { color_, 1.0f };
+
+    AssignSprite(chr->sprite, "robot:ENEMIES:Robot1:01_Idle:idle_000");
+    AnimatorPlay(chr->animator, "robot:ENEMIES:Robot1:01_Idle");
+
+    return chr;
+}
+
 void RoboshipSetCamera()
 {
     auto* camera = Engine::GetDefaultResource<Camera>();
@@ -137,9 +166,19 @@ void RoboshipSetCamera()
 void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
-    RBackdrop::RoboshipCreateBackdrop(0,0);
+    RBackdrop::RoboshipCreateBackdrop(0, 0);
 
     auto sndChar = RCharacter::Create("Arrows", { 1, 0, 0 }, {0, -223 });
     Engine::Registry().emplace<RCameraFollowFocus>(sndChar.entity);
+    
+    int n_enemies = 1;
+    std::vector<REnemy*> enemies;
+    for (int i = 0; i < n_enemies; i++)
+    {
+        REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { i * 200, -200 });
+        enemies.push_back(enemyChar);
+    }
+
+    sndChar.character.enemies = enemies;
 }
 
