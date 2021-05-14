@@ -4,6 +4,7 @@
 #include "gameplay/hotline_miami/hotline_miami_projectile.h"
 #include "gameplay/hotline_miami/hotline_miami_tools.h"
 #include "gameplay/hotline_miami/hotline_miami_player_input.h"
+#include "gameplay/hotline_miami/hotline_miami_camera_focus.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -48,6 +49,7 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     auto& engine = Engine::Instance();
 
     engine.AddPausableSystem<SimpleCollisionsSystem>();
+    engine.AddPausableSystem<HotlineMiamiCameraFollowSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
@@ -105,6 +107,9 @@ void hotline_miami::SetupWorld()
         auto& player = reg.emplace<HotlineMiamiPlayer>(entity);
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
+
+        auto& camera = reg.emplace<HotlineMiamiCameraFollowFocus>(entity);
+
         HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
     }
 
