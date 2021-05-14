@@ -293,7 +293,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     //1st player
     {
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
-        Item::Create("spritesheets:pixel_mart:american_cheese_p", {1, 1, 1}, {64, 64});    
+        Item::Create("spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {32, 32});    
     }
     
     
