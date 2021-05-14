@@ -11,6 +11,7 @@ using namespace dagger;
 
 static int count = 0;
 static int iteration = 1;
+static int iteration1 = 1;
 
 // Idle
 
@@ -57,13 +58,24 @@ void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM
 	}
 	else
 	{
-		for (REnemy* enemy : character.enemies)
-		{
-			printf("%d %lf %lf\n", enemy->sprite.scale.x, run, sprite.position.x);
-
-			if (enemy->sprite.scale.x * run < 0)
+		if (iteration1 == 1) {
+			for (int i = 0; i < 5; i++)
 			{
-				enemy->sprite.scale.x *= -1.0f;
+				character.enemies[i]->sprite.scale = { 0.15f, 0.15f };
+			}
+			iteration1++;
+		}
+
+		for (int i = 0; i < 5; i++)
+		{
+
+			printf("%d:\nscale enemy x: %lf\n run: %lf\n", i, character.enemies[i]->sprite.scale.x, run);
+			printf("\n");
+			printf("\n");
+
+			if (character.enemies[i]->sprite.scale.x * run < 0) {
+				character.enemies[i]->sprite.scale.x = character.enemies[i]->sprite.scale.x * -1;
+				printf("Novi: %lf\n", character.enemies[i]->sprite.scale.x);
 			}
 		}
 

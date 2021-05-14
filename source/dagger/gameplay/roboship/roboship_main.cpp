@@ -171,11 +171,12 @@ void Roboship::WorldSetup()
     auto sndChar = RCharacter::Create("Arrows", { 1, 0, 0 }, {0, -223 });
     Engine::Registry().emplace<RCameraFollowFocus>(sndChar.entity);
     
-    int n_enemies = 1;
+    int n_enemies = 5;
     std::vector<REnemy*> enemies;
     for (int i = 0; i < n_enemies; i++)
     {
-        REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { i * 200, -200 });
+        REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 200, -200 });
+        enemyChar->sprite.scale = { 0.15f, 0.15f };
         enemies.push_back(enemyChar);
     }
 
