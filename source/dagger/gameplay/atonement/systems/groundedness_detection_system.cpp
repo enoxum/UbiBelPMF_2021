@@ -24,7 +24,7 @@ GroundednessDetectionSystem::GroundednessDetectionSystem()
 void GroundednessDetectionSystem::Run()
 {
 
-    auto& view = Engine::Registry().view<Transform, Sprite, CharacterCollision, AtonementController::AtonementCharacter>();
+    auto&& view = Engine::Registry().view<Transform, Sprite, CharacterCollision, AtonementController::AtonementCharacter>();
     for (auto& entity : view) {
         auto&& [transform_, sprite_, collision_, char_] = 
             Engine::Registry().get<Transform, Sprite, CharacterCollision, 
