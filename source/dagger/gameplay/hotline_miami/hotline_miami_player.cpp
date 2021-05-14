@@ -25,7 +25,7 @@ void HotlineMiamiPlayerObstacleCollisionSystem::Run()
 
         if (col.colided)
         {
-            if (Engine::Registry().valid(col.colidedWith))
+            if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
             {
                 SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
                 Transform& transform = viewCollisions.get<Transform>(col.colidedWith);

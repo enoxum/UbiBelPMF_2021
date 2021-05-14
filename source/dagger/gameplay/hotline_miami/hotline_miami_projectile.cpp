@@ -36,7 +36,7 @@ void HotlineMiamiProjectileObstacleCollisionSystem::Run()
 
         if (col.colided)
         {
-            if (Engine::Registry().valid(col.colidedWith))
+            if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
             {
                 Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
             }
