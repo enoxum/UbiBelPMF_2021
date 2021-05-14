@@ -113,23 +113,8 @@ void HotlineMiamiPlayerInputSystem::Run()
                 collision.size.y = tileSize;
 
                 auto& transform = reg.emplace<Transform>(entity);
-                if (ctrl.look_direction == DOWN)
-                {
-                    transform.position = t.position + Vector3(0, -sprite.size.y, 0);
-                }
-                // TODO treba lepse racunati gde postaviti metak inace ce da koliduje sa playerom i puca
-                else if (ctrl.look_direction == TOP)
-                {                             
-                    transform.position = t.position + Vector3(0, tileSize * 2, 0);
-                }
-                else if (ctrl.look_direction == LEFT)
-                {
-                    transform.position = t.position + Vector3(-tileSize * 2, 0, 0);
-                }
-                else if (ctrl.look_direction == RIGHT)
-                {
-                    transform.position = t.position + Vector3(sprite.size.x, 0, 0);
-                }
+                transform.position = t.position;
+               
 
                 auto& sprite = reg.emplace<Sprite>(entity);
                 AssignSprite(sprite, "hotline_miami:Projectile:pistol_gun_1");
