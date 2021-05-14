@@ -21,7 +21,7 @@
 #include "gameplay/ping_pong/pingpong_tools.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
-#include "gameplay/PandemicShop/pandemic_character_controller.h";
+#include "gameplay/PandemicShop/pandemic_character_controller.h"
 
 
 using namespace dagger;
@@ -74,6 +74,7 @@ struct Item {
     Sprite &sprite;
     Transform &transform;
     SimpleCollision &collision;
+    bool hidden = false;
     
     static Item Get(Entity entity) {
         auto &reg = Engine::Registry();
@@ -101,6 +102,12 @@ struct Item {
 
     
     return item;
+  }
+  void setHidden(){
+      hidden = true;
+      auto &reg = Engine::Registry();
+      reg.destroy(entity);
+      
   }
 
 };
@@ -293,7 +300,16 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     //1st player
     {
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
-        Item::Create("spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {32, 32});    
+
+        auto item = Item::Create("spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {32, 32}); 
+        // item.setHidden();
+        if(item.hidden){
+            printf("\nhidden\n");
+        }
+        else{
+
+            printf("\n not hidden \n");
+        }
     }
     
     
