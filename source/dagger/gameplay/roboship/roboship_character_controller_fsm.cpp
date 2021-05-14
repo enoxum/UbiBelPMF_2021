@@ -1,4 +1,5 @@
 #include "roboship_character_controller_fsm.h"
+#include "gameplay/roboship/roboship_createbackdrop.h"
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/input/inputs.h"
@@ -8,8 +9,10 @@
 
 using namespace dagger;
 
-// Idle
+static int count = 0;
+static int iteration = 1;
 
+// Idle
 
 void RoboshipCharacterControllerFSM::Idle::Enter(RoboshipCharacterControllerFSM::StateComponent& state_)
 {
@@ -54,7 +57,23 @@ void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM
 	}
 	else
 	{
-		sprite.scale.x = run*0.1f;
+		sprite.scale.x = run*0.2f;
 		sprite.position.x += character.speed * run * Engine::DeltaTime();
+
+
+		printf("%lf\n", sprite.position.x);
+		if (abs(sprite.position.x - 800) <= 0.2 && iteration == 1)
+		{
+			iteration++;
+			count += 1600;
+			puts("updated");
+			RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
+		}
+		else if (abs((sprite.position.x - 800) - (iteration - 1)*2000)-400*(iteration-1) <= 0.2 && iteration > 1) {
+			iteration++;
+			count += 1600;
+			puts("updated");
+			RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
+		}
 	}
 }
