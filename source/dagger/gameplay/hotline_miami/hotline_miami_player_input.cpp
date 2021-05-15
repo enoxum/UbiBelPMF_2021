@@ -83,6 +83,10 @@ void HotlineMiamiPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
             {
                 ctrl_.shoot = true;
             }
+            else if (kEvent_.key == ctrl_.shoot_key && kEvent_.action == EDaggerInputState::Released && ctrl_.shoot == true)
+            {
+                ctrl_.shoot = false;
+            }
 
         });
 }
@@ -97,12 +101,38 @@ void HotlineMiamiPlayerInputSystem::Run()
         auto& player = view.get<HotlineMiamiPlayer>(entity);
         auto& col = view.get<SimpleCollision>(entity);
         auto& sprite = view.get<Sprite>(entity);
-    
-        if (ctrl.shoot)
+        
+        t.position.y += ctrl.input.y * player.player_speed * Engine::DeltaTime();
+        t.position.x += ctrl.input.x * player.player_speed * Engine::DeltaTime();
+        if (player.weapon_type == 0)
+        {
+            AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
+        }
+        else if (player.weapon_type == 1) 
+        {
+            AssignSprite(sprite, "hotline_miami:Player:player_pistol");
+        }
+        else if (player.weapon_type == 2)
+        {
+            AssignSprite(sprite, "hotline_miami:Player:player_bazuka");
+        }
+        sprite.rotation = ctrl.look_direction * 90.f;
+        
+
+        if (ctrl.shoot && player.weapon_type != 0)
         {
             // make a projectile
             {
-                constexpr float tileSize = 15.f;
+                float tileSize;
+
+                if (player.weapon_type == 1)
+                {
+                    tileSize = 10.f;
+                }
+                else if (player.weapon_type == 2)
+                {
+                    tileSize = 20.f;
+                }
 
                 auto& engine = Engine::Instance();
                 auto& reg = engine.Registry();
@@ -115,9 +145,15 @@ void HotlineMiamiPlayerInputSystem::Run()
                 auto& transform = reg.emplace<Transform>(entity);
                 transform.position = t.position;
                
-
                 auto& sprite = reg.emplace<Sprite>(entity);
-                AssignSprite(sprite, "hotline_miami:Projectile:pistol_gun_1");
+                if (player.weapon_type == 1)
+                {
+                    AssignSprite(sprite, "hotline_miami:Projectile:projectile_pistol");
+                }
+                else if (player.weapon_type == 2)
+                {
+                    AssignSprite(sprite, "hotline_miami:Projectile:projectile_bazuka");
+                }
                 sprite.rotation = ctrl.look_direction * 90.f;
                 sprite.size.x = tileSize;
                 sprite.size.y = tileSize;
@@ -127,11 +163,5 @@ void HotlineMiamiPlayerInputSystem::Run()
             }
             ctrl.shoot = false;
         }
-
-        t.position.y += ctrl.input.y * player.player_speed * Engine::DeltaTime();
-        t.position.x += ctrl.input.x * player.player_speed * Engine::DeltaTime();
-
-        sprite.rotation = ctrl.look_direction * 90.f;
-
     }   
 }
