@@ -267,9 +267,14 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 		transform.position.x += dashedInLastFrame;
 	}
 
-	if (character.dashingAnimationEnded || collided) {
+	if (character.dashingAnimationEnded) {
 		if (!character.grounded) {
-			GoTo(ECharStates::JumpWinddown, state_);
+			if (collided) {
+				GoTo(ECharStates::WallJump, state_);
+			}
+			else {
+				GoTo(ECharStates::JumpWinddown, state_);
+			}
 		}
 		else {
 			GoTo(ECharStates::Idle, state_);
@@ -349,6 +354,13 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 
 			if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 				jumping = false;
+			}
+
+			if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
+			{
+				jumping = false;
+				character.dashJumped = true;
+				GoTo(ECharStates::Dashing, state_);
 			}
 		}
 		else {
