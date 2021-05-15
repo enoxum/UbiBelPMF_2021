@@ -1,7 +1,4 @@
 #include "pandemic_shop_main.h"
-
-#include "core/core.h"
-#include "core/engine.h"
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
@@ -22,7 +19,7 @@
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
-
+#include "gameplay/PandemicShop/item.h"
 
 using namespace dagger;
 using namespace pandemic_shop;
@@ -52,6 +49,7 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
     engine_.AddPausableSystem<PandemicControllerSystem>();
     engine_.AddPausableSystem<CollisionDetectionSystem>();
+    engine_.AddPausableSystem<Pickable>();
 #if defined(DAGGER_DEBUG)
     engine_.AddPausableSystem<ping_pong::PingPongTools>();
 #endif //defined(DAGGER_DEBUG)
@@ -69,48 +67,7 @@ void PandemicShopGame::WorldSetup(Engine& engine_)
     SetupWorld(engine_);
 }
 //---------------------------------------------------------
-struct Item {
-    Entity entity;
-    Sprite &sprite;
-    Transform &transform;
-    SimpleCollision &collision;
-    bool hidden = false;
-    
-    static Item Get(Entity entity) {
-        auto &reg = Engine::Registry();
-        auto &sprite = reg.get_or_emplace<Sprite>(entity);
-        auto &transform = reg.get_or_emplace<Transform>(entity);
-        auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
-    return Item{entity, sprite, transform, collision};
-  }
 
-    static Item Create(String sprite_ = "", ColorRGB color_ = {1, 1, 1},
-                          Vector2 position_ = {0, 0}) {
-    auto &reg = Engine::Registry();
-    auto entity = reg.create();
-
-    auto item = Item::Get(entity);
-
-    item.transform.position = {position_, 0.0f};
-    item.collision.size = {16, 16};
-
-    item.sprite.scale = {1, 1};
-    item.sprite.position = {position_, 0.0f};
-    item.sprite.color = {color_, 1.0f};
-
-    AssignSprite(item.sprite, sprite_);
-
-    
-    return item;
-  }
-  void setHidden(){
-      hidden = true;
-      auto &reg = Engine::Registry();
-      reg.destroy(entity);
-      
-  }
-
-};
 struct Character {
   Entity entity;
   Sprite &sprite;
@@ -119,6 +76,7 @@ struct Character {
   PandemicCharacter &character;
   Transform &transform;
   SimpleCollision &collision;
+  std::vector<Entity> inventory;
 
 
   static Character Get(Entity entity) {
@@ -161,6 +119,9 @@ struct Character {
     chr.character.speed = 200;
 
     return chr;
+  }
+  static void addItem(Entity ent){
+      inventory.emplace_back(ent);
   }
 };
 //--------------------------------------------
@@ -301,8 +262,9 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     {
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
 
-        auto item = Item::Create("spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {32, 32}); 
-        // item.setHidden();
+        auto ent = reg.create();
+        auto item = reg.emplace<Item>(ent);
+        item.Create(ent, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {32, 32});
         if(item.hidden){
             printf("\nhidden\n");
         }

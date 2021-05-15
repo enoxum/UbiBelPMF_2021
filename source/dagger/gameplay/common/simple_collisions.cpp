@@ -2,12 +2,18 @@
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
+#include "core/graphics/sprite.h"
+#include "core/graphics/animations.h"
+#include "gameplay/PandemicShop/pandemic_character_controller.h"
+#include "gameplay/PandemicShop/item.h"
 
 using namespace dagger;
+using namespace pandemic;
 
 void SimpleCollisionsSystem::Run()
 {
-    auto view = Engine::Registry().view<SimpleCollision, Transform>();
+    auto &reg = Engine::Registry();
+    auto view = reg.view<SimpleCollision, Transform, Sprite>();
 
     auto it = view.begin();
     while(it != view.end())
@@ -21,36 +27,28 @@ void SimpleCollisionsSystem::Run()
         {
             auto &col = view.get<SimpleCollision>(*it2);
             auto &tr = view.get<Transform>(*it2);
-
+            
             // processing one collision per frame for each colider
             if (collision.IsCollided(transform.position, col, tr.position))
             {
                 collision.colidedWith = *it2;   
                 col.colidedWith = *it;
-                
+
+                collision.colided = true;
+                col.colided = true;
+                                
                 if (collision.GetCollisionSides(transform.position, col, tr.position).x == 1){
                     transform.position.x = transform.position.x - collision.size.x/10.f;
-                    collision.colided = true;
-                    col.colided = true;
                 }
                 else if(collision.GetCollisionSides(transform.position, col, tr.position).x == -1){
                     transform.position.x = transform.position.x + collision.size.x/10.f;
-                    collision.colided = true;
-                    col.colided = true;
                 }
                 else if(collision.GetCollisionSides(transform.position, col, tr.position).y == 1){
                     transform.position.y = transform.position.y - collision.size.y/10.f;
-                    collision.colided = true;
-                    col.colided = true;
                 }
                 else if(collision.GetCollisionSides(transform.position, col, tr.position).y == -1){
                     transform.position.y = transform.position.y + collision.size.y/10.f;
-                    collision.colided = true;
-                    col.colided = true;
                 }
-                
-                col.colided = false;
-                collision.colided = false;
 
             }
             it2++;

@@ -13,6 +13,7 @@
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
+#include "gameplay/PandemicShop/item.h"
 
 
 using namespace pandemic_shop;
@@ -37,15 +38,32 @@ void CollisionDetectionSystem::RenderGUI()
 	auto moving_obj = reg.view<Sprite, Transform, SimpleCollision, Animator, PandemicCharacter>();
 	auto static_obj = reg.view<Sprite, Transform, SimpleCollision>();
 
-	static_obj.each([&](Sprite &sprite_, Transform& transform_, SimpleCollision col_)
+	static_obj.each([&](Entity ent, Sprite &sprite_, Transform& transform_, SimpleCollision &col_)
 		{
 			const auto& other = col_.colidedWith;
 
-			if(reg.has<Sprite, Transform, SimpleCollision, Animator, PandemicCharacter>(other)){
-				auto &transf = reg.get<Transform>(other);
-				ImGui::Text("Player position: %f %f", transf.position.x, transf.position.y);
-				ImGui::Text("Colided with position: %f %f", transform_.position.x, transform_.position.y);
+			if(reg.valid(other)){
+				if(reg.has<Sprite, Transform, SimpleCollision, Animator, PandemicCharacter>(other)){
+					
+					if(reg.has<Item>(ent)){
+						if(reg.valid(ent)){
+							ImGui::Text("ITEM");
+							auto &transf = reg.get<Transform>(other);
+							ImGui::Text("Player position: %f %f", transf.position.x, transf.position.y);
+							ImGui::Text("Colided with position: %f %f", transform_.position.x, transform_.position.y);
+						}
+						
+					}
+					else{
+						auto &transf = reg.get<Transform>(other);
+						ImGui::Text("Player position: %f %f", transf.position.x, transf.position.y);
+						ImGui::Text("Colided with position: %f %f", transform_.position.x, transform_.position.y);
+					}
+					
+					
+				}
 			}
+			
 		});
 
 	ImGui::End();
