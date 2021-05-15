@@ -32,6 +32,9 @@ namespace brawler {
 		static constexpr float DROPDOWN_OFFSET = 2.0f;
 
 		static void Load(String name);
+
+		static Entity Player1();
+		static Entity Player2();
 		
 		static TileCoords WorldToTile(Vector2 worldPos);
 		inline static int WorldToTileX(float x);
@@ -47,6 +50,9 @@ namespace brawler {
 		static std::optional<float> getRightWall(Transform& t, Movable& m, SimpleCollision& c);
 	private:
 		static Tilemap tiles;
+
+		static Entity player1;
+		static Entity player2;
 	};
 
 }

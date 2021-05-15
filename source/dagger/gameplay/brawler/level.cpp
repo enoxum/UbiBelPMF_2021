@@ -12,6 +12,8 @@ unsigned Level::LEVEL_WIDTH = 0;
 unsigned Level::LEVEL_HEIGHT = 0;
 
 Tilemap Level::tiles{};
+Entity Level::player1 {entt::null};
+Entity Level::player2 {entt::null};
 
 void Level::Load(String map)
 {
@@ -60,18 +62,31 @@ void Level::Load(String map)
 		backgroundZ--;
 	}
 
-	auto player1 = BrawlerCharacter::Create(
+	auto player1char = BrawlerCharacter::Create(
 		"Player 1",
 		"controller_1", 
 		{ TileToWorldX(level->player1.x), TileToWorldY(level->player1.y) },
 		level->player1.isLeft,
 		"blue");
-	auto player2 = BrawlerCharacter::Create(
+	auto player2char = BrawlerCharacter::Create(
 	 	"Player 2",
 	 	"controller_2",
 	 	{ TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, 
 	 	level->player2.isLeft,
 	 	"red");
+
+	player1 = player1char.entity;
+	player2 = player2char.entity;
+}
+
+Entity Level::Player1()
+{
+	return player1;
+}
+
+Entity Level::Player2()
+{
+	return player2;
 }
 
 std::optional<float> Level::getGround(Transform& t, Movable& m, SimpleCollision& c) {
