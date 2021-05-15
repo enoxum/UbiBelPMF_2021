@@ -8,10 +8,9 @@
 		] }, 
 		{ "command-name": "jump", "trigger": "KeyW" },
 		{ "command-name": "down", "trigger": "KeyS" },
-		{ "command-name": "use", "trigger": "KeyE" },
-		{ "command-name": "attack", "trigger": "KeyX" , "event": "Released"},
-		{ "command-name": "reload", "trigger": "KeyR" , "event": "Reload"},
-		{ "command-name": "cycle_weapons", "trigger": "KeyE" , "event": "Cycle weapons"},
-		{ "command-name": "drop_weapon", "trigger": "KeyQ" , "event": "Released"}
+		{ "command-name": "attack", "trigger": "KeyF" , "event": "Released"},
+		{ "command-name": "reload", "trigger": "KeyG" , "event": "Reload"},
+		{ "command-name": "cycle_weapons", "trigger": "KeyH" , "event": "Cycle weapons"},
+		{ "command-name": "drop_weapon", "trigger": "KeyR" , "event": "Released"}
 	]
 }
