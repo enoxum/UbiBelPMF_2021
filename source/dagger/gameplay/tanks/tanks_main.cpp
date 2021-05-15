@@ -13,8 +13,9 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
-#include "gameplay/tanks/tanks_main.h"
-#include "gameplay/tanks/tank_movement.h"
+#include "tanks_main.h"
+#include "tank.h"
+#include "tank_movement.h"
 #include "tilemap.h"
 #include "tank_bullet.h"
 
@@ -149,7 +150,6 @@ void tanks::SetupWorld(Engine& engine_)
         transform.position = { 2 * BLOCK_SIZE, 3 * BLOCK_SIZE, 0 };
         
         auto& tank = reg.emplace<Tank>(entity);
-        tank.speed = 60.0f;
         tank.angle = 90.0f;
         
         auto& controller = reg.emplace<ControllerMapping>(entity);
@@ -170,7 +170,6 @@ void tanks::SetupWorld(Engine& engine_)
         transform.position = { 18 * BLOCK_SIZE, 16 * BLOCK_SIZE, 0 };
         
         auto& tank = reg.emplace<Tank>(entity);
-        tank.speed = 60.0f;
         tank.angle = -90.0f;
         
         auto& controller = reg.emplace<ControllerMapping>(entity);

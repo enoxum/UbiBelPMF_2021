@@ -5,7 +5,7 @@
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "gameplay/common/simple_collisions.h"
-#include "tanks_main.h"
+#include "tank.h"
 
 #include <iostream>
 using namespace std;
@@ -70,7 +70,7 @@ void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
                 ctrl_.rotation = 0;
             }
 
-            else if (kEvent_.key == ctrl_.fire_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed)) {
+            if (kEvent_.key == ctrl_.fire_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed)) {
                 ctrl_.fire = 1;
             }
 
@@ -103,29 +103,32 @@ void TankMovement::Run()
         auto &tank = view.get<Tank>(entity);
         auto &s = view.get<Sprite>(entity);
         auto &col = view.get<SimpleCollision>(entity);
+        Float32 rad;
         
-        tank.angle += ctrl.rotation * Engine::DeltaTime() * 30.0;
-        s.rotation = {-90.0f + tank.angle};
-        Float32 rad = tank.angle * PI / 180.0f;
-        col.angle = rad;
-        
-        if (ctrl.fire) {
-            ctrl.fire = 0;
-
-                CreateTankBullet(
-                    20, 
-                    ColorRGBA(1, 1, 1, 1), 
-                    { sin(-s.rotation * PI / 180.0f) * 10 ,
-                      cos(-s.rotation * PI / 180.0f) * 10 ,
-                      0 
-                    },
-
-                    {   tank.pos.x + 42 * cos(tank.angle * PI / 180.0f),
-                        tank.pos.y + 42 * sin(tank.angle * PI / 180.0f),
-                      0 
-                    }
-                );
-
+        if (ctrl.move){
+        	if (ctrl.move == 1.0 && tank.speed > 0.0 || ctrl.move == -1.0 && tank.speed < 0.0){
+        		tank.rotationSpeed = 45.0;
+        		tank.driftAngle = tank.angle;
+        		tank.direction = ctrl.move;
+        		tank.speed = tank.speed + ctrl.move * tank.acceleration * Engine::DeltaTime();
+        	}
+        	else{
+        		tank.rotationSpeed = 60.0;
+        		tank.speed = tank.speed + 1.5 * ctrl.move * tank.acceleration * Engine::DeltaTime();
+        	}
+        	if (tank.speed > tank.maxSpeed)
+        		tank.speed = tank.maxSpeed;
+        	if (tank.speed < tank.minSpeed)
+        		tank.speed = tank.minSpeed;
+        }
+        else {
+        	tank.rotationSpeed = 60.0;
+        	tank.driftAngle = tank.angle;
+        	tank.speed = tank.speed - 1.2 * tank.direction * tank.acceleration * Engine::DeltaTime();
+        	if (tank.direction == 1.0 && tank.speed < 0.0 || tank.direction == -1.0 && tank.speed > 0.0){
+        		tank.direction = 0.0;
+        		tank.speed = 0.0;
+        	}
         }
 
         if (col.colided)
@@ -145,15 +148,53 @@ void TankMovement::Run()
             }
             
             if(!tankDestroyed){
+            	
+            	tank.angle = tank.last_angle;
+            	s.rotation = {-90.0f + tank.angle};
+        		rad = tank.angle * PI / 180.0f;
+        		col.angle = rad;
+        		
+        		tank.speed = 0.0;
+        		tank.direction = 0.0;
                 t.position = tank.pos;
                 col.colided = false;
             }
         }
         else 
         {
+        	tank.last_angle = tank.angle;
+        	tank.angle += ctrl.rotation * Engine::DeltaTime() * tank.rotationSpeed;
+        	s.rotation = {-90.0f + tank.angle};
+        	rad = tank.angle * PI / 180.0f;
+        	col.angle = rad;
+        	
         	tank.pos = t.position;
-        	t.position.x += cos(rad) * ctrl.move * tank.speed * Engine::DeltaTime();
-        	t.position.y += sin(rad) * ctrl.move * tank.speed * Engine::DeltaTime();
+        	if (ctrl.move == 0 || ctrl.move == tank.direction){
+        		t.position.x += cos(rad) * tank.speed;
+        		t.position.y += sin(rad) * tank.speed;
+        	}
+        	else{
+        		t.position.x += cos(tank.driftAngle * PI / 180.0f) * tank.speed;
+        		t.position.y += sin(tank.driftAngle * PI / 180.0f) * tank.speed;
+        	}
+        }
+        
+        if (ctrl.fire) {
+            ctrl.fire = 0;
+
+                CreateTankBullet(
+                    20, 
+                    ColorRGBA(1, 1, 1, 1), 
+                    { sin(-s.rotation * PI / 180.0f) * 10 ,
+                      cos(-s.rotation * PI / 180.0f) * 10 ,
+                      0 
+                    },
+
+                    {   tank.pos.x + 42 * cos(rad),
+                        tank.pos.y + 42 * sin(rad),
+                      0 
+                    }
+                );
         }
     }
 }
