@@ -10,7 +10,7 @@ using namespace dagger;
 
 struct Item {
     bool hidden = false;
-    
+    bool pickable = false;    
 
     Item Create(entt::entity &entity, String sprite_ = "", ColorRGB color_ = {1, 1, 1},
                           Vector2 position_ = {0, 0});
