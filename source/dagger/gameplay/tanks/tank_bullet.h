@@ -12,6 +12,8 @@ namespace tanks
         Vector3 speed{ 0, 0, 0 };
 
         int damage{ 0 };
+
+        String tank{""};
     };
 
 

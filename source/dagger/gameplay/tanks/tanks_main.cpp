@@ -151,7 +151,8 @@ void tanks::SetupWorld(Engine& engine_)
         
         auto& tank = reg.emplace<Tank>(entity);
         tank.angle = 90.0f;
-        
+        tank.description = "tank1";
+
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerOneMovement(controller);
         
@@ -171,6 +172,7 @@ void tanks::SetupWorld(Engine& engine_)
         
         auto& tank = reg.emplace<Tank>(entity);
         tank.angle = -90.0f;
+        tank.description = "tank2";
         
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerTwoMovement(controller);

@@ -25,7 +25,7 @@ void TankMovement::WindDown()
     Engine::Dispatcher().sink<KeyboardEvent>().disconnect<&TankMovement::OnKeyboardEvent>(this);
 }
 
-void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3 pos_)
+void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3 pos_, String desc)
 {
     auto& reg = Engine::Registry();
     auto entity = reg.create();
@@ -40,6 +40,7 @@ void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3
     transform.position.z = pos_.z;
     auto& ball = reg.emplace<TankBullet>(entity);
     ball.speed = speed_ * tileSize_;
+    ball.tank = desc;
 
     auto& col = reg.emplace<SimpleCollision>(entity);
     col.size.x = tileSize_;
@@ -181,7 +182,8 @@ void TankMovement::Run()
         
         if (ctrl.fire) {
             ctrl.fire = 0;
-
+            if(tank.description == "tank1" && tank1_num_bullets < 5){
+                tank1_num_bullets += 1;
                 CreateTankBullet(
                     20, 
                     ColorRGBA(1, 1, 1, 1), 
@@ -193,8 +195,27 @@ void TankMovement::Run()
                     {   tank.pos.x + 42 * cos(rad),
                         tank.pos.y + 42 * sin(rad),
                       0 
-                    }
+                    },
+                    tank.description
                 );
+            }
+            if(tank.description == "tank2" && tank2_num_bullets < 5){
+                tank2_num_bullets += 1;
+                CreateTankBullet(
+                    20, 
+                    ColorRGBA(1, 1, 1, 1), 
+                    { sin(-s.rotation * PI / 180.0f) * 10 ,
+                      cos(-s.rotation * PI / 180.0f) * 10 ,
+                      0 
+                    },
+
+                    {   tank.pos.x + 42 * cos(rad),
+                        tank.pos.y + 42 * sin(rad),
+                      0 
+                    },
+                    tank.description
+                );
+            }
         }
     }
 }

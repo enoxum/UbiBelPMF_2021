@@ -1,4 +1,5 @@
 #include "tank_bullet.h"
+#include "tank.h"
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
@@ -30,6 +31,12 @@ void TankBulletSystem::Run()
 
             //std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
 
+            if(ball.tank == "tank1"){
+                tank1_num_bullets -= 1;
+            }
+            else if (ball.tank == "tank2"){
+                tank2_num_bullets -= 1;
+            }
             Engine::Registry().destroy(entity);
 
             /*
