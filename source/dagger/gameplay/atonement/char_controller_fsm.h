@@ -13,7 +13,8 @@ namespace atonement {
 		Walking,
 		JumpWindup,
 		JumpWinddown,
-		Dashing
+		Dashing,
+		WallJump
 	};
 
 	struct CharControllerFSM : public FSM<ECharStates>
@@ -23,6 +24,7 @@ namespace atonement {
 		DEFINE_STATE(CharControllerFSM, ECharStates, JumpWindup);
 		DEFINE_STATE(CharControllerFSM, ECharStates, JumpWinddown);
 		DEFINE_STATE(CharControllerFSM, ECharStates, Dashing);
+		DEFINE_STATE(CharControllerFSM, ECharStates, WallJump);
 
 		CharControllerFSM()
 		{
@@ -31,6 +33,7 @@ namespace atonement {
 			CONNECT_STATE(ECharStates, JumpWindup);
 			CONNECT_STATE(ECharStates, JumpWinddown);
 			CONNECT_STATE(ECharStates, Dashing);
+			CONNECT_STATE(ECharStates, WallJump);
 		}
 
 		void OnAnimationEnd(ViewPtr<Animation> animation);
