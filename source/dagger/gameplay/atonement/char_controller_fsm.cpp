@@ -258,8 +258,9 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 	Bool collided = (collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0);
 
 	if (collided) {
-		transform.position.x -= dashedInLastFrame;
+		//transform.position.x -= dashedInLastFrame;
 		dashedInLastFrame = 0;
+		GoTo(ECharStates::WallJump, state_);
 	}
 	else {
 		dashedInLastFrame = character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
