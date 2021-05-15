@@ -7,11 +7,11 @@ using namespace dagger;
 
 namespace hotline_miami
 {
-   
     struct HotlineMiamiPlayer
     {
         bool is_player{ true };
         Float32 player_speed = 300.f;
+        int weapon_type = 0;
     };
 
     class HotlineMiamiPlayerObstacleCollisionSystem

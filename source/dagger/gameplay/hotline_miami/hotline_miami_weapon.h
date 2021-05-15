@@ -8,9 +8,9 @@ using namespace dagger;
 namespace hotline_miami
 {
 
-    struct HotlineMiamiDeleteEntity
+    struct HotlineMiamiWeapon
     {
-        String type{ "none" };
+        int type{ 0 };
     };
 
     class HotlineMiamiWeaponSystem

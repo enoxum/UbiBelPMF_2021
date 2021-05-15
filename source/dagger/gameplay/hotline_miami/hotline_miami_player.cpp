@@ -1,5 +1,7 @@
 #include "hotline_miami_player.h"
 #include "gameplay/hotline_miami/hotline_miami_obstacle.h"
+#include "gameplay/hotline_miami/hotline_miami_weapon.h"
+#include "gameplay/hotline_miami/hotline_miami_tools.h"
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
