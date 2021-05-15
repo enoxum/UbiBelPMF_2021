@@ -12,6 +12,7 @@ void Pickable::Run(){
     auto &reg = Engine::Registry();
     auto items = reg.view<SimpleCollision, Transform, Sprite, Item>();
     auto hero_view = reg.view<SimpleCollision, Transform, Sprite, Animator, PandemicCharacter>().begin();
+    
 
     items.each([&] (Entity ent, SimpleCollision &col_, Transform &transf_, Sprite &sprite_, Item &item_){
                     auto &hero_transf = reg.get<Transform>(*hero_view);
@@ -24,11 +25,16 @@ void Pickable::Run(){
                             printf("\ncollided with item\n");
                             auto hero = Character::Get(possibly_hero);
                             auto &inventory = hero.inventory;
-                            item_.hidden = true;
-                            reg.remove<SimpleCollision>(ent);
-                            sprite_.scale = {0, 0};
-                            inventory.emplace_back(ent);
-                            printf("Inventory %d", inventory[0]);
+                            auto &input = hero.input;
+                            
+                            if (EPSILON_NOT_ZERO(input.Get("pickup")))
+                            {
+                                item_.hidden = true;
+                                reg.remove<SimpleCollision>(ent);
+                                sprite_.scale = {0, 0};
+                                inventory.emplace_back(ent);
+                                printf("Inventory %d", inventory[0]);   
+                            }
                         }
                     }
                 });
