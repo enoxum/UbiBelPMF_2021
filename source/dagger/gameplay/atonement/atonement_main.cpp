@@ -150,6 +150,7 @@ void AtonementGame::WorldSetup()
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 
     /* Parallax setup */
+    /*
     auto& reg = Engine::Registry();
     auto entity = reg.create();
     auto& sprite = reg.get_or_emplace<Sprite>(entity);
@@ -168,7 +169,7 @@ void AtonementGame::WorldSetup()
 
     AssignSprite(sprite1, "MossyBackground:scrolling_bg1");
     sprite1.position = { sprite.position.x + sprite.size.x, -225, 100 };
-    sprite1.scale.x *= -1;
+    sprite1.scale.x *= -1;*/
 }
 
 

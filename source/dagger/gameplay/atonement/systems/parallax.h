@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "core/system.h"
+#include "core/graphics/sprite.h"
 
 using namespace dagger;
 
@@ -20,6 +21,12 @@ namespace atonement
             return "Parallax System";
         };
 
+        void SpinUp() override;
+
         void Run() override;
+
+    private:
+        Sprite leftmost;
+        Sprite rightmost;
     };
 }
