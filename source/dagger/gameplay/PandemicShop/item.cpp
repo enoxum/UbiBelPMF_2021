@@ -18,11 +18,9 @@ void Pickable::Run(){
                     auto &hero_transf = reg.get<Transform>(*hero_view);
                     auto &hero_col = reg.get<SimpleCollision>(*hero_view);
                     if(col_.colided){
-                        printf("\ncollided\n");
                         item_.pickable = true;
                         auto possibly_hero = col_.colidedWith;
                         if(reg.has<SimpleCollision, Transform, Animator, PandemicCharacter>(possibly_hero)){
-                            printf("\ncollided with item\n");
                             auto hero = Character::Get(possibly_hero);
                             auto &inventory = hero.inventory;
                             auto &input = hero.input;
@@ -33,7 +31,6 @@ void Pickable::Run(){
                                 reg.remove<SimpleCollision>(ent);
                                 sprite_.scale = {0, 0};
                                 inventory.emplace_back(ent);
-                                printf("Inventory %d", inventory[0]);   
                             }
                         }
                     }

@@ -19,8 +19,10 @@
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
+#include "gameplay/PandemicShop/karen_controller.h"
 #include "gameplay/PandemicShop/item.h"
 #include "gameplay/PandemicShop/player.h"
+#include "gameplay/PandemicShop/karen.h"
 
 
 using namespace dagger;
@@ -50,6 +52,7 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
     engine_.AddPausableSystem<PandemicControllerSystem>();
+    engine_.AddPausableSystem<KarenControllerSystem>();
     engine_.AddPausableSystem<CollisionDetectionSystem>();
     engine_.AddPausableSystem<Pickable>();
 #if defined(DAGGER_DEBUG)
@@ -203,11 +206,13 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             -(width - 2) * (tileSize + Space + 5) / 2.f);
         stats->PlayerSpeed = tileSize * 14.f;
         Engine::Instance().PutDefaultResource<pandemic_shop::GameStats>(stats);
+        Engine::Instance();
     }
 
     //1st player
     {
         Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+        KarenCharacter::Create("Pandemic", {1, 1, 1}, {10, 10});
 
         auto ent = reg.create();
         auto item = reg.emplace<Item>(ent);
