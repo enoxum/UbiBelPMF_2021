@@ -256,13 +256,19 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 	auto&& [transform, sprite, character, collision] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
 
 	Bool collided = (collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0);
+	
+	if (character.wallDashed) {
+		sprite.scale.x *= -1;
+	}
 
-	if (collided) {
+	if (collided && !character.wallDashed) {
 		//transform.position.x -= dashedInLastFrame;
 		dashedInLastFrame = 0;
 		GoTo(ECharStates::WallJump, state_);
 	}
 	else {
+		character.wallDashed = false; // HACK: if dash speed is not fast enough for char to get out of collider
+									  // this might result in them returning to WallJump state
 		dashedInLastFrame = character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
 		transform.position.x += dashedInLastFrame;
 	}
@@ -308,6 +314,7 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
 		character.dashJumped = true;
+		character.wallDashed = true;
 		GoTo(ECharStates::Dashing, state_);
 	}
 

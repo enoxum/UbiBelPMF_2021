@@ -30,6 +30,7 @@ namespace atonement
 			Bool fallingAnimationEnded{ false };
 			Bool dashingAnimationEnded{ false };
 			Bool dashJumped{ false };
+			Bool wallDashed{ false };
 		};
 
 		class AtonementControllerSystem
