@@ -1,0 +1,13 @@
+{
+	"animation-name": "gunner:black:RUN",
+	"animation-length-ms": 600,
+	"animation-frames": 
+	[
+		{ "texture-name": "spritesheets:gunner:black:run:1" },
+		{ "texture-name": "spritesheets:gunner:black:run:2" },
+		{ "texture-name": "spritesheets:gunner:black:run:3" },
+		{ "texture-name": "spritesheets:gunner:black:run:4" },
+		{ "texture-name": "spritesheets:gunner:black:run:5" },
+		{ "texture-name": "spritesheets:gunner:black:run:6" }
+	]
+}

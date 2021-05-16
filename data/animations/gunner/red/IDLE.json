@@ -1,0 +1,11 @@
+{
+	"animation-name": "gunner:red:IDLE",
+	"animation-length-ms": 600,
+	"animation-frames": 
+	[
+		{ "texture-name": "spritesheets:gunner:red:idle:1" },
+		{ "texture-name": "spritesheets:gunner:red:idle:2" },
+		{ "texture-name": "spritesheets:gunner:red:idle:3" },
+		{ "texture-name": "spritesheets:gunner:red:idle:4" }
+	]
+}

@@ -1,0 +1,9 @@
+{
+	"animation-name": "gunner:blue:JUMP",
+	"animation-length-ms": 600,
+	"animation-frames": 
+	[
+		{ "texture-name": "spritesheets:gunner:blue:jump:1" },
+		{ "texture-name": "spritesheets:gunner:blue:jump:2" }
+	]
+}

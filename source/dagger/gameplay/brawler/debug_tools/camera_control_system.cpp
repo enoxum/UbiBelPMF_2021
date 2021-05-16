@@ -5,10 +5,10 @@ using namespace brawler;
 
 float CameraControlSystem::cameraSpeed = 150.0f;
 
-EDaggerKeyboard CameraControlSystem::up_key = EDaggerKeyboard::KeyUp;
-EDaggerKeyboard CameraControlSystem::down_key = EDaggerKeyboard::KeyDown;
-EDaggerKeyboard CameraControlSystem::right_key = EDaggerKeyboard::KeyRight;
-EDaggerKeyboard CameraControlSystem::left_key = EDaggerKeyboard::KeyLeft;
+EDaggerKeyboard CameraControlSystem::up_key = EDaggerKeyboard::KeyKp8;
+EDaggerKeyboard CameraControlSystem::down_key = EDaggerKeyboard::KeyKp2;
+EDaggerKeyboard CameraControlSystem::right_key = EDaggerKeyboard::KeyKp6;
+EDaggerKeyboard CameraControlSystem::left_key = EDaggerKeyboard::KeyKp4;
 
 void CameraControlSystem::SpinUp()
 {

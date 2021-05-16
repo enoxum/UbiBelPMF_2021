@@ -1,0 +1,16 @@
+{
+	"context-name": "controller_2",
+	"commands": [
+		{ "command-name": "run", 
+		  "actions": [
+			{ "trigger": "KeyLeft", "value": -1 },
+			{ "trigger": "KeyRight", "value": 1 } 
+		] }, 
+		{ "command-name": "jump", "trigger": "KeyUp" },
+		{ "command-name": "down", "trigger": "KeyDown" },
+		{ "command-name": "attack", "trigger": "KeyL" , "event": "Released"},
+		{ "command-name": "reload", "trigger": "KeyK" , "event": "Reload"},
+		{ "command-name": "cycle_weapons", "trigger": "KeyJ" , "event": "Cycle weapons"},
+		{ "command-name": "drop_weapon", "trigger": "KeyO" , "event": "Released"}
+	]
+}

@@ -15,7 +15,8 @@ namespace brawler
 {
 	struct Player
 	{
-
+		String 					name = "player";
+		String					color = "green";
 		int 					maxWeapons = 5;
 		int 					pickedUpWeapons = 0;
 		Vector2 				startPosition{ 0.0f, 0.0f };

@@ -44,9 +44,11 @@ namespace brawler
         }
 
         static BrawlerCharacter Create(
+            String name_ = "Player",
             String input_ = "",
             Vector2 position_ = { 0, 0 },
-            Bool isLeft_ = false)
+            Bool isLeft_ = false,
+            String color_ = "green")
         {
             auto& reg = Engine::Registry();
             auto entity = reg.create();
@@ -61,8 +63,8 @@ namespace brawler
 
             chr.col.size = chr.sprite.size;
 
-            AssignSprite(chr.sprite, "spritesheets:2lisp:Gunner_Green_Idle:idle:1");
-            AnimatorPlay(chr.animator, "Gunner_Green:IDLE");
+            AssignSprite(chr.sprite, "spritesheets:gunner:" + color_ + ":idle:1");
+            AnimatorPlay(chr.animator, "gunner:" + color_ + ":IDLE");
 
             chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 1.0f };
 
@@ -71,6 +73,8 @@ namespace brawler
 
             chr.col.size = { 24.0f, 30.0f };
 
+            chr.character.name = name_;
+            chr.character.color = color_;
             chr.character.startPosition = position_;
             chr.character.startDirection = isLeft_ ? -1 : 1;
 
