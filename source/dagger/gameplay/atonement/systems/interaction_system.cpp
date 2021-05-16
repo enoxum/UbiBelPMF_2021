@@ -54,12 +54,12 @@ void IntearactionSystem::Run()
     auto playerView = Engine::Registry().view<Transform, CharacterCollision>();
     for (auto& entity : playerView) 
     {   
-        auto& transf = playerView.get<Transform>(entity);
+        auto& playerTransform = playerView.get<Transform>(entity);
 
         for (auto& stone : loreStonePositions) 
         {
-            if (std::abs(transf.position.x - stone.first.x) < 250 &&
-                std::abs(transf.position.y - stone.first.y) < 150)
+            if (std::abs(playerTransform.position.x - stone.first.x) < 250 &&
+                std::abs(playerTransform.position.y - stone.first.y) < 150)
             {   
                 nearestLoreStone = stone;
                 interactionInputEnabled = true;
@@ -68,8 +68,8 @@ void IntearactionSystem::Run()
                 if (Engine::Registry().has<Transform>(interactPrompt))
                 {
                     auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
-                    interactPromptTransform.position.x = nearestLoreStone.first.x;
-                    interactPromptTransform.position.y = nearestLoreStone.first.y + 250;
+                    interactPromptTransform.position.x = playerTransform.position.x;
+                    interactPromptTransform.position.y = playerTransform.position.y + 130;
                     interactPromptTransform.position.z = 12;
                 }
             }

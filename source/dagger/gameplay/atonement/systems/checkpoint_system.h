@@ -23,6 +23,8 @@ namespace atonement {
     private:
         Vector3 currentCheckpoint = {0, 0, 0};
         std::vector<Vector3> possibleCheckpoints = { Vector3{4190, 700, 15},
-                                                     Vector3{6000, 800, 15} };
+                                                     Vector3{6700, -2300, 15},
+                                                     Vector3{5200, -3150, 15},
+                                                   };
     };
 }
