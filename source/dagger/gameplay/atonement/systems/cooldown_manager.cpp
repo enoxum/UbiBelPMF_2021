@@ -2,12 +2,6 @@
 #include <iostream>
 
 using namespace dagger;
-using namespace atonement;
-
-CooldownManager::CooldownManager()
-{
-    canBePaused = true;
-}
 
 void CooldownManager::Run() {
     for (auto& [key, val] : lookup) {
@@ -15,19 +9,19 @@ void CooldownManager::Run() {
     }
 }
 
-void CooldownManager::registerCooldown(Entity entity, std::string name, Float32 duration) {
-    std::pair<Entity, std::string> key = std::make_pair(entity, name);
+void CooldownManager::registerCooldown(const Entity& entity, const std::string& name, Float32 duration) {
+    auto key = std::make_pair(entity, name);
     auto res = lookup.find(key);
+
     if (res != lookup.end()) {
-        // found
         lookup.erase(res);
     }
 
     lookup.insert(std::make_pair( key, Cooldown(entity, name, duration) ));
 }
 
-Bool CooldownManager::isOnCooldown(Entity entity, std::string name) {
-    std::pair<Entity, std::string> key = std::make_pair(entity, name);
+Bool CooldownManager::isOnCooldown(const Entity& entity, const std::string& name) {
+    auto key = std::make_pair(entity, name);
     auto res = lookup.find(key);
     if (res == lookup.end()) {  // not found, so never registered
         return false;
@@ -47,7 +41,7 @@ Bool CooldownManager::isOnCooldown(Entity entity, std::string name) {
 }
 
 
-CooldownManager::Cooldown::Cooldown(Entity entity, std::string name, Float32 duration)
+CooldownManager::Cooldown::Cooldown(const Entity& entity, const std::string& name, Float32 duration)
     : entity(entity), name(name), duration(duration) {}
 
 
