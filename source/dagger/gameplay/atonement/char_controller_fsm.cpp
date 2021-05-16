@@ -256,19 +256,31 @@ void CharControllerFSM::Dashing::Run(CharControllerFSM::StateComponent& state_)
 	auto&& [transform, sprite, character, collision] = Engine::Registry().get<Transform, Sprite, AtonementController::AtonementCharacter, CharacterCollision>(state_.entity);
 
 	Bool collided = (collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0);
+	
+	if (character.wallDashed) {
+		sprite.scale.x *= -1;
+	}
 
-	if (collided) {
-		transform.position.x -= dashedInLastFrame;
+	if (collided && !character.wallDashed) {
+		//transform.position.x -= dashedInLastFrame;
 		dashedInLastFrame = 0;
+		GoTo(ECharStates::WallJump, state_);
 	}
 	else {
+		character.wallDashed = false; // HACK: if dash speed is not fast enough for char to get out of collider
+									  // this might result in them returning to WallJump state
 		dashedInLastFrame = character.dashSpeed * sprite.scale.x * Engine::DeltaTime();
 		transform.position.x += dashedInLastFrame;
 	}
 
-	if (character.dashingAnimationEnded || collided) {
+	if (character.dashingAnimationEnded) {
 		if (!character.grounded) {
-			GoTo(ECharStates::JumpWinddown, state_);
+			if (collided) {
+				GoTo(ECharStates::WallJump, state_);
+			}
+			else {
+				GoTo(ECharStates::JumpWinddown, state_);
+			}
 		}
 		else {
 			GoTo(ECharStates::Idle, state_);
@@ -286,6 +298,7 @@ void CharControllerFSM::WallJump::Enter(CharControllerFSM::StateComponent& state
 	AnimatorPlayOnce(animator, "BlueWizard:WALL_JUMP");
 
 	auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(state_.entity);
+	character.dashJumped = false;
 }
 
 DEFAULT_EXIT(CharControllerFSM, WallJump);
@@ -301,6 +314,7 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 	if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
 	{
 		character.dashJumped = true;
+		character.wallDashed = true;
 		GoTo(ECharStates::Dashing, state_);
 	}
 
@@ -348,6 +362,13 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 
 			if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 				jumping = false;
+			}
+
+			if (EPSILON_NOT_ZERO(input.Get("dash")) && canDash(state_.entity))
+			{
+				jumping = false;
+				character.dashJumped = true;
+				GoTo(ECharStates::Dashing, state_);
 			}
 		}
 		else {
