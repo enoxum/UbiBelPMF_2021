@@ -27,7 +27,7 @@ void ParallaxSystem::Run()
         auto& sprite = reg.get_or_emplace<Sprite>(entity);
         auto& parallax = reg.get_or_emplace<Parallax>(entity);
         parallax.lastCameraPosition = camera->position;
-        parallax.strength = 0.1;
+        parallax.strength = 0.00001;
 
         AssignSprite(sprite, "MossyBackground:scrolling_bg1");
         sprite.position = { rightmost.position.x + rightmost.size.x, -225, 100 };
@@ -43,7 +43,7 @@ void ParallaxSystem::Run()
         auto& sprite = reg.get_or_emplace<Sprite>(entity);
         auto& parallax = reg.get_or_emplace<Parallax>(entity);
         parallax.lastCameraPosition = camera->position;
-        parallax.strength = 0.1;
+        parallax.strength = 0.00001;
 
         AssignSprite(sprite, "MossyBackground:scrolling_bg1");
         sprite.position = { leftmost.position.x - leftmost.size.x, -225, 100 };
@@ -63,7 +63,7 @@ void ParallaxSystem::SpinUp()
     auto& sprite = reg.get_or_emplace<Sprite>(entity);
     auto& parallax = reg.get_or_emplace<Parallax>(entity);
     parallax.lastCameraPosition = camera->position;
-    parallax.strength = 0.1;
+    parallax.strength = 0.00001;
 
     AssignSprite(sprite, "MossyBackground:scrolling_bg1");
     sprite.position = { 600, -225, 99 };
