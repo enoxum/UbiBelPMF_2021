@@ -1,7 +1,6 @@
 #include "simple_collisions.h"
 
 #include "core/engine.h"
-#include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animations.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
@@ -36,18 +35,12 @@ void SimpleCollisionsSystem::Run()
 
                 collision.colided = true;
                 col.colided = true;
-                                
-                if (collision.GetCollisionSides(transform.position, col, tr.position).x == 1){
-                    transform.position.x = transform.position.x - collision.size.x/10.f;
+
+                if(collision.type != CollisionType::Item){
+                    resolveDirection(collision, transform, col, tr);
                 }
-                else if(collision.GetCollisionSides(transform.position, col, tr.position).x == -1){
-                    transform.position.x = transform.position.x + collision.size.x/10.f;
-                }
-                else if(collision.GetCollisionSides(transform.position, col, tr.position).y == 1){
-                    transform.position.y = transform.position.y - collision.size.y/10.f;
-                }
-                else if(collision.GetCollisionSides(transform.position, col, tr.position).y == -1){
-                    transform.position.y = transform.position.y + collision.size.y/10.f;
+                else{
+                    resolveDirection( col, tr, collision, transform);
                 }
 
             }
@@ -56,7 +49,20 @@ void SimpleCollisionsSystem::Run()
         it++;
     }
 }
-
+void SimpleCollisionsSystem::resolveDirection(SimpleCollision &collision, Transform &col_transform, SimpleCollision &other, Transform& other_transform ){
+    if (collision.GetCollisionSides(col_transform.position, collision, other_transform.position).x == 1){
+        col_transform.position.x -= collision.size.x/10.f;
+    }
+    else if(collision.GetCollisionSides(col_transform.position, collision, other_transform.position).x == -1){
+        col_transform.position.x += collision.size.x/10.f;
+    }
+    else if(collision.GetCollisionSides(col_transform.position, collision, other_transform.position).y == 1){
+        col_transform.position.y -= collision.size.y/10.f;
+    }
+    else if(collision.GetCollisionSides(col_transform.position, collision, other_transform.position).y == -1){
+        col_transform.position.y += collision.size.y/10.f;
+    }
+}
 // SimpleCollision
 
 bool SimpleCollision::IsCollided(const Vector3& pos_, const SimpleCollision& other_, const Vector3& posOther_)

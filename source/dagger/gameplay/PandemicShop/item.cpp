@@ -53,6 +53,7 @@ Item Item::Create(entt::entity &entity, String sprite_, ColorRGB color_ ,
     
     transform.position = {position_, 0.0f};
     collision.size = {16, 16};
+    collision.type = CollisionType::Item;
      
     sprite.scale = {1, 1};
     sprite.position = {position_, 0.0f};
