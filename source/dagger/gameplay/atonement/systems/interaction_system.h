@@ -25,5 +25,7 @@ namespace atonement {
         std::pair<Vector3, int> nearestLoreStone;
         bool loreStonePositionsLoaded = false;
         bool interactionInputEnabled = false;
+
+        entt::entity interactPrompt = entt::null;
     };
 }

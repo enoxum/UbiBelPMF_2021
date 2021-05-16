@@ -5,6 +5,7 @@
 #include "core/engine.h"
 
 #include "core/game/transforms.h"
+#include "core/graphics/sprite.h"
 #include "gameplay/atonement/systems/interaction_system.h"
 #include "gameplay/atonement/components/marker_components.h"
 #include "gameplay/atonement/systems/character_collisions.h"
@@ -34,7 +35,20 @@ void IntearactionSystem::Run()
             auto& interact = view.get<InteractableComponent>(entity);
             loreStonePositions.push_back( std::make_pair(transf.position, interact.id) );
         }
+
         loreStonePositionsLoaded = true;
+
+        //also create the 'Press E' sprite for interaction on the first Run()
+        auto& reg = Engine::Registry();
+        auto entity = reg.create();
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "TextAssets:PressE");
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position = Vector3{0, 0 , -1};    //-1 on Z axis so it is not visible on game start
+
+        interactPrompt = entity;
     }
 
     auto playerView = Engine::Registry().view<Transform, CharacterCollision>();
@@ -49,10 +63,24 @@ void IntearactionSystem::Run()
             {   
                 nearestLoreStone = stone;
                 interactionInputEnabled = true;
-                //iscrtavanje onog Press E sprajta
+                
+                //show the 'Press E prompt'
+                if (Engine::Registry().has<Transform>(interactPrompt))
+                {
+                    auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
+                    interactPromptTransform.position.x = nearestLoreStone.first.x;
+                    interactPromptTransform.position.y = nearestLoreStone.first.y + 250;
+                    interactPromptTransform.position.z = 12;
+                }
             }
             else 
-            {
+            {   
+                //hide the 'Press E prompt'
+                if (Engine::Registry().has<Transform>(interactPrompt))
+                {
+                    auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
+                    interactPromptTransform.position.z = -1;
+                }
                 interactionInputEnabled = false;
             }
         }
