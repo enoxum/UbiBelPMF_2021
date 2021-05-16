@@ -28,6 +28,7 @@
 #include "gameplay/atonement/systems/character_collisions.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/atonement/systems/checkpoint_system.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -123,6 +124,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<CollisionHandlerSystem>();
     engine.AddPausableSystem<CooldownManager>();
     engine.AddSystem<CameraFollowSystem>();
+    engine.AddPausableSystem<CheckpointSystem>();
 
 #if defined(DAGGER_DEBUG)
 #endif //defined(DAGGER_DEBUG)
@@ -143,8 +145,18 @@ void AtonementGame::WorldSetup()
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
         //SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
         SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
+
+
+    /*auto& view = Engine::Registry().view<Animator>();
+    for (auto& entity : view) {
+        Engine::Registry().destroy(entity);
+    }
+
+    Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::SaveRequest>(
+        SaveGameSystem<ECommonSaveArchetype>::SaveRequest{ "level_1.json" });*/
+
                                                             //bilo -100, - 200
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { 6500, -200 }, {70, 176});
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, 200 }, {70, 176});
     mainChar.sprite.scale = { 0.6, 0.6 };
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 }
