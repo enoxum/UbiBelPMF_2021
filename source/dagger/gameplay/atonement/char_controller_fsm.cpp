@@ -292,6 +292,7 @@ void CharControllerFSM::WallJump::Enter(CharControllerFSM::StateComponent& state
 	AnimatorPlayOnce(animator, "BlueWizard:WALL_JUMP");
 
 	auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(state_.entity);
+	character.dashJumped = false;
 }
 
 DEFAULT_EXIT(CharControllerFSM, WallJump);
