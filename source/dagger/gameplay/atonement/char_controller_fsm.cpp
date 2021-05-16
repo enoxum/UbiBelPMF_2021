@@ -7,7 +7,7 @@
 #include "core/game/transforms.h"
 #include <gameplay/atonement/atonement_controller.h>
 
-#include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/common/cooldown_manager.h"
 
 #include <iostream>
 

@@ -26,7 +26,7 @@
 #include "gameplay/atonement/systems/collision_handler_system.h"
 #include "gameplay/atonement/systems/character_collisions.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
-#include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/common/cooldown_manager.h"
 
 using namespace dagger;
 using namespace atonement;
