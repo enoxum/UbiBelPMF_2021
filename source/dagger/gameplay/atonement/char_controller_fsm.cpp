@@ -144,7 +144,7 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 			//transform.position.x -= movedInLastFrame;
 			//movedInLastFrame = 0;
-			auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+			auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 			if (!cdManager->isOnCooldown(state_.entity, "wall jump")) {
 				GoTo(ECharStates::WallJump, state_);
 			}
@@ -211,7 +211,7 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 			//transform.position.x -= movedInLastFrame;
 			//movedInLastFrame = 0;
-			auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+			auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 			if (!cdManager->isOnCooldown(state_.entity, "wall jump")) {
 				GoTo(ECharStates::WallJump, state_);
 			}
