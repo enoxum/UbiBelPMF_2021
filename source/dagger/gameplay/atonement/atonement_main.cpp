@@ -121,7 +121,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
     engine.AddPausableSystem<GroundednessDetectionSystem>();
     engine.AddPausableSystem<CollisionHandlerSystem>();
-    engine.AddPausableSystem<CooldownManager>();
+    engine.AddPausableSystem<CooldownManager<std::string>>();
 
 
 #if defined(DAGGER_DEBUG)

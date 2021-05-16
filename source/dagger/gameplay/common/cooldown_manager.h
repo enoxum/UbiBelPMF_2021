@@ -10,6 +10,7 @@
 
 using namespace dagger;
 
+template <typename T>
 class CooldownManager : public System
 {
 
@@ -19,11 +20,40 @@ public:
         return "Cooldown Manager";
     }
 
-    void Run() override;
+    void Run() {
+        for (auto& [key, val] : lookup) {
+            val.time += Engine::DeltaTime();
+        }
+    }
 
-    void registerCooldown(const Entity& entity, const std::string& name, Float32 duration);
+    void registerCooldown(const Entity& entity, const T& identifier, Float32 duration) {
+        auto key = std::make_pair(entity, identifier);
+        auto res = lookup.find(key);
 
-    Bool isOnCooldown(const Entity& entity, const std::string& name);
+        if (res != lookup.end()) {
+            lookup.erase(res);
+        }
+
+        lookup.insert(std::make_pair(key, Cooldown(entity, identifier, duration)));
+    }
+
+    Bool isOnCooldown(const Entity& entity, const T& identifier) {
+        auto key = std::make_pair(entity, identifier);
+        auto res = lookup.find(key);
+        if (res == lookup.end()) {  // not found, so never registered
+            return false;
+        }
+        else { // found
+
+            auto& cd = res->second;
+            if (cd.time < cd.duration) { // hasn't expired
+                return true;
+            }
+            else { // expired
+                return false;
+            }
+        }
+    }
 
 private:
     class Cooldown;
@@ -33,11 +63,14 @@ private:
     class Cooldown
     {
     public:
-        Cooldown(const Entity& entity, const std::string& name, Float32 duration);
-        Cooldown(const Cooldown& other);
+        Cooldown(const Entity& entity, const T& identifier, Float32 duration)
+            : entity(entity), identifier(identifier), duration(duration) {}
+
+        Cooldown(const Cooldown& other)
+            : entity(other.entity), identifier(other.identifier), duration(other.duration) {}
 
         Entity entity;
-        std::string name;
+        T identifier;
         Float32 duration;
         Float32 time = 0;
     };

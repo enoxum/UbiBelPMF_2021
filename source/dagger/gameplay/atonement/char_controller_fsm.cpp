@@ -190,7 +190,7 @@ void CharControllerFSM::Dashing::Enter(CharControllerFSM::StateComponent& state_
 
 	character.dashingAnimationEnded = false;
 
-	auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+	auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 	cdManager->registerCooldown(state_.entity, "dash", character.dashCooldown);
 }
 
@@ -232,7 +232,7 @@ void CharControllerFSM::OnAnimationEnd(ViewPtr<Animation> animation) {
 }
 
 Bool CharControllerFSM::canDash(Entity entity) {
-	auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+	auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 	auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(entity);
 	return !cdManager->isOnCooldown(entity, "dash") && !character.dashJumped;
 }
