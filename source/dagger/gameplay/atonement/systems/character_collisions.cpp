@@ -4,6 +4,8 @@
 #include "core/engine.h"
 #include "core/game/transforms.h"
 
+#include <iostream>
+
 using namespace dagger;
 using namespace atonement;
 
@@ -18,15 +20,15 @@ void CharacterCollisionsSystem::Run()
         auto& charTransform = view.get<Transform>(character);
 
         //resetujemo sve kolizije koje su postojale u proslom frejmu
-        charCollision.colidedLeft = false;
-        charCollision.colidedRight = false;
-        charCollision.colidedUp = false;
-        charCollision.colidedDown = false;
+        charCollision.collidedLeft = false;
+        charCollision.collidedRight = false;
+        charCollision.collidedUp = false;
+        charCollision.collidedDown = false;
 
-        charCollision.colidedWithLeft = entt::null;
-        charCollision.colidedWithRight = entt::null;
-        charCollision.colidedWithUp = entt::null;
-        charCollision.colidedWithDown = entt::null;
+        charCollision.collidedWithLeft = entt::null;
+        charCollision.collidedWithRight = entt::null;
+        charCollision.collidedWithUp = entt::null;
+        charCollision.collidedWithDown = entt::null;
 
         //svi ostali entiteti sa kolizijom
         auto simpleView = Engine::Registry().view<SimpleCollision, Transform>();
@@ -34,27 +36,27 @@ void CharacterCollisionsSystem::Run()
 
             auto& otherCollision = simpleView.get<SimpleCollision>(entity);
             auto& otherTransform = simpleView.get<Transform>(entity);
-           
+
             CollisionSide collisionDetection = charCollision.IsCollided(charTransform.position, otherTransform.position, otherCollision);
-            
+
             switch (collisionDetection) {
-                case CollisionSide::Left: 
-                    charCollision.colidedLeft = true;
-                    charCollision.colidedWithLeft = entity;
-                    break;
-                case CollisionSide::Right:
-                    charCollision.colidedRight = true;
-                    charCollision.colidedWithRight = entity;
-                    break;
-                case CollisionSide::Up:
-                    charCollision.colidedUp = true;
-                    charCollision.colidedWithUp = entity;
-                    break;
-                case CollisionSide::Down:
-                    charCollision.colidedDown = true;
-                    charCollision.colidedWithDown = entity;
-                    break;
-                default: break;
+            case CollisionSide::Left:
+                charCollision.collidedLeft = true;
+                charCollision.collidedWithLeft = entity;
+                break;
+            case CollisionSide::Right:
+                charCollision.collidedRight = true;
+                charCollision.collidedWithRight = entity;
+                break;
+            case CollisionSide::Up:
+                charCollision.collidedUp = true;
+                charCollision.collidedWithUp = entity;
+                break;
+            case CollisionSide::Down:
+                charCollision.collidedDown = true;
+                charCollision.collidedWithDown = entity;
+                break;
+            default: break;
             }
         }
 
@@ -66,38 +68,46 @@ CollisionSide CharacterCollision::IsCollided(const Vector3& pos_, const Vector3&
     Vector2 p(pos_.x, pos_.y);
     Vector2 p2(posOther_.x, posOther_.y);
 
-    if (p.x < p2.x && ((p2.x - p.x) < (size.x + colOther_.size.x) / 2.f ) &&
-        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2.f )
-    {   
+    Float32 horizontalOverlap = 0;
+    Float32 verticalOverlap = 0;
+
+    if (std::abs(p2.x - p.x) < (size.x + colOther_.size.x) / 2.f &&
+        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2.f) {
         
-        if (p.y + size.y / 2.f < p2.y) { return CollisionSide::Up; }
-        else if (p.y - size.y / 2.f > p2.y) { return CollisionSide::Down; }
+        if (p.x + size.x / 2.f < p2.x + colOther_.size.x / 2.f) {
+            horizontalOverlap = (p.x + size.x / 2.f) - (p2.x - colOther_.size.x / 2.f);
+        }
+        else {
+            horizontalOverlap = (p2.x + colOther_.size.x / 2.f) - (p.x - size.x / 2.f);
+        }
 
-        return CollisionSide::Right;
+        if (p.y + size.y / 2.f < p2.y + colOther_.size.y / 2.f) {
+            verticalOverlap = (p.y + size.y / 2.f) - (p2.y - colOther_.size.y / 2.f);
+        }
+        else {
+            verticalOverlap = (p2.y + colOther_.size.y / 2.f) - (p.y - size.y / 2.f);
+        }
+
+        if (std::abs(horizontalOverlap) < std::abs(verticalOverlap)) {
+            if (p.x < p2.x) {
+                return CollisionSide::Right;
+            }
+            else {
+                return CollisionSide::Left;
+            }
+        }
+        else {
+            if (p.y < p2.y) {
+                return CollisionSide::Up;
+            }
+            else {
+                return CollisionSide::Down;
+            }
+        }
     }
-
-    else if (p.x > p2.x && ((p.x - p2.x) < (size.x + colOther_.size.x) / 2.f) &&
-        std::abs(p.y - p2.y) < (size.y + colOther_.size.y) / 2.f)
-    {
-        if (p.y + size.y / 2.f < p2.y) { return CollisionSide::Up; }
-        else if (p.y - size.y / 2.f > p2.y) { return CollisionSide::Down; }
-
-        return CollisionSide::Left;
+    else {
+        return CollisionSide::None;
     }
-
-    /*else if (p.y < p2.y && ((p2.y - p.y) < (size.y + colOther_.size.y) / 2.) &&
-        std::abs(p.x - p2.x) < (size.x + colOther_.size.x) / 2.)
-    {
-        return CollisionSide::Up;
-    }
-
-    else if (p.y > p2.y && ((p.y - p2.y) < (size.y + colOther_.size.y) / 2.) &&
-        std::abs(p.x - p2.x) < (size.x + colOther_.size.x) / 2.)
-    {
-        return CollisionSide::Down;
-    }*/
-
-    return CollisionSide::None;
 }
 
 //UNTESTED
