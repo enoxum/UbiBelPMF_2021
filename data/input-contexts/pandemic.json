@@ -10,6 +10,10 @@
 		  "actions": [
 			{ "trigger": "KeyW", "value": 1 },
 			{ "trigger": "KeyS", "value": -1 } 
-		] }
+		] },
+		{ "command-name": "pickup", 
+			"actions": [
+			  { "trigger": "KeySpace"}
+		  ] }
 	]
 }
