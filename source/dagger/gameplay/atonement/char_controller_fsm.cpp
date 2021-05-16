@@ -320,7 +320,7 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 
 	if (EPSILON_NOT_ZERO(input.Get("wall")) && !jumping)
 	{
-		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+		auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 		if(!cdManager->isOnCooldown(state_.entity, "boost")){
 			cdManager->registerCooldown(state_.entity, "boost", 0.3);
 			auto&& animator = Engine::Registry().get<Animator>(state_.entity);
@@ -353,7 +353,7 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 		}
 	}
 	else {
-		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+		auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 		if (cdManager->isOnCooldown(state_.entity, "boost")) {
 			movedInLastFrame = character.boostSide * sprite.scale.x * Engine::DeltaTime();
 			transform.position.x += movedInLastFrame;

@@ -8,7 +8,7 @@
 #include "core/game/transforms.h"
 #include "gameplay/atonement/atonement_controller.h"
 #include "gameplay/atonement/systems/character_collisions.h"
-#include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/common/cooldown_manager.h"
 
 #include <iostream>
 
@@ -44,7 +44,7 @@ void GroundednessDetectionSystem::Run()
 
             if (char_.grounded != tmp) {
                 if (char_.grounded == false) {
-                    auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+                    auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
                     cdManager->registerCooldown(entity, "wall jump", 0.3);
                 }
 
