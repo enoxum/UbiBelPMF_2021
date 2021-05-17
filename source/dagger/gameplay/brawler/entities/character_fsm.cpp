@@ -98,10 +98,22 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 	else
 	{
 		sprite.scale.x = run;
-		transform.position.x += run * PhysicsSystem::s_RunSpeed * Engine::DeltaTime();
+		// if moving in opposite direction, first decrease x speed then move transform
+		if(movable.speed.x * run < 0.0f)
+		{
+			movable.speed.x += run * PhysicsSystem::s_RunSpeed * Engine::DeltaTime();
+			if(movable.speed.x * run > 0.0f)
+			{
+				transform.position.x += movable.speed.x;
+				movable.speed.x = 0.0f;
+			}
+		}
+		else
+		{
+			transform.position.x += run * PhysicsSystem::s_RunSpeed * Engine::DeltaTime();
+		}
 	}
-
-	// TODO decrease x speed when running in opposite direction
+	
 }
 
 // Jumping
