@@ -8,6 +8,7 @@
 #include "core/game/transforms.h"
 #include "gameplay/atonement/atonement_controller.h"
 #include "gameplay/atonement/systems/character_collisions.h"
+#include "gameplay/atonement/systems/cooldown_manager.h"
 
 #include <iostream>
 
@@ -22,26 +23,35 @@ GroundednessDetectionSystem::GroundednessDetectionSystem()
 
 void GroundednessDetectionSystem::Run()
 {
-    Engine::Registry().view<Transform, Sprite, CharacterCollision, AtonementController::AtonementCharacter>()
-        .each([&](Transform& transform_, Sprite& sprite_, CharacterCollision& collision_, AtonementController::AtonementCharacter& char_)
-        {
-                bool tmp = char_.grounded;
 
-                if(collision_.collidedDown)
-                {
-                    char_.grounded = true;
-                    char_.dashJumped = false;
-                }
-                else {
-                    char_.grounded = false;
+    auto&& view = Engine::Registry().view<Transform, Sprite, CharacterCollision, AtonementController::AtonementCharacter>();
+    for (auto& entity : view) {
+        auto&& [transform_, sprite_, collision_, char_] = 
+            Engine::Registry().get<Transform, Sprite, CharacterCollision, 
+            AtonementController::AtonementCharacter>(entity);
+
+            bool tmp = char_.grounded;
+
+            if (collision_.collidedDown)
+            {
+                char_.grounded = true;
+                char_.dashJumped = false;
+            }
+            else {
+                char_.grounded = false;
+            }
+
+
+            if (char_.grounded != tmp) {
+                if (char_.grounded == false) {
+                    auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+                    cdManager->registerCooldown(entity, "wall jump", 0.3);
                 }
 
-                
-                if (char_.grounded != tmp) {
-                    std::cout << "Char pos: " << transform_.position.x << " " << transform_.position.y << std::endl;
-                    std::cout << "Grounded: " << (char_.grounded ? "true" : "false") << std::endl;
-                }
-        });
+                //std::cout << "Char pos: " << transform_.position.x << " " << transform_.position.y << std::endl;
+                //std::cout << "Grounded: " << (char_.grounded ? "true" : "false") << std::endl;
+            }
 
+    }
 
 }

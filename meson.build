@@ -64,6 +64,7 @@ sources = [
     'source/dagger/gameplay/atonement/systems/atonement_pause_system.cpp',
     'source/dagger/gameplay/atonement/systems/checkpoint_system.cpp',
     'source/dagger/gameplay/atonement/systems/interaction_system.cpp',
+    'source/dagger/gameplay/atonement/systems/parallax.cpp',
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',
