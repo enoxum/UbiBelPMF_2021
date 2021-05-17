@@ -17,8 +17,14 @@
 
 #include "tools/diagnostics.h"
 
+struct RExpandBackground
+{
+	int count;
+	Float32 x;
+};
+
 struct RBackdrop {
 
 	static void RoboshipCreateBackdrop(Float32 background_pos_x, Float32 terrain_pos_x);
-
+	void expand_background(RExpandBackground&);
 };

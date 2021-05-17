@@ -99,7 +99,6 @@ REnemy* REnemy::Create(
     auto entity = reg.create();
 
     REnemy *chr = REnemy::Get(entity);
-
     chr->sprite.scale = { -0.15f, 0.15f };
     chr->sprite.position = { position_, 0.0f };
     //chr.sprite.color = { color_, 1.0f };
@@ -108,6 +107,13 @@ REnemy* REnemy::Create(
     AnimatorPlay(chr->animator, "robot:ENEMIES:Robot1:01_Idle");
 
     return chr;
+}
+
+void REnemy::change_direction(RChangeDirection& ev)
+{
+    puts("CHANGED DIRECTION");
+    printf("%lf\n", this->sprite.scale.x);
+    this->sprite.scale.x *= -1.0;
 }
 
 void RoboshipSetCamera()
@@ -120,49 +126,6 @@ void RoboshipSetCamera()
     camera->Update();
 }
 
-//void RoboshipCreateBackdrop()
-//{
-//    auto& reg = Engine::Registry();
-//    auto* camera = Engine::GetDefaultResource<Camera>();
-//
-//    // Create terrain 
-//    {
-//        auto back = reg.create();
-//        auto& sprite = reg.get_or_emplace<Sprite>(back);
-//
-//        AssignSprite(sprite, "EmptyWhitePixel");
-//        sprite.color = { 0, 0, 0, 1 };
-//        sprite.size = { 200, TERRAIN_HEIGHT };
-//        sprite.scale = { 10, 1 };
-//        sprite.position = { 0, -(camera->size.y - TERRAIN_HEIGHT) / 2, 1 };
-//    }
-//    
-//
-//    /* Put background image */
-//    {
-//        auto entity = reg.create();
-//        auto& sprite = reg.get_or_emplace<Sprite>(entity);
-//
-//        AssignSprite(sprite, "robot:BACKGROUND:background2_infinite");
-//        
-//        /*sprite.scale.x = 0.5f;
-//        sprite.scale.y = 0.5f;*/
-//        sprite.position.x = 0;
-//        sprite.position.y = 5;
-//        sprite.position.z = 10;
-//    }
-//
-//    /*
-//    {
-//        auto ui = reg.create();
-//        auto& text = reg.emplace<Text>(ui);
-//        text.spacing = 0.6f;
-//        text.Set("pixel-font", "Roboship game");
-//    }
-//    */
-//}
-
-
 void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
@@ -172,14 +135,12 @@ void Roboship::WorldSetup()
     Engine::Registry().emplace<RCameraFollowFocus>(sndChar.entity);
     
     int n_enemies = 5;
-    std::vector<REnemy*> enemies;
     for (int i = 0; i < n_enemies; i++)
     {
         REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 200, -200 });
         enemyChar->sprite.scale = { 0.15f, 0.15f };
-        enemies.push_back(enemyChar);
-    }
 
-    sndChar.character.enemies = enemies;
+        Engine::Dispatcher().sink<RChangeDirection>().connect<&REnemy::change_direction>(*enemyChar);
+    }
 }
 

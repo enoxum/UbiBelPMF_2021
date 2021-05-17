@@ -14,7 +14,6 @@ namespace roboship
 	struct RoboshipCharacter
 	{
 		int speed{ 1 };
-		std::vector<REnemy*> enemies;
 	};
 
 	class RoboshipControllerSystem

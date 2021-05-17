@@ -52,31 +52,19 @@ void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM
 
 	Float32 run = input.Get("run");
 
+	if (sprite.scale.x * run < 0) {
+		Engine::Dispatcher().trigger<RChangeDirection>();
+	}
+
 	if (EPSILON_ZERO(run))
 	{
 		GoTo(EStates::Idle, state_);
 	}
 	else
 	{
-		if (iteration1 == 1) {
-			for (int i = 0; i < 5; i++)
-			{
-				character.enemies[i]->sprite.scale = { 0.15f, 0.15f };
-			}
-			iteration1++;
-		}
-
-		for (int i = 0; i < 5; i++)
+		if (iteration1 == 1)
 		{
-
-			printf("%d:\nscale enemy x: %lf\n run: %lf\n", i, character.enemies[i]->sprite.scale.x, run);
-			printf("\n");
-			printf("\n");
-
-			if (character.enemies[i]->sprite.scale.x * run < 0) {
-				character.enemies[i]->sprite.scale.x = character.enemies[i]->sprite.scale.x * -1;
-				printf("Novi: %lf\n", character.enemies[i]->sprite.scale.x);
-			}
+			iteration1++;
 		}
 
 		sprite.scale.x = run * 0.2f;

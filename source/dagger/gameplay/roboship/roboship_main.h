@@ -36,6 +36,11 @@ namespace roboship
 
 extern struct RCharacter;
 
+struct RChangeDirection
+{
+    char _placeholder;
+};
+
 struct REnemy {
     Entity entity;
     Sprite& sprite;
@@ -43,6 +48,7 @@ struct REnemy {
 
     static REnemy* Get(Entity entity);
     static REnemy* Create(ColorRGB color_, Vector2);
+    void change_direction(RChangeDirection& ev);
 };
 
 extern struct REnemy;
