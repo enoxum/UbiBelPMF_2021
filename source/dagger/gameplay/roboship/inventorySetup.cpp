@@ -144,43 +144,20 @@ void inventory::Inventory::FillInventory()
 
         }
     }
-    printf("Pocetna\n");
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-            printf("%d ", matrix.matrix[i][j]);
-
-        printf("\n");
-    }
 }
 
 void inventory::Inventory::SwapMatrix(int x, int y, int a, int b)
 {
-    printf("Swap \n");
-    printf("%d %d %d %d\n", x, y, a, b);
+
     auto entity = Engine::Registry().view<InventoryMatrix>()[0];
     auto& matrix = Engine::Registry().get<InventoryMatrix>(entity);
-    printf("SWAP MATRIX");
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-            printf("%d ", matrix.matrix[i][j]);
 
-        printf("\n");
-    }
 
     int tmp = matrix.matrix[x][y];
     matrix.matrix[x][y] = matrix.matrix[a][b];
     matrix.matrix[a][b] = tmp;
-    printf("-----------------");
     SwapSprites(x, y, a, b);
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-            printf("%d ", matrix.matrix[i][j]);
 
-        printf("\n");
-    }
 }
 
 void inventory::Inventory::makeMatrix()
@@ -197,14 +174,6 @@ void inventory::Inventory::makeMatrix()
         for (int j = 0; j < 4; j++)
             matrix.matrix[i][j] = 1 + rand() % 5;
 
-    printf("make matrix");
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-            printf("%d ", matrix.matrix[i][j]);
-
-        printf("\n");
-    }
 }
 
 void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
@@ -215,13 +184,6 @@ void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
 
     tileSize = 30;
 
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-            printf("%d ", matrix.matrix[i][j]);
-
-        printf("\n");
-    }
 
     float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
     float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;

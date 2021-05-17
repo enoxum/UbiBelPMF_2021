@@ -3,12 +3,13 @@
 #include "core/engine.h"
 #include "core/graphics/sprite.h"
 #include "core/game/transforms.h"
-
+#include "gameplay/roboship/fightEnemy.h"
 #include "gameplay/roboship/roboship_main.h"
 
 using namespace dagger;
 using namespace robo_game;
 using namespace roboship;
+using namespace fightEnemy;
 
 void SelectedTileInputSystem::SpinUp()
 {
@@ -105,8 +106,6 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     swapX = ctrl_.input.x;
                     swapY = ctrl_.input.y;
                     
-                    printf("%d %d %d %d\n", x, y, swapX, swapY);
-                    printf("---------");
                     Inventory* inv = new Inventory();
                     inv->SwapMatrix(x, y, swapX, swapY);
 
@@ -128,6 +127,9 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     }
 
                     swap = false;
+
+                    bool found;
+                    found = findCombination({ 1, 1, 1});
                 }
             }
 

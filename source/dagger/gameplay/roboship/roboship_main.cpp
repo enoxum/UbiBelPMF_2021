@@ -1,6 +1,7 @@
 #include "gameplay/roboship/roboship_main.h"
 #include "gameplay/roboship/selectTileController.h"
 #include "gameplay/roboship/inventorySetup.h"
+#include "gameplay/roboship/fightEnemy.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -24,6 +25,8 @@
 using namespace dagger;
 using namespace roboship;
 using namespace robo_game;
+using namespace fightEnemy;
+
 
 
 void Roboship::GameplaySystemsSetup()
@@ -86,6 +89,7 @@ void RoboshipCreateBackdrop()
     inv->SelectedTileSetup();
     inv->makeMatrix();
     inv->FillInventory();
+
 
     /*
     {
