@@ -1,3 +1,4 @@
+#include "gameplay/roboship/roboship_controller.h"
 #include "roboship_character_controller_fsm.h"
 #include "gameplay/roboship/roboship_createbackdrop.h"
 #include "core/core.h"
@@ -5,7 +6,7 @@
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
-#include "gameplay/roboship/roboship_controller.h"
+
 
 using namespace dagger;
 
@@ -71,14 +72,14 @@ void RoboshipCharacterControllerFSM::Running::Run(RoboshipCharacterControllerFSM
 		sprite.position.x += character.speed * run * Engine::DeltaTime();
 
 		printf("%lf\n", sprite.position.x);
-		if (abs(sprite.position.x - 800) <= 0.2 && iteration == 1)
+		if (abs(sprite.position.x - 800) <= 0.3 && iteration == 1)
 		{
 			iteration++;
 			count += 1600;
 			puts("updated");
 			RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
 		}
-		else if (abs((sprite.position.x - 800) - (iteration - 1)*2000)-400*(iteration-1) <= 0.2 && iteration > 1) {
+		else if (abs((sprite.position.x - 800) - (iteration - 1)*2000)-400*(iteration-1) <= 0.3 && iteration > 1) {
 			iteration++;
 			count += 1600;
 			puts("updated");

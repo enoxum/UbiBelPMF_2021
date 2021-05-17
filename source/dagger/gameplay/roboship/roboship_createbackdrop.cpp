@@ -2,11 +2,6 @@
 
 const int TERRAIN_HEIGHT = 30;
 
-void RBackdrop::expand_background(RExpandBackground& ev) {
-    printf("%d %lf\n", ev.count, ev.x);
-    RBackdrop::RoboshipCreateBackdrop(ev.count, ev.x);
-}
-
 void RBackdrop::RoboshipCreateBackdrop(Float32 background_pos_x, Float32 terrain_pos_x)
 {
     Float32 base_x = 800;

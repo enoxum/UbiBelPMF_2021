@@ -76,7 +76,7 @@ struct RCharacter
         if (input_ != "")
             chr.input.contexts.push_back(input_);
 
-        chr.character.speed = 300;
+        chr.character.speed = 200;
 
         return chr;
     }
