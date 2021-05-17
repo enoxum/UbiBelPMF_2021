@@ -51,37 +51,44 @@ void IntearactionSystem::Run()
         interactPrompt = entity;
     }
 
+    //a nonexistant value
+    nearestLoreStone = std::make_pair(Vector3{0, 0, 0}, -1);
+    interactionInputEnabled = false;
+
     auto playerView = Engine::Registry().view<Transform, CharacterCollision>();
     for (auto& entity : playerView) 
     {   
         auto& playerTransform = playerView.get<Transform>(entity);
 
         for (auto& stone : loreStonePositions) 
-        {
+        {   
             if (std::abs(playerTransform.position.x - stone.first.x) < 250 &&
                 std::abs(playerTransform.position.y - stone.first.y) < 150)
-            {   
+            {
                 nearestLoreStone = stone;
                 interactionInputEnabled = true;
-                
-                //show the 'Press E prompt'
-                if (Engine::Registry().has<Transform>(interactPrompt))
-                {
-                    auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
-                    interactPromptTransform.position.x = playerTransform.position.x;
-                    interactPromptTransform.position.y = playerTransform.position.y + 130;
-                    interactPromptTransform.position.z = 12;
-                }
             }
-            else 
-            {   
-                //hide the 'Press E prompt'
-                if (Engine::Registry().has<Transform>(interactPrompt))
-                {
-                    auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
-                    interactPromptTransform.position.z = -1;
-                }
-                interactionInputEnabled = false;
+        }
+        
+        //if a stone is actually near
+        if (interactionInputEnabled)
+        {   
+            //show the 'Press E prompt'
+            if (Engine::Registry().has<Transform>(interactPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
+                interactPromptTransform.position.x = playerTransform.position.x;
+                interactPromptTransform.position.y = playerTransform.position.y + 130;
+                interactPromptTransform.position.z = 12;
+            }
+        }
+        else 
+        {
+            //hide the 'Press E prompt'
+            if (Engine::Registry().has<Transform>(interactPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
+                interactPromptTransform.position.z = -1;
             }
         }
     }
