@@ -28,10 +28,10 @@ void BulletSystem::Run()
 	auto  projectiles = Engine::Registry().view<Sprite, Transform, Bullet, Movable, Animator>();
 	auto* camera = Engine::GetDefaultResource<Camera>();
 	
-	BulletSystem::s_CameraBoundLeft = camera->position.x - camera->size.x / 2;
-	BulletSystem::s_CameraBoundRight = camera->position.x + camera->size.x / 2;
-	BulletSystem::s_CameraBoundUp = camera->position.y - camera->size.y / 2;
-	BulletSystem::s_CameraBoundDown = camera->position.y + camera->size.y / 2;
+	BulletSystem::s_CameraBoundLeft = camera->position.x - camera->size.x / 4;
+	BulletSystem::s_CameraBoundRight = camera->position.x + camera->size.x / 4;
+	BulletSystem::s_CameraBoundUp = camera->position.y + camera->size.y / 4;
+	BulletSystem::s_CameraBoundDown = camera->position.y - camera->size.y / 4;
 
 	auto& reg = Engine::Registry();
 	for (auto obj : bullets) {
@@ -50,7 +50,6 @@ void BulletSystem::Run()
 			}
 		}
 	}
-
 
 	for (auto obj : projectiles) {
 

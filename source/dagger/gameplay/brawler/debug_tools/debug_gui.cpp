@@ -8,6 +8,7 @@
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/weapon_spawn_system.h"
+#include "gameplay/brawler/systems/hud_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -87,7 +88,7 @@ void DebugGui::RenderDebugWindow()
 			activateSpawners = true;
 		
 		Engine::Registry().view<Player>().each([&](Player& player) {
-			ImGui::Text("Player one:");
+			ImGui::Text("Player %s:", player.isLeft? "left": "right");
 			for (int i = 0; i < player.weapons.size(); i++) {
 				const auto& weapon = player.weapons[i];
 				ImGui::Text("\t%s%s : x%d [%d]", (i == player.active_weapon_idx ? "> " : ""), weapon.name().c_str(), weapon.currentAmmoInClip(), weapon.numClips());
@@ -96,12 +97,23 @@ void DebugGui::RenderDebugWindow()
 		});
 	}
 
-	// Removed these because they are wrong anyway
-	//ImGui::Separator();
-	//ImGui::Text("Cam bound left: %f", BulletSystem::s_CameraBoundLeft);
-	//ImGui::Text("Cam bound right: %f", BulletSystem::s_CameraBoundRight);
-	//ImGui::Text("Cam bound up: %f", BulletSystem::s_CameraBoundUp);
-	//ImGui::Text("Cam bound down: %f", BulletSystem::s_CameraBoundDown);
+	if (ImGui::CollapsingHeader("HUD"))
+    {
+        ImGui::Text("Cam left: %f", BulletSystem::s_CameraBoundLeft);
+        ImGui::Text("Cam right: %f", BulletSystem::s_CameraBoundRight);
+        ImGui::Text("Cam up: %f", BulletSystem::s_CameraBoundUp);
+        ImGui::Text("Cam down: %f", BulletSystem::s_CameraBoundDown);
+        ImGui::SliderFloat("Blip width: ", &HUDSystem::s_blipWidth, 0.0f, 5.0f);
+        ImGui::SliderFloat("Blip height: ", &HUDSystem::s_blipHeight, 0.0f, 100.0f);
+        ImGui::SliderFloat("Weapon dim: ", &HUDSystem::s_weaponDim, 0, 100);
+        ImGui::SliderFloat("Active weapon indicator size: ", &HUDSystem::s_activeWeaponIndicatorSize, 0.0f, 100.0f);
+        ImGui::SliderFloat("Padding up: ", &HUDSystem::s_paddingUp, 0.0f, 50.0f);
+        ImGui::SliderFloat("Padding side: ", &HUDSystem::s_paddingSide, 0.0f, 50.0f);
+        ImGui::SliderFloat("Mid padding up: ", &HUDSystem::s_midPaddingUp, 0.0f, 50.0f);
+        ImGui::SliderFloat("Mid padding side: ", &HUDSystem::s_midPaddingSide, 0.0f, 50.0f);
+        ImGui::SliderInt("Left player health: ", &HUDSystem::s_leftPlayerHealth, 0, 100);
+        ImGui::SliderInt("Right player health: ", &HUDSystem::s_rightPlayerHealth, 0, 100);
+    }
 	 
 	ImGui::End();
 }

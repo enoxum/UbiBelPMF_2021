@@ -153,9 +153,13 @@ namespace brawler {
 		int		clipSize() const;
 		int		numClips() const;
 		int		currentAmmoInClip() const;
+
+
+		String  ammoRepr() const;
 		String  sprite() const;
 		Vector2 translate() const;
 		Vector2 scale() const;
+
 
 
 		bool	reload();

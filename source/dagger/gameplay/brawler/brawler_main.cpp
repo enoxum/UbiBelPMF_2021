@@ -31,6 +31,7 @@
 #include "gameplay/brawler/systems/weapon_spawn_system.h"
 #include "gameplay/brawler/systems/weaponpickupsystem.h"
 #include "gameplay/brawler/systems/drop_system.h"
+#include "gameplay/brawler/systems/hud_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -50,11 +51,11 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<WeaponSpawnSystem>();
     engine.AddPausableSystem<WeaponPickupSystem>();
     engine.AddPausableSystem<DropSystem>();
+    engine.AddPausableSystem<HUDSystem>();
     
     // Debug Systems
     engine.AddSystem<CameraControlSystem>();
     engine.AddSystem<DebugGui>();
-
 }
 
 void Brawler::SetCamera()
@@ -71,4 +72,12 @@ void Brawler::WorldSetup()
 {
     SetCamera();
     Level::Load("default");
+
+    HUDSystem::CreateHealthBarLeft();
+    HUDSystem::CreateWeaponsLeft();
+
+    HUDSystem::CreateHealthBarRight();
+    HUDSystem::CreateWeaponsRight();
+
+    HUDSystem::CreateMarkersAndTexts();
 }

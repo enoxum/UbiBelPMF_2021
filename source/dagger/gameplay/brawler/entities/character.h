@@ -75,6 +75,7 @@ namespace brawler
 
             chr.character.name = name_;
             chr.character.color = color_;
+            chr.character.isLeft = isLeft_;
             chr.character.startPosition = position_;
             chr.character.startDirection = isLeft_ ? -1 : 1;
 

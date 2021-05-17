@@ -17,6 +17,11 @@ namespace brawler
 	{
 		String 					name = "player";
 		String					color = "green";
+		bool					isLeft{ false };
+
+		int						health{ 100 };
+
+		// Weapons
 		int 					maxWeapons = 5;
 		int 					pickedUpWeapons = 0;
 		Vector2 				startPosition{ 0.0f, 0.0f };

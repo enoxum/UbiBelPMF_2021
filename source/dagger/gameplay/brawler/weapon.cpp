@@ -69,6 +69,11 @@ int Weapon::currentAmmoInClip() const
 	return m_currentAmmoInClip;
 }
 
+String Weapon::ammoRepr() const
+{
+	return "x" + std::to_string(m_currentAmmoInClip) + " [" + std::to_string(m_numClips) + "]";
+}
+
 String Weapon::sprite() const
 {
 	return m_sprite;
