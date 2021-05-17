@@ -6,6 +6,7 @@
 #include "gameplay/hotline_miami/hotline_miami_player_input.h"
 #include "gameplay/hotline_miami/hotline_miami_camera_focus.h"
 #include "gameplay/hotline_miami/hotline_miami_weapon.h"
+#include "gameplay/hotline_miami/hotline_miami_enemy.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -22,6 +23,7 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
+
 
 
 using namespace dagger;
@@ -58,6 +60,10 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     engine.AddPausableSystem<HotlineMiamiWeaponSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
+    engine.AddPausableSystem<HotlineMiamiEnemyProjectileCollisionSystem>();
+    engine.AddPausableSystem<HotlineMiamiEnemyBulletSystem>();
+    engine.AddPausableSystem<HotlineMiamiEnemyBulletPlayerCollisionSystem>();
+    engine.AddPausableSystem<HotlineMiamiEnemyBulletObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiDeleteEntitySystem>();
 }
 
@@ -140,6 +146,26 @@ void hotline_miami::SetupWorld()
         weapon.type = 2;
     }
 
+    // enemy
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = playerSize;
+        col.size.y = playerSize;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 500;
+        transform.position.y = 50;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
+        sprite.size.x = playerSize;
+        sprite.size.y = playerSize;
+
+        auto& enemey = reg.emplace<HotlineMiamiEnemy>(entity);
+    }
+
     // pistol
     {
         auto entity = reg.create();
@@ -187,26 +213,6 @@ void hotline_miami::SetupWorld()
         HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
     }
 
-     // obstacle
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = playerSize;
-        col.size.y = playerSize;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 0;
-        transform.position.y = 0;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "EmptyWhitePixel");
-        sprite.size.x = playerSize;
-        sprite.size.y = playerSize;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
     // obstacle house
     {
         auto entity = reg.create();
@@ -236,7 +242,7 @@ void hotline_miami::SetupWorld()
 
         auto& transform = reg.emplace<Transform>(entity);
         transform.position.x = -150;
-        transform.position.y = -150;
+        transform.position.y = 0;
         transform.position.z = zPos;
 
         auto& sprite = reg.emplace<Sprite>(entity);
