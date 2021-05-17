@@ -40,7 +40,6 @@ void HotlineMiamiProjectileObstacleCollisionSystem::Run()
             {
                 Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
             }
-            col.colided = false;
         }
     }
 }

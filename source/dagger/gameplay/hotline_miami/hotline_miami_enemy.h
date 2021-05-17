@@ -15,7 +15,7 @@ namespace hotline_miami
 
     struct HotlineMiamiEnemyBullet
     {
-        Float32 bullet_speed = 150.f;
+        Float32 bullet_speed = 300.f;
         Vector3 direction{ 0, 0, 0 };
         bool has_direction{ false };
     };
@@ -33,7 +33,7 @@ namespace hotline_miami
         : public System
     {
     public:
-        int interval = 500;
+        int interval = 100;
 
         inline String SystemName() { return "HotlineMiami Enemy Bullet System"; }
 

@@ -125,6 +125,44 @@ void hotline_miami::SetupWorld()
 
     zPos -= 1.f;
 
+    // enemy 1
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = playerSize;
+        col.size.y = playerSize;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 500;
+        transform.position.y = 50;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
+        sprite.size.x = playerSize;
+        sprite.size.y = playerSize;
+
+        auto& enemey = reg.emplace<HotlineMiamiEnemy>(entity);
+    }
+    // enemy 2 
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = playerSize;
+        col.size.y = playerSize;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = -500;
+        transform.position.y = 50;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
+        sprite.size.x = playerSize;
+        sprite.size.y = playerSize;
+
+        auto& enemey = reg.emplace<HotlineMiamiEnemy>(entity);
+    }
     // bazuka
     {
         auto entity = reg.create();
@@ -145,27 +183,6 @@ void hotline_miami::SetupWorld()
         auto& weapon = reg.emplace<HotlineMiamiWeapon>(entity);
         weapon.type = 2;
     }
-
-    // enemy
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = playerSize;
-        col.size.y = playerSize;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 500;
-        transform.position.y = 50;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
-        sprite.size.x = playerSize;
-        sprite.size.y = playerSize;
-
-        auto& enemey = reg.emplace<HotlineMiamiEnemy>(entity);
-    }
-
     // pistol
     {
         auto entity = reg.create();

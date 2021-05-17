@@ -41,7 +41,7 @@ void HotlineMiamiEnemyProjectileCollisionSystem::Run()
 void HotlineMiamiEnemyBulletSystem::Run()
 {   
     if (interval-- == 0) {
-        interval = 500;
+        interval = 100;
         auto enemies = Engine::Registry().view<Transform, HotlineMiamiEnemy>();
         for (auto entity : enemies)
         {
@@ -86,7 +86,10 @@ void HotlineMiamiEnemyBulletSystem::Run()
             auto& bullet = view2.get<HotlineMiamiEnemyBullet>(entity);
             if (!bullet.has_direction) 
             {
-                SetupEnemyBulletStats(bullet, Vector3(-1, 0, 0));
+                Float32 x = (t_player.position.x - t.position.x) / (abs(t_player.position.x - t.position.x) + abs(t_player.position.y - t.position.y));
+                Float32 y = (t_player.position.y - t.position.y) / (abs(t_player.position.x - t.position.x) + abs(t_player.position.y - t.position.y));
+        
+                SetupEnemyBulletStats(bullet, Vector3(x, y, 0));
                 bullet.has_direction = true;
             }
             t.position += bullet.direction * bullet.bullet_speed * Engine::DeltaTime();
@@ -108,7 +111,6 @@ void HotlineMiamiEnemyBulletObstacleCollisionSystem::Run()
             {
                 Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
             }
-            col.colided = false;
         }
     }
 }
@@ -127,7 +129,6 @@ void HotlineMiamiEnemyBulletPlayerCollisionSystem::Run()
             {
                 Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
             }
-            col.colided = false;
         }
     }
 }
