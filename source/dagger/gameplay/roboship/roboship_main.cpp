@@ -87,6 +87,7 @@ REnemy* REnemy::Get(Entity entity)
     auto& reg = Engine::Registry();
     auto& sprite = reg.get_or_emplace<Sprite>(entity);
     auto& anim = reg.get_or_emplace<Animator>(entity);
+    reg.get_or_emplace<EnemyMarker>(entity);
 
     return new REnemy{ entity, sprite, anim };
 }
@@ -113,7 +114,7 @@ void REnemy::change_direction(RChangeDirection& ev)
 {
     puts("CHANGED DIRECTION");
     printf("%lf\n", this->sprite.scale.x);
-    this->sprite.scale.x *= -1.0;
+    this->sprite.scale.x *= -1.0f;
 }
 
 void RoboshipSetCamera()
@@ -140,7 +141,14 @@ void Roboship::WorldSetup()
         REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 200, -200 });
         enemyChar->sprite.scale = { 0.15f, 0.15f };
 
-        Engine::Dispatcher().sink<RChangeDirection>().connect<&REnemy::change_direction>(*enemyChar);
+        Engine::Dispatcher().sink<RChangeDirection>().connect<&Roboship::TurnRobots>(this);
     }
 }
 
+void Roboship::TurnRobots()
+{
+    Engine::Registry().view<Sprite, EnemyMarker>().each([](Sprite& sprite_, const EnemyMarker&)
+        {
+            sprite_.scale.x *= -1.0f;
+        });
+}

@@ -22,6 +22,8 @@ using namespace dagger;
 
 namespace roboship
 {
+    struct EnemyMarker { char Id; };
+
     class Roboship : public Game
     {
         String GetIniFile() override
@@ -31,6 +33,8 @@ namespace roboship
 
         void GameplaySystemsSetup() override;
         void WorldSetup() override;
+
+        void TurnRobots();
     };
 }
 
