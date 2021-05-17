@@ -16,13 +16,12 @@ namespace atonement
 	public:
 		struct AtonementCharacter
 		{
-			Float32 speed{ 800 };
+			Float32 speed{ 900 };
 			Float32 jumpSpeed{ 1100 };
 			Float32 jumpedHeight{ 0 };
 			Float32 jumpHeight{ 350};
 			Float32 dashSpeed{ 1600 };
-			Float32 fallSpeed{ 1100 };
-			Float32 fallSpeed{ 900 };
+			Float32 fallSpeed{ 1600 };
 			Float32 slideSpeedAsPercentOfFall{ 0.5 };
 			Float32 boostUp{ 1000 };
 			Float32 boostSide{ 800 };
