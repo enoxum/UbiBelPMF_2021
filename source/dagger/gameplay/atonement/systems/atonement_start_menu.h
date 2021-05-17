@@ -10,8 +10,7 @@ namespace atonement {
     {
         EDaggerKeyboard upKey = EDaggerKeyboard::KeyUp;
         EDaggerKeyboard downKey = EDaggerKeyboard::KeyDown;
-
-
+        EDaggerKeyboard enterKey = EDaggerKeyboard::KeyEnter;
         Vector4 input{ 0, 0, 0, 0};
     };
 

@@ -152,6 +152,7 @@ void atonement::SetUpWorld()
     float tileSize = 300.f;
     constexpr float Space = 0.3f;
 
+
     auto entity = reg.create();
     auto& sprite = reg.emplace<Sprite>(entity);
     AssignSprite(sprite, "selected");
@@ -161,25 +162,43 @@ void atonement::SetUpWorld()
 
     auto& transform = reg.emplace<Transform>(entity);
 
-        //transform.position.x = (200.0f + 1 + 1 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        //transform.position.y = (1.0f + 2 + 2 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
         transform.position.x = (2.0f) * tileSize;
         transform.position.y = tileSize/2;
-        transform.position.z = 0.f;
+        transform.position.z = 1.f;
 
-        auto& controller = reg.emplace<SelectionMapping>(entity);
-
-    for (int i = 0; i < 2; i++){
-        auto entity2 = reg.create();
-        auto& sprite2 = reg.emplace<Sprite>(entity2);
-        AssignSprite(sprite2, "start_test");
+    auto& controller = reg.emplace<SelectionMapping>(entity);
+    
+    
+    auto entity2 = reg.create();
+    auto& sprite2 = reg.emplace<Sprite>(entity2);
+    AssignSprite(sprite2, "exit");
         
-        auto& transform2 = reg.emplace<Transform>(entity2);
+    auto& transform2 = reg.emplace<Transform>(entity2);
 
-        transform2.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform2.position.y = (1.277f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
-        transform2.position.z = 1.f;
-    }
+    transform2.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    transform2.position.y = (1.277f - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+    transform2.position.z = 2.f;
+
+    auto entity3 = reg.create();
+    auto& sprite3 = reg.emplace<Sprite>(entity3);
+    AssignSprite(sprite3, "start");
+        
+    auto& transform3 = reg.emplace<Transform>(entity3);
+
+    transform3.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    transform3.position.y = (1.277f + 1 + 1 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+    transform3.position.z = 2.f;
+    
+
+    auto entity4 = reg.create();
+    auto& sprite4 = reg.emplace<Sprite>(entity4);
+    AssignSprite(sprite4, "start_menu_background");
+
+    auto& transform4 = reg.emplace<Transform>(entity4);
+
+        transform4.position.x = 0.3f;
+        transform4.position.y = 2.0f;
+        transform4.position.z = 3.f;
 
 }
 
