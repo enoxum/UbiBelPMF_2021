@@ -6,9 +6,12 @@
 
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
+#include "core/input/inputs.h"
 #include "gameplay/atonement/systems/interaction_system.h"
+//#include "gameplay/atonement/systems/cooldown_manager.h"
 #include "gameplay/atonement/components/marker_components.h"
 #include "gameplay/atonement/systems/character_collisions.h"
+#include "gameplay/atonement/atonement_controller.h"
 #include <iostream>
 
 using namespace dagger;
@@ -106,8 +109,26 @@ void IntearactionSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 
 void IntearactionSystem::UnlockAbility(int abilityId)
 {
-    // abilityId = 1  -> DASH
-    // abilityId = 2  -> WALL JUMP
+    auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver>();
 
-    //std::cout << "ability unlocked: id = " << abilityId << std::endl;
+    //auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+    //cdManager->registerCooldown(entity, "some name", 0.3);
+    //if(cdManager->isOnCooldown(entity, "some name")){
+    //
+    //}
+
+    for (const auto& entity : view){
+        auto&& input = view.get<InputReceiver>(entity);
+        // abilityId = 1  -> DASH
+        if (abilityId == 1) {
+            input.contexts.pop_back();
+            input.contexts.push_back("ATON1");
+        }
+        // abilityId = 2  -> JUMP
+        else if (abilityId == 2) {
+            input.contexts.pop_back();
+            input.contexts.push_back("ATON2");
+        }
+        std::cout << "ability unlocked: id = " << abilityId << std::endl;
+    }
 }
