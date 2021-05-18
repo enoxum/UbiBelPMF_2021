@@ -59,8 +59,6 @@ sources = [
     'source/dagger/gameplay/platformer/parallax.cpp',
     'source/dagger/gameplay/platformer/platformer_controller.cpp',
     'source/dagger/gameplay/platformer/platformer_main.cpp',
-    'source/dagger/gameplay/platformer/character_controller_fsm.cpp',
-    'source/dagger/gameplay/roboship/roboship_character_controller_fsm.cpp',
     'source/dagger/gameplay/roboship/roboship_controller.cpp',
     'source/dagger/gameplay/roboship/roboship_main.cpp',
     'source/dagger/gameplay/roboship/roboship_camera_focus.cpp',
