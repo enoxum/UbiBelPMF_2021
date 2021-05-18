@@ -1,7 +1,7 @@
 #include "gameplay/roboship/roboship_main.h"
-#include "gameplay/roboship/roboship_controller.h"
 #include "gameplay/roboship/roboship_camera_focus.h"
 #include "gameplay/roboship/roboship_createbackdrop.h"
+#include "gameplay/roboship/roboship_player_move.h";
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -30,57 +30,9 @@ void Roboship::GameplaySystemsSetup()
 {
     auto& engine = Engine::Instance();
 
-    engine.AddSystem<RoboshipControllerSystem>();
+    engine.AddSystem<RoboshipPlayerInputSystem>();
     engine.AddSystem<RCameraFollowSystem>();
 }
-
-
-struct RCharacter
-{
-    Entity entity;
-    Sprite& sprite;
-    Animator& animator;
-    InputReceiver& input;
-    RoboshipCharacter& character;
-
-    static RCharacter Get(Entity entity)
-    {
-        auto& reg = Engine::Registry();
-        auto& sprite = reg.get_or_emplace<Sprite>(entity);
-        auto& anim = reg.get_or_emplace<Animator>(entity);
-        auto& input = reg.get_or_emplace<InputReceiver>(entity);
-        auto& character = reg.get_or_emplace<RoboshipCharacter>(entity);
-
-        return RCharacter{ entity, sprite, anim, input, character };
-    }
-
-    static RCharacter Create(
-        String input_ = "",
-        ColorRGB color_ = { 1, 1, 1 },
-        Vector2 position_ = { 0, 0 })
-    {
-        auto& reg = Engine::Registry();
-        auto entity = reg.create();
-
-        ATTACH_TO_FSM(RoboshipCharacterControllerFSM, entity);
-
-        auto chr = RCharacter::Get(entity);
-
-        chr.sprite.scale = { 0.2f, 0.2f };
-        chr.sprite.position = { position_, 0.0f };
-        //chr.sprite.color = { color_, 1.0f };
-
-        AssignSprite(chr.sprite, "robot:IDLE:Idle (1)");
-        AnimatorPlay(chr.animator, "robot:IDLE");
-
-        if (input_ != "")
-            chr.input.contexts.push_back(input_);
-
-        chr.character.speed = 200;
-
-        return chr;
-    }
-};
 
 REnemy* REnemy::Get(Entity entity)
 {
@@ -100,7 +52,7 @@ REnemy* REnemy::Create(
     auto entity = reg.create();
 
     REnemy *chr = REnemy::Get(entity);
-    chr->sprite.scale = { -0.15f, 0.15f };
+    chr->sprite.scale = { 0.15f, 0.15f };
     chr->sprite.position = { position_, 0.0f };
     //chr.sprite.color = { color_, 1.0f };
 
@@ -112,8 +64,6 @@ REnemy* REnemy::Create(
 
 void REnemy::change_direction(RChangeDirection& ev)
 {
-    puts("CHANGED DIRECTION");
-    printf("%lf\n", this->sprite.scale.x);
     this->sprite.scale.x *= -1.0f;
 }
 
@@ -132,14 +82,37 @@ void Roboship::WorldSetup()
     RoboshipSetCamera();
     RBackdrop::RoboshipCreateBackdrop(0, 0);
 
-    auto sndChar = RCharacter::Create("Arrows", { 1, 0, 0 }, {0, -223 });
-    Engine::Registry().emplace<RCameraFollowFocus>(sndChar.entity);
+    auto& engine = Engine::Instance();
+    auto& reg = engine.Registry();
+
+    float zPos = 0.0f;
+
+    // player
+
+    {
+        auto entity = reg.create();
+        auto& sprite = reg.emplace<Sprite>(entity);
+        auto& animator = reg.get_or_emplace<Animator>(entity);
+
+        AssignSprite(sprite, "robot:IDLE:Idle (1)");
+        AnimatorPlay(animator, "robot:IDLE");
+
+        sprite.scale = { 0.2f, 0.2f };
+        sprite.position = { 0.0f, -223.0f, 0.0f };
+
+        auto& roboshipPlayer = reg.emplace<RoboshipPlayer>(entity);
+        roboshipPlayer.speed = 200;
+
+        reg.emplace<ControllerMapping>(entity);
+        Engine::Registry().emplace<RCameraFollowFocus>(entity);
+    }
     
+
     int n_enemies = 5;
     for (int i = 0; i < n_enemies; i++)
     {
         REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 200, -200 });
-        enemyChar->sprite.scale = { 0.15f, 0.15f };
+        enemyChar->sprite.scale = { -0.15f, 0.15f };
 
         Engine::Dispatcher().sink<RChangeDirection>().connect<&Roboship::TurnRobots>(this);
     }

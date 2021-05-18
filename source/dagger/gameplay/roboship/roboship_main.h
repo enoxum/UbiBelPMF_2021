@@ -38,8 +38,6 @@ namespace roboship
     };
 }
 
-extern struct RCharacter;
-
 struct RChangeDirection
 {
     char _placeholder;

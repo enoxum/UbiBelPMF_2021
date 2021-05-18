@@ -65,6 +65,7 @@ sources = [
     'source/dagger/gameplay/roboship/roboship_main.cpp',
     'source/dagger/gameplay/roboship/roboship_camera_focus.cpp',
     'source/dagger/gameplay/roboship/roboship_createbackdrop.cpp',
+    'source/dagger/gameplay/roboship/roboship_player_move.cpp',
     'source/dagger/gameplay/racing/racing_car.cpp',
     'source/dagger/gameplay/racing/racing_game_logic.cpp',
     'source/dagger/gameplay/racing/racing_main.cpp',
