@@ -10,17 +10,17 @@ void Pickable::Run(){
 
     
     auto &reg = Engine::Registry();
-    auto items = reg.view<SimpleCollision, Transform, Sprite, Item>();
+    auto items = reg.view<SimpleCollision, Transform, Sprite, Item, CollisionType::Item>();
     auto hero_view = reg.view<SimpleCollision, Transform, Sprite, Animator, PandemicCharacter>().begin();
     
 
     items.each([&] (Entity ent, SimpleCollision &col_, Transform &transf_, Sprite &sprite_, Item &item_){
-                    auto &hero_transf = reg.get<Transform>(*hero_view);
-                    auto &hero_col = reg.get<SimpleCollision>(*hero_view);
                     if(col_.colided){
                         item_.pickable = true;
+                        Logger::info("\nCollided {}\n", col_.colided);
                         auto possibly_hero = col_.colidedWith;
-                        if(reg.has<SimpleCollision, Transform, Animator, PandemicCharacter>(possibly_hero)){
+                        if(reg.has<PandemicCharacter, CollisionType::Char>(possibly_hero)){
+                            Logger::info("\nFound hero\n");
                             auto hero = Character::Get(possibly_hero);
                             auto &inventory = hero.inventory;
                             auto &input = hero.input;
@@ -46,11 +46,12 @@ Item Item::Create(entt::entity &entity, String sprite_, ColorRGB color_ ,
     auto &sprite = reg.get_or_emplace<Sprite>(entity);
     auto &transform = reg.get_or_emplace<Transform>(entity);
     auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
+    reg.emplace<CollisionType::Item>(entity);
     auto item = Item{};
     
     transform.position = {position_, 0.0f};
     collision.size = {16, 16};
-    collision.type = CollisionType::Item;
+    
      
     sprite.scale = {1, 1};
     sprite.position = {position_, 0.0f};

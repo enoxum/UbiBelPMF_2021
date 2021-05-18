@@ -69,6 +69,7 @@ sources = [
     'source/dagger/gameplay/PandemicShop/item.cpp',
     'source/dagger/gameplay/PandemicShop/karen_controller_fsm.cpp',
     'source/dagger/gameplay/PandemicShop/karen_controller.cpp',
+    'source/dagger/gameplay/PandemicShop/ai_system.cpp',
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',

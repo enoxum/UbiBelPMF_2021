@@ -32,7 +32,7 @@ struct Character {
     auto &character = reg.get_or_emplace<PandemicCharacter>(entity);
     auto &transform = reg.get_or_emplace<Transform>(entity);
     auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
-
+    
     
     //return Character{entity, sprite, anim, input};
     return Character{entity, sprite, anim, input, character, transform, collision};
@@ -54,6 +54,7 @@ struct Character {
     chr.sprite.scale = {2, 2};
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
+    reg.emplace<CollisionType::Char>(entity);
 
     AssignSprite(chr.sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
     AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");

@@ -9,9 +9,9 @@
 #include "gameplay/common/simple_collisions.h"
 #include "gameplay/PandemicShop/karen_controller.h"
 #include "gameplay/PandemicShop/item.h"
+#include "gameplay/PandemicShop/ai_system.h"
 
 using namespace pandemic;
-
 struct KarenCharacter {
   Entity entity;
   Sprite &sprite;
@@ -20,7 +20,9 @@ struct KarenCharacter {
   PandemicKarenCharacter &character;
   Transform &transform;
   SimpleCollision &collision;
+  KarenAI& karenAi;
   std::vector<Entity> inventory;
+  
 
 
   static KarenCharacter Get(Entity entity) {
@@ -31,10 +33,12 @@ struct KarenCharacter {
     auto &character = reg.get_or_emplace<PandemicKarenCharacter>(entity);
     auto &transform = reg.get_or_emplace<Transform>(entity);
     auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
+    auto &karenAI = reg.emplace<KarenAI>(entity);
+    
 
     
     //return Character{entity, sprite, anim, input};
-    return KarenCharacter{entity, sprite, anim, input, character, transform, collision};
+    return KarenCharacter{entity, sprite, anim, input, character, transform, collision, karenAI};
   }
 
   static KarenCharacter Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
@@ -53,6 +57,7 @@ struct KarenCharacter {
     chr.sprite.scale = {2, 2};
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
+    reg.emplace<CollisionType::Char>(entity);
 
     AssignSprite(chr.sprite, "PandemicShop:AMELIA_IDLE:FRONT:amelia_idle1");
     AnimatorPlay(chr.animator, "PandemicShop:AMELIA_IDLE_FRONT");

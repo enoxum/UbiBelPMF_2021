@@ -7,7 +7,7 @@
 #include "core/graphics/sprite.h"
 #include "core/input/inputs.h"
 #include "core/game/transforms.h"
-
+#include "gameplay/PandemicShop/ai_system.h"
 using namespace dagger;
 using namespace pandemic;
 
@@ -21,13 +21,9 @@ void KarenControllerFSM::Idle::Enter(
 }
 
 void KarenControllerFSM::Idle::Run(KarenControllerFSM::StateComponent &state_) {
-    
-    auto& input = Engine::Registry().get<InputReceiver>(state_.entity);
-
-    auto h = input.Get("horizontal");
-    auto v = input.Get("vertical");
-
-    if (EPSILON_NOT_ZERO(h) || EPSILON_NOT_ZERO(v)) {
+	
+    auto &command = Engine::Registry().get<KarenAI>(state_.entity); 
+    if (command.current.curr_action != Action::IDLE && command.current.curr_action != Action::PICK) {
         GoTo(EKarenStates::Running, state_);
     }
 }
@@ -39,36 +35,45 @@ DEFAULT_EXIT(KarenControllerFSM, Idle);
 void KarenControllerFSM::Running::Run(
     KarenControllerFSM::StateComponent &state_) 
 {
-  auto &&[animator, input, character, transform] =
-        Engine::Registry().get<Animator, InputReceiver, pandemic::PandemicKarenCharacter, Transform>(state_.entity);
+  auto &&[animator, command, character, transform] =
+        Engine::Registry().get<Animator, KarenAI, pandemic::PandemicKarenCharacter, Transform>(state_.entity);
 
-    auto h = input.Get("horizontal");
-    auto v = input.Get("vertical");
-
-    switch (character.direction)
+    float up_down =0;
+    float left_right = 0;
+    switch (command.current.curr_action)
     {
-    case EDirection::Left:
+    case Action::LEFT:
+      left_right = -1;
       transform.position.x += character.speed * (-1) * Engine::DeltaTime();
+      // command.current.x += character.speed * (-1);
       break;
-    case EDirection::Right:
+    case Action::RIGHT:
+      left_right = 1;
       transform.position.x += character.speed * (1) * Engine::DeltaTime();
+      // command.current.x += character.speed * (1);
       break;
-    case EDirection::Up:
+    case Action::UP:
+      up_down = -1;
       transform.position.y += character.speed * (-1) * Engine::DeltaTime();
+      // command.current.y += character.speed * (1);
       break;
-    case EDirection::Down:
+    case Action::DOWN:
+      up_down = 1;
       transform.position.y += character.speed * (1) * Engine::DeltaTime();
+      // command.current.y += character.speed * (-1) ;
       break;
 
     default:
       break;
     }
 
-    if (EPSILON_ZERO(h) && EPSILON_ZERO(v)) 
+
+    if (EPSILON_ZERO(left_right) && EPSILON_ZERO(up_down) ||
+         command.current.curr_action==Action::IDLE || command.current.curr_action==Action::PICK) 
     {
         GoTo(EKarenStates::Idle, state_);
     } else {
-        auto direction = GetDirectionFromVector(Vector2{ h, v });
+        auto direction = GetDirectionFromVector(Vector2{ left_right, up_down});
         if (direction != character.direction)
         {
             character.direction = direction;

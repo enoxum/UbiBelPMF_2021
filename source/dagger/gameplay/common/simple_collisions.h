@@ -4,12 +4,17 @@
 #include "core/game/transforms.h"
 using namespace dagger;
 
-enum struct CollisionType {Wall, Item};
+
+namespace CollisionType{
+    struct Wall{};
+    struct Item{};
+    struct Char{};
+}
+
 struct SimpleCollision
 {
     Vector2 size;
     Vector2 pivot {-0.5f, -0.5f};
-    CollisionType type = CollisionType::Wall;
 
     bool colided = false;
     entt::entity colidedWith;
@@ -25,6 +30,7 @@ struct SimpleCollision
 
 class SimpleCollisionsSystem : public System
 {
+
 public:
     inline String SystemName() { return "Simple Collisions System"; }
 
