@@ -14,15 +14,15 @@ enum struct Action {PICK, IDLE, UP, DOWN, RIGHT, LEFT};
 
 struct AICommand
 {
-    // Vector2 current, previous, next;
+    Vector2 current, previous, next;
     Action curr_action = Action::IDLE;
     bool finished = true;
   
 };
-struct KarenAI{
-    AICommand current;
-    std::deque<AICommand>previous;
-};
+// struct KarenAI{
+//     AICommand current;
+//     std::deque<AICommand>previous;
+// };
 
 class AISystem : public System
 {

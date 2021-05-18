@@ -214,12 +214,12 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     //1st player
     {
-        Character::Create("Pandemic", {1, 1, 1}, {0, 0});
-        KarenCharacter::Create("Pandemic", {1, 1, 1}, {10, 10});
+        // Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+        KarenCharacter::Create("Pandemic", {1, 1, 1}, {0, 0});
 
-        auto ent1 = reg.create();
-        auto item1 = reg.emplace<Item>(ent1);
-        item1.Create(ent1, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {10, 32});
+        // auto ent1 = reg.create();
+        // auto item1 = reg.emplace<Item>(ent1);
+        // item1.Create(ent1, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {10, 32});
 
         // auto ent2 = reg.create();
         // auto item2 = reg.emplace<Item>(ent2);

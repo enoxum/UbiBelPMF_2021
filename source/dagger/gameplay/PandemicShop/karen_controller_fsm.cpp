@@ -22,8 +22,8 @@ void KarenControllerFSM::Idle::Enter(
 
 void KarenControllerFSM::Idle::Run(KarenControllerFSM::StateComponent &state_) {
 	
-    auto &command = Engine::Registry().get<KarenAI>(state_.entity); 
-    if (command.current.curr_action != Action::IDLE && command.current.curr_action != Action::PICK) {
+    auto &command = Engine::Registry().get<AICommand>(state_.entity); 
+    if (command.curr_action != Action::IDLE && command.curr_action != Action::PICK) {
         GoTo(EKarenStates::Running, state_);
     }
 }
@@ -36,43 +36,57 @@ void KarenControllerFSM::Running::Run(
     KarenControllerFSM::StateComponent &state_) 
 {
   auto &&[animator, command, character, transform] =
-        Engine::Registry().get<Animator, KarenAI, pandemic::PandemicKarenCharacter, Transform>(state_.entity);
+        Engine::Registry().get<Animator, AICommand/*KarenAI*/, pandemic::PandemicKarenCharacter, Transform>(state_.entity);
 
     float up_down =0;
     float left_right = 0;
-    switch (command.current.curr_action)
+    // Logger::info("\nPOSITION BEFORE MOVING: {} {}\n", transform.position.x, transform.position.y);
+    switch (command.curr_action)
     {
+    
     case Action::LEFT:
       left_right = -1;
       transform.position.x += character.speed * (-1) * Engine::DeltaTime();
-      // command.current.x += character.speed * (-1);
+      command.current.x = transform.position.x;
       break;
     case Action::RIGHT:
       left_right = 1;
       transform.position.x += character.speed * (1) * Engine::DeltaTime();
-      // command.current.x += character.speed * (1);
+      command.current.x = transform.position.x;
       break;
     case Action::UP:
       up_down = -1;
       transform.position.y += character.speed * (-1) * Engine::DeltaTime();
-      // command.current.y += character.speed * (1);
+      command.current.y = transform.position.y;
       break;
     case Action::DOWN:
       up_down = 1;
       transform.position.y += character.speed * (1) * Engine::DeltaTime();
-      // command.current.y += character.speed * (-1) ;
+      command.current.y = transform.position.y;
       break;
 
     default:
       break;
     }
 
+    // Logger::info("\nPOSITION AFTER MOVING: {} {}\n", transform.position.x, transform.position.y);
+    auto dist = glm::length(Vector2(command.next.x - command.current.x, command.next.y - command.current.y));
+    Logger::info("\nDISTANCE IN CONTROLLER {}\n", dist);
+    
+    if(abs(dist) < 1 || (EPSILON_ZERO(command.next.x - command.current.x) 
+        && EPSILON_ZERO(command.next.y - command.current.y))){
+      command.curr_action = Action::IDLE;
+      command.previous = command.current;
+      command.current = command.next;
+      command.finished = true;
+      GoTo(EKarenStates::Idle, state_);
 
-    if (EPSILON_ZERO(left_right) && EPSILON_ZERO(up_down) ||
-         command.current.curr_action==Action::IDLE || command.current.curr_action==Action::PICK) 
+    }
+    else if (EPSILON_ZERO(left_right) && EPSILON_ZERO(up_down)) 
     {
         GoTo(EKarenStates::Idle, state_);
-    } else {
+    }
+     else {
         auto direction = GetDirectionFromVector(Vector2{ left_right, up_down});
         if (direction != character.direction)
         {

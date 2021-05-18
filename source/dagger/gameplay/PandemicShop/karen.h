@@ -20,7 +20,8 @@ struct KarenCharacter {
   PandemicKarenCharacter &character;
   Transform &transform;
   SimpleCollision &collision;
-  KarenAI& karenAi;
+  // KarenAI& karenAi;
+  AICommand &command;
   std::vector<Entity> inventory;
   
 
@@ -33,12 +34,13 @@ struct KarenCharacter {
     auto &character = reg.get_or_emplace<PandemicKarenCharacter>(entity);
     auto &transform = reg.get_or_emplace<Transform>(entity);
     auto &collision = reg.get_or_emplace<SimpleCollision>(entity);
-    auto &karenAI = reg.emplace<KarenAI>(entity);
+    // auto &karenAI = reg.emplace<KarenAI>(entity);
+    auto &command = reg.get_or_emplace<AICommand>(entity);
     
 
     
     //return Character{entity, sprite, anim, input};
-    return KarenCharacter{entity, sprite, anim, input, character, transform, collision, karenAI};
+    return KarenCharacter{entity, sprite, anim, input, character, transform, collision, command};
   }
 
   static KarenCharacter Create(String input_ = "", ColorRGB color_ = {1, 1, 1},
@@ -58,6 +60,9 @@ struct KarenCharacter {
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
     reg.emplace<CollisionType::Char>(entity);
+
+    chr.command.previous = position_;
+    chr.command.current = position_;
 
     AssignSprite(chr.sprite, "PandemicShop:AMELIA_IDLE:FRONT:amelia_idle1");
     AnimatorPlay(chr.animator, "PandemicShop:AMELIA_IDLE_FRONT");
