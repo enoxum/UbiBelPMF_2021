@@ -14,6 +14,7 @@ using namespace roboship;
 
 static int count = 0;
 static int iteration = 1;
+static int jumpActive = 0;
 
 void RoboshipPlayerInputSystem::SpinUp()
 {
@@ -45,6 +46,14 @@ void RoboshipPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
             {
                 ctrl_.input.x = 0;
             }
+            else if (kEvent_.key == ctrl_.jumpKey && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
+            {
+                ctrl_.input.x = 2;
+            }
+            else if (kEvent_.key == ctrl_.jumpKey && kEvent_.action == EDaggerInputState::Released && ctrl_.input.x > 0)
+            {
+                ctrl_.input.x = 0;
+            }
         });
 }
 
@@ -67,7 +76,29 @@ void RoboshipPlayerInputSystem::Run()
             AnimatorPlay(animator, "robot:IDLE");
         }
         else{
-            AnimatorPlay(animator, "robot:RUN");
+            if (ctrl.input.x == 1 || ctrl.input.x == -1) {
+                AnimatorPlay(animator, "robot:RUN");
+
+                sprite.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
+        
+            }
+            else if (ctrl.input.x == 2) {
+
+
+
+                AnimatorPlay(animator, "robot:JUMP");
+
+                if (sprite.position.y + 223 <= 2 && jumpActive == 0)
+                    jumpActive = 1;
+                else if (sprite.position.y < -90 && jumpActive == 1){
+                    sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
+                }
+                else if (sprite.position.y + 90 <= 2 && jumpActive == 1)
+                    jumpActive = 0;
+                else if (sprite.position.y > -223 && jumpActive == 0){
+                    sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
+                }
+            }
 
             if (sprite.scale.x * ctrl.input.x < 0) {
                 
@@ -88,7 +119,6 @@ void RoboshipPlayerInputSystem::Run()
                 RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
             }
 
-            sprite.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
         }
     }
 }
