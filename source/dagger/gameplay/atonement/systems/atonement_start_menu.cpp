@@ -18,6 +18,11 @@ Engine::Dispatcher().sink<KeyboardEvent>().template connect<&AtonementStartMenu:
 }
 
 void AtonementStartMenu::Run(){
+    Select();
+}
+
+void AtonementStartMenu::Select(){
+
  auto view = Engine::Registry().view<Transform, SelectionMapping>();
     for (auto entity : view)
     {
@@ -30,6 +35,16 @@ void AtonementStartMenu::Run(){
 
 }
 
+void AtonementStartMenu::RemoveFromScreen(){
+    auto view = Engine::Registry().view<Transform, OnScreenToggle>();
+    for (auto entity : view){
+        auto& t = view.get<Transform>(entity);
+        auto& ctrl = view.get<OnScreenToggle>(entity); 
+
+        t.position.z = -1;
+    }
+}
+
 void AtonementStartMenu::WindDown(){
 Engine::Dispatcher().sink<KeyboardEvent>().template disconnect<&AtonementStartMenu::OnKeyboardEvent>(this);
 }
@@ -38,14 +53,36 @@ void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
      Engine::Registry().view<SelectionMapping>().each([&](SelectionMapping& ctrl_)
         {
 
-            if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+            if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
             {
                 ctrl_.input.y += 5;
             }
-            else if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+            else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
             {
                 ctrl_.input.y -= 5;
             }
+            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+            {
+                RemoveFromScreen();
+                Engine::ToggleSystemsPause(false);
+            }
+            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+            {
+                 Engine::Dispatcher().trigger<Exit>();
+            }
+        }
+        );
 
-        });
+        /*Engine::Registry().view<OnScreenToggle>().each([&](OnScreenToggle& ctrl_){
+            if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 5)
+            {
+                RemoveFromScreen();
+                Engine::ToggleSystemsPause(false);
+            }
+            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 0)
+            {
+                Engine::Dispatcher().trigger<Exit>();
+            }
+        });*/
+        
 }

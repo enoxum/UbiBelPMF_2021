@@ -14,6 +14,12 @@ namespace atonement {
         Vector4 input{ 0, 0, 0, 0};
     };
 
+    struct OnScreenToggle
+    {
+        EDaggerKeyboard enterKey = EDaggerKeyboard::KeyEnter;
+        Vector4 input{ 0, 0, 0, 0};
+    };
+
 
     struct AtonementStartMenu : public System {
         private:
@@ -22,6 +28,8 @@ namespace atonement {
          void SpinUp() override;
          void Run() override;
          void WindDown() override;
+         void Select();
+         void RemoveFromScreen();
          String SystemName();
     };
 };

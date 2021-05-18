@@ -167,6 +167,7 @@ void atonement::SetUpWorld()
         transform.position.z = 1.f;
 
     auto& controller = reg.emplace<SelectionMapping>(entity);
+    auto& onscreen = reg.emplace<OnScreenToggle>(entity);
     
     
     auto entity2 = reg.create();
@@ -179,6 +180,8 @@ void atonement::SetUpWorld()
     transform2.position.y = (1.277f - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
     transform2.position.z = 2.f;
 
+    auto& onscreen2 = reg.emplace<OnScreenToggle>(entity2);
+
     auto entity3 = reg.create();
     auto& sprite3 = reg.emplace<Sprite>(entity3);
     AssignSprite(sprite3, "start");
@@ -188,6 +191,8 @@ void atonement::SetUpWorld()
     transform3.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
     transform3.position.y = (1.277f + 1 + 1 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
     transform3.position.z = 2.f;
+
+    auto& onscreen3 = reg.emplace<OnScreenToggle>(entity3);
     
 
     auto entity4 = reg.create();
@@ -199,6 +204,8 @@ void atonement::SetUpWorld()
         transform4.position.x = 0.3f;
         transform4.position.y = 2.0f;
         transform4.position.z = 3.f;
+
+    auto& onscreen4 = reg.emplace<OnScreenToggle>(entity4);
 
 }
 
