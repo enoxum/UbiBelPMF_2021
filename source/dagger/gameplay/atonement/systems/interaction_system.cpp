@@ -107,7 +107,7 @@ void IntearactionSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 void IntearactionSystem::UnlockAbility(int abilityId)
 {
     // abilityId = 1  -> DASH
-    // abilityId = 2  -> JUMP
+    // abilityId = 2  -> WALL JUMP
 
     //std::cout << "ability unlocked: id = " << abilityId << std::endl;
 }
