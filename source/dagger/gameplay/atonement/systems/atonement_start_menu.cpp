@@ -21,6 +21,70 @@ void AtonementStartMenu::Run(){
     Select();
 }
 
+void AtonementStartMenu::BuildMenu(){
+
+    Engine::ToggleSystemsPause(true);
+    auto& reg = Engine::Registry();
+    constexpr int width = 4;
+    constexpr int height = 2;
+    float tileSize = 300.f;
+    constexpr float Space = 0.3f;
+
+    auto entity = reg.create();
+    auto& sprite = reg.emplace<Sprite>(entity);
+    AssignSprite(sprite, "selected");
+
+    sprite.size.x = tileSize;
+    sprite.size.y = tileSize/2;
+
+    auto& transform = reg.emplace<Transform>(entity);
+
+        transform.position.x = (2.0f) * tileSize;
+        transform.position.y = tileSize/2;
+        transform.position.z = 1.f;
+
+    auto& controller = reg.emplace<SelectionMapping>(entity);
+    auto& onscreen = reg.emplace<OnScreenToggle>(entity);
+    
+    
+    auto entity2 = reg.create();
+    auto& sprite2 = reg.emplace<Sprite>(entity2);
+    AssignSprite(sprite2, "exit");
+        
+    auto& transform2 = reg.emplace<Transform>(entity2);
+
+    transform2.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    transform2.position.y = (1.277f - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+    transform2.position.z = 2.f;
+
+    auto& onscreen2 = reg.emplace<OnScreenToggle>(entity2);
+
+    auto entity3 = reg.create();
+    auto& sprite3 = reg.emplace<Sprite>(entity3);
+    AssignSprite(sprite3, "start");
+        
+    auto& transform3 = reg.emplace<Transform>(entity3);
+
+    transform3.position.x = (1.94f + Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    transform3.position.y = (1.277f + 1 + 1 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
+    transform3.position.z = 2.f;
+
+    auto& onscreen3 = reg.emplace<OnScreenToggle>(entity3);
+    
+
+    auto entity4 = reg.create();
+    auto& sprite4 = reg.emplace<Sprite>(entity4);
+    AssignSprite(sprite4, "start_menu_background");
+
+    auto& transform4 = reg.emplace<Transform>(entity4);
+
+        transform4.position.x = 0.3f;
+        transform4.position.y = 2.0f;
+        transform4.position.z = 3.f;
+
+    auto& onscreen4 = reg.emplace<OnScreenToggle>(entity4);
+}
+
 void AtonementStartMenu::Select(){
 
  auto view = Engine::Registry().view<Transform, SelectionMapping>();
@@ -61,28 +125,20 @@ void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
             {
                 ctrl_.input.y -= 5;
             }
+            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+            {
+                 Engine::Dispatcher().trigger<Exit>(); 
+            }
             else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
             {
                 RemoveFromScreen();
                 Engine::ToggleSystemsPause(false);
             }
-            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+            else if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed)
             {
-                 Engine::Dispatcher().trigger<Exit>();
+                AtonementStartMenu::BuildMenu();
             }
         }
         );
-
-        /*Engine::Registry().view<OnScreenToggle>().each([&](OnScreenToggle& ctrl_){
-            if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 5)
-            {
-                RemoveFromScreen();
-                Engine::ToggleSystemsPause(false);
-            }
-            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 0)
-            {
-                Engine::Dispatcher().trigger<Exit>();
-            }
-        });*/
         
 }

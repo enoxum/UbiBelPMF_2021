@@ -11,6 +11,7 @@ namespace atonement {
         EDaggerKeyboard upKey = EDaggerKeyboard::KeyUp;
         EDaggerKeyboard downKey = EDaggerKeyboard::KeyDown;
         EDaggerKeyboard enterKey = EDaggerKeyboard::KeyEnter;
+        EDaggerKeyboard leftKey = EDaggerKeyboard::KeyLeft;
         Vector4 input{ 0, 0, 0, 0};
     };
 
@@ -29,6 +30,7 @@ namespace atonement {
          void Run() override;
          void WindDown() override;
          void Select();
+         static void BuildMenu();
          void RemoveFromScreen();
          String SystemName();
     };
