@@ -24,7 +24,7 @@ void AtonementStartMenu::Run(){
 
 void AtonementStartMenu::BuildMenu(){
 
-    //Engine::ToggleSystemsPause(true);
+    Engine::ToggleSystemsPause(true);
     auto& reg = Engine::Registry();
     constexpr int width = 4;
     constexpr int height = 2;
