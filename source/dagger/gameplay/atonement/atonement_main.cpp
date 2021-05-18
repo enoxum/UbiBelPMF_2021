@@ -127,8 +127,7 @@ void AtonementGame::GameplaySystemsSetup()
 #endif //defined(DAGGER_DEBUG)
 }
 
-void atonement::SetUpWorld()
-{
+void AtonementGame::WorldSetup(){
     auto* camera = Engine::GetDefaultResource<Camera>();
     camera->mode = ECameraMode::FixedResolution;
     camera->size = { 1920, 1080 };
@@ -136,7 +135,7 @@ void atonement::SetUpWorld()
     camera->position = { 0, 0, 0 };
     camera->Update();
 
-    //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
+        //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
 
     
@@ -145,19 +144,6 @@ void atonement::SetUpWorld()
     auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
     mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
-
-    AtonementStartMenu::BuildMenu();
-
-}
-
-void AtonementGame::WorldSetup(){
-    auto* camera = Engine::GetDefaultResource<Camera>();
-    camera->mode = ECameraMode::FixedResolution;
-    camera->size = { 800, 600 };
-    camera->zoom = 1;
-    camera->position = { 0, 0, 0 };
-    camera->Update();
-    atonement::SetUpWorld();
 }
 
 

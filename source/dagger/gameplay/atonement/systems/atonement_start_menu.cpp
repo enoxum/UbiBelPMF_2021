@@ -14,7 +14,8 @@ using namespace atonement;
 String AtonementStartMenu::SystemName(){return "AtonementStartMenu";}
 
 void AtonementStartMenu::SpinUp(){
-Engine::Dispatcher().sink<KeyboardEvent>().template connect<&AtonementStartMenu::OnKeyboardEvent>(this);
+    Engine::Dispatcher().sink<KeyboardEvent>().template connect<&AtonementStartMenu::OnKeyboardEvent>(this);
+    AtonementStartMenu::BuildMenu();
 }
 
 void AtonementStartMenu::Run(){
@@ -23,7 +24,7 @@ void AtonementStartMenu::Run(){
 
 void AtonementStartMenu::BuildMenu(){
 
-    Engine::ToggleSystemsPause(true);
+    //Engine::ToggleSystemsPause(true);
     auto& reg = Engine::Registry();
     constexpr int width = 4;
     constexpr int height = 2;
@@ -32,7 +33,7 @@ void AtonementStartMenu::BuildMenu(){
 
     auto entity = reg.create();
     auto& sprite = reg.emplace<Sprite>(entity);
-    AssignSprite(sprite, "selected");
+    AssignSprite(sprite, "MenuTextures:selected");
 
     sprite.size.x = tileSize;
     sprite.size.y = tileSize/2;
@@ -49,7 +50,7 @@ void AtonementStartMenu::BuildMenu(){
     
     auto entity2 = reg.create();
     auto& sprite2 = reg.emplace<Sprite>(entity2);
-    AssignSprite(sprite2, "exit");
+    AssignSprite(sprite2, "MenuTextures:exit");
         
     auto& transform2 = reg.emplace<Transform>(entity2);
 
@@ -61,7 +62,7 @@ void AtonementStartMenu::BuildMenu(){
 
     auto entity3 = reg.create();
     auto& sprite3 = reg.emplace<Sprite>(entity3);
-    AssignSprite(sprite3, "start");
+    AssignSprite(sprite3, "MenuTextures:start");
         
     auto& transform3 = reg.emplace<Transform>(entity3);
 
@@ -74,7 +75,7 @@ void AtonementStartMenu::BuildMenu(){
 
     auto entity4 = reg.create();
     auto& sprite4 = reg.emplace<Sprite>(entity4);
-    AssignSprite(sprite4, "start_menu_background");
+    AssignSprite(sprite4, "MenuTextures:start_menu_background");
 
     auto& transform4 = reg.emplace<Transform>(entity4);
 
