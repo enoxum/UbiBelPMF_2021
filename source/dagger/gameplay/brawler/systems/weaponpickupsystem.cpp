@@ -85,7 +85,6 @@ void WeaponPickupSystem::Run()
             }
 
             wpData.weaponPickup.pickedUp = true;
-            
         }
     }
 
