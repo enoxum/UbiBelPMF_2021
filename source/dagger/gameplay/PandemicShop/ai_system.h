@@ -17,13 +17,10 @@ struct AICommand
     Vector2 current, previous, next;
     Action curr_action = Action::IDLE;
     bool finished = true;
+    bool finishedX = true;
+    bool finishedY = true;
   
 };
-// struct KarenAI{
-//     AICommand current;
-//     std::deque<AICommand>previous;
-// };
-
 class AISystem : public System
 {
 private: 
@@ -31,10 +28,9 @@ private:
     int border_width = 20;
     float delay;
     float counter;
-    int depth;
 public:
 
-    AISystem() { delay = 1.0f; counter = 0.0f; depth = 3;};
+    AISystem() { delay = 1.0f; counter = 0.0f;};
     inline String SystemName() { return "AI System"; }
 
     void Run() override;

@@ -214,8 +214,8 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     //1st player
     {
-        // Character::Create("Pandemic", {1, 1, 1}, {0, 0});
-        KarenCharacter::Create("Pandemic", {1, 1, 1}, {0, 0});
+        // Character::Create("Pandemic", {1, 1, 1}, {64, 64});
+        KarenCharacter::Create("Pandemic", {1, 1, 1}, {64, 64});
 
         // auto ent1 = reg.create();
         // auto item1 = reg.emplace<Item>(ent1);

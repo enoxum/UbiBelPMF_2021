@@ -36,47 +36,68 @@ void KarenControllerFSM::Running::Run(
     KarenControllerFSM::StateComponent &state_) 
 {
   auto &&[animator, command, character, transform] =
-        Engine::Registry().get<Animator, AICommand/*KarenAI*/, pandemic::PandemicKarenCharacter, Transform>(state_.entity);
+        Engine::Registry().get<Animator, AICommand, pandemic::PandemicKarenCharacter, Transform>(state_.entity);
 
     float up_down =0;
     float left_right = 0;
-    // Logger::info("\nPOSITION BEFORE MOVING: {} {}\n", transform.position.x, transform.position.y);
-    switch (command.curr_action)
+    
+    if(!command.finishedX){
+      switch (command.curr_action)
     {
     
-    case Action::LEFT:
-      left_right = -1;
-      transform.position.x += character.speed * (-1) * Engine::DeltaTime();
-      command.current.x = transform.position.x;
-      break;
-    case Action::RIGHT:
-      left_right = 1;
-      transform.position.x += character.speed * (1) * Engine::DeltaTime();
-      command.current.x = transform.position.x;
-      break;
-    case Action::UP:
-      up_down = -1;
-      transform.position.y += character.speed * (-1) * Engine::DeltaTime();
-      command.current.y = transform.position.y;
-      break;
-    case Action::DOWN:
-      up_down = 1;
-      transform.position.y += character.speed * (1) * Engine::DeltaTime();
-      command.current.y = transform.position.y;
-      break;
-
-    default:
-      break;
+      case Action::LEFT:
+        left_right = -1;
+        transform.position.x += character.speed * (-1) * Engine::DeltaTime();
+        command.current.x = transform.position.x;
+        break;
+      case Action::RIGHT:
+        left_right = 1;
+        transform.position.x += character.speed * (1) * Engine::DeltaTime();
+        command.current.x = transform.position.x;
+        break;
+        default: break;
+      }
     }
+    // Logger::info("POS X: {}", command.current.x);
+     if(std::abs(command.next.x - command.current.x) < 1){
+      command.finishedX = true;
+    }
+    
+    if(!command.finishedY){
+      switch (command.curr_action){
+        case Action::UP:
+        up_down = -1;
+        transform.position.y += character.speed * (-1) * Engine::DeltaTime();
+        command.current.y = transform.position.y;
+        break;
+      case Action::DOWN:
+        up_down = 1;
+        transform.position.y += character.speed * (1) * Engine::DeltaTime();
+        command.current.y = transform.position.y;
+        break;
+
+      default:
+        break;
+      }
+      
+    }
+    // Logger::info("POS Y: {}", command.current.y);
+    if(std::abs(command.next.y - command.current.y) < 1){
+      command.finishedY = true;
+    }
+    
+    
 
     auto dist = glm::length(Vector2(command.next.x - command.current.x, command.next.y - command.current.y));    
-    Logger::info("\nDIRECTION VECTOR {} {}\n", left_right, up_down);
     
-    if(abs(dist) < 1 || (EPSILON_ZERO(command.next.x - command.current.x) 
-        && EPSILON_ZERO(command.next.y - command.current.y))){
+    
+    if(abs(dist) < 1 || (abs(command.next.x - command.current.x) < 1 
+        && abs(command.next.y - command.current.y) < 1)){
       command.curr_action = Action::IDLE;
       command.previous = command.current;
       command.current = command.next;
+      command.finishedX = true;
+      command.finishedY = true;
       command.finished = true;
       GoTo(EKarenStates::Idle, state_);
 
