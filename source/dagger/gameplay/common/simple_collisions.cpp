@@ -48,8 +48,8 @@ void SimpleCollisionsSystem::Run()
 
                 collision.colided = true;
                 col.colided = true;
-
-                resolveDirection( collision, transform, col, tr);
+                auto &command = reg.get<AICommand>(*it);
+                resolveWalls( collision, transform, col, tr, command);
 
             }
             it2++;
@@ -150,7 +150,23 @@ void SimpleCollisionsSystem::Run()
     }
 }
 
-
+void SimpleCollisionsSystem::resolveWalls(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command ){
+    
+    
+   
+    resolveDirection(collision, col_transform, other, other_transform); 
+    other.colided = false;
+    collision.colided = false;
+    command.previous = command.current;
+    command.current = command.next;    
+    command.next = {(rand() % AISystem::border_width) - AISystem::border_width, 
+                    (rand() % AISystem::border_height) - AISystem::border_height};
+    command.finishedX = false;
+    command.finishedY = false;
+    command.finished = false;
+}
 
 
 void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &col_transform, 
@@ -167,8 +183,11 @@ void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &
         resolveDirection(collision, col_transform, other, other_transform); 
         other.colided = false;
         collision.colided = false;
+        command.previous = command.current;
+        command.current = command.next;
         command.next = {(rand() % AISystem::border_width) - AISystem::border_width, 
                         (rand() % AISystem::border_height) - AISystem::border_height};
+        
         command.finishedX = false;
         command.finishedY = false;
         command.finished = false;

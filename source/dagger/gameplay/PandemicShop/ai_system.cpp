@@ -18,8 +18,8 @@ void AISystem::Run(){
             Vector2 karen_pos = {karen.transform.position.x, karen.transform.position.y};
 
             if(karen.command.finished && karen.command.picked){
-                // Vector2 next_position = {(rand() % border_width), rand() % border_height};
-                Vector2 next_position = {-128, -128};
+                Vector2 next_position = {(rand() % border_width) - border_width, rand() % border_height - border_height};
+                // Vector2 next_position = {-128, -128};
                 karen.command.finished = false;
                 karen.command.finishedY = false;
                 karen.command.finishedX = false;

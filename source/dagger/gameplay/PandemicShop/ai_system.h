@@ -30,8 +30,8 @@ private:
     float delay;
     float counter;
 public:
-    static const int border_height = 20;
-    static const int border_width = 20;
+    static const int border_height = 200;
+    static const int border_width = 200;
 
     AISystem() { delay = 1.0f; counter = 0.0f;};
     inline String SystemName() { return "AI System"; }

@@ -42,4 +42,7 @@ public:
     void resolveItem(SimpleCollision &collision, Transform &col_transform, 
                                             SimpleCollision &other, Transform& other_transform,
                                             AICommand& command);
+    void resolveWalls(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command);
 };
