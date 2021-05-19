@@ -7,6 +7,7 @@
 #include "gameplay/hotline_miami/hotline_miami_tools.h"
 
 #include "gameplay/common/simple_collisions.h"
+#include "math.h"
 
 #include <algorithm>
 #include <execution>
@@ -18,21 +19,26 @@
 using namespace dagger;
 using namespace hotline_miami;
 
+
 void HotlineMiamiEnemyProjectileCollisionSystem::Run()
 {
     auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiProjectile>();
-    auto view = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiEnemy>();
+    auto view = Engine::Registry().view<Transform, SimpleCollision, Sprite, HotlineMiamiEnemy>();
     for (auto entity : view)
     {
         auto& col = view.get<SimpleCollision>(entity);
+        auto& sprite = view.get<Sprite>(entity);
+        auto& enemy = view.get<HotlineMiamiEnemy>(entity);
 
         if (col.colided)
         {
             if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
             {
-                Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
+                enemy.is_dead = true;
+                AssignSprite(sprite, "hotline_miami:Enemy:enemy_dead");
                 Engine::Registry().emplace<HotlineMiamiDeleteEntity>(col.colidedWith);
-            }
+                Engine::Registry().remove<SimpleCollision>(entity);
+            }   
             col.colided = false;
         }
     }
@@ -41,35 +47,49 @@ void HotlineMiamiEnemyProjectileCollisionSystem::Run()
 void HotlineMiamiEnemyBulletSystem::Run()
 {   
     if (interval-- == 0) {
-        interval = 100;
-        auto enemies = Engine::Registry().view<Transform, HotlineMiamiEnemy>();
-        for (auto entity : enemies)
+        interval = 10;
+        auto players = Engine::Registry().view<Transform, HotlineMiamiPlayer>();
+        auto enemies = Engine::Registry().view<Transform, Sprite, HotlineMiamiEnemy>();
+        for (auto entity : players)
         {
-            auto& t = enemies.get<Transform>(entity);
-            auto& enemie = enemies.get<HotlineMiamiEnemy>(entity);
+            auto& t_player = players.get<Transform>(entity);
+            auto& player = players.get<HotlineMiamiPlayer>(entity);
 
-            // make a bullet
+            for (auto entity : enemies)
             {
-                float tileSize = 20.f;
+                auto& t = enemies.get<Transform>(entity);
+                auto& enemy_sprite = enemies.get<Sprite>(entity);
+                auto& enemy = enemies.get<HotlineMiamiEnemy>(entity);
 
-                auto& engine = Engine::Instance();
-                auto& reg = engine.Registry();
-                auto entity = reg.create();
+                // make a bullet
+                if (!enemy.is_dead)
+                {
+                    float tileSize = 8.f;
 
-                auto& collision = reg.emplace<SimpleCollision>(entity);
-                collision.size.x = tileSize;
-                collision.size.y = tileSize;
+                    auto& engine = Engine::Instance();
+                    auto& reg = engine.Registry();
+                    auto entity = reg.create();
 
-                auto& transform = reg.emplace<Transform>(entity);
-                transform.position = t.position;
+                    auto& collision = reg.emplace<SimpleCollision>(entity);
+                    collision.size.x = tileSize;
+                    collision.size.y = tileSize;
 
-                auto& sprite = reg.emplace<Sprite>(entity);
+                    auto& transform = reg.emplace<Transform>(entity);
+                    transform.position = t.position;
 
-                AssignSprite(sprite, "hotline_miami:Projectile:projectile_pistol");
-                sprite.size.x = tileSize;
-                sprite.size.y = tileSize;
+                    auto& sprite = reg.emplace<Sprite>(entity);
 
-                auto& bullet = reg.emplace<HotlineMiamiEnemyBullet>(entity);
+                    AssignSprite(sprite, "hotline_miami:Projectile:enemy_bullet");
+                    sprite.size.x = tileSize;
+                    sprite.size.y = tileSize;
+
+                    auto& bullet = reg.emplace<HotlineMiamiEnemyBullet>(entity);
+                    Float32 x = (t_player.position.x - t.position.x) / (abs(t_player.position.x - t.position.x) + abs(t_player.position.y - t.position.y));
+                    Float32 y = (t_player.position.y - t.position.y) / (abs(t_player.position.x - t.position.x) + abs(t_player.position.y - t.position.y));
+                    SetupEnemyBulletStats(bullet, Vector3(x, y, 0));
+
+                    enemy_sprite.rotation = (atan2(y, x) * 180.f) / 3.14 + 90;
+                }
             }
         }
     }
@@ -84,14 +104,6 @@ void HotlineMiamiEnemyBulletSystem::Run()
         {
             auto& t = view2.get<Transform>(entity);
             auto& bullet = view2.get<HotlineMiamiEnemyBullet>(entity);
-            if (!bullet.has_direction) 
-            {
-                Float32 x = (t_player.position.x - t.position.x) / (abs(t_player.position.x - t.position.x) + abs(t_player.position.y - t.position.y));
-                Float32 y = (t_player.position.y - t.position.y) / (abs(t_player.position.x - t.position.x) + abs(t_player.position.y - t.position.y));
-        
-                SetupEnemyBulletStats(bullet, Vector3(x, y, 0));
-                bullet.has_direction = true;
-            }
             t.position += bullet.direction * bullet.bullet_speed * Engine::DeltaTime();
         }
     }
