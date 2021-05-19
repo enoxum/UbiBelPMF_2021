@@ -69,9 +69,8 @@ void KarenControllerFSM::Running::Run(
       break;
     }
 
-    // Logger::info("\nPOSITION AFTER MOVING: {} {}\n", transform.position.x, transform.position.y);
-    auto dist = glm::length(Vector2(command.next.x - command.current.x, command.next.y - command.current.y));
-    Logger::info("\nDISTANCE IN CONTROLLER {}\n", dist);
+    auto dist = glm::length(Vector2(command.next.x - command.current.x, command.next.y - command.current.y));    
+    Logger::info("\nDIRECTION VECTOR {} {}\n", left_right, up_down);
     
     if(abs(dist) < 1 || (EPSILON_ZERO(command.next.x - command.current.x) 
         && EPSILON_ZERO(command.next.y - command.current.y))){
@@ -88,11 +87,9 @@ void KarenControllerFSM::Running::Run(
     }
      else {
         auto direction = GetDirectionFromVector(Vector2{ left_right, up_down});
-        if (direction != character.direction)
-        {
+
             character.direction = direction;
             AnimatorPlay(animator, "PandemicShop:AMELIA_RUN" + GetNameFromDirection(direction));
-        }
     }
 }
 
