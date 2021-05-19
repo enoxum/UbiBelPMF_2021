@@ -138,7 +138,7 @@ void hotline_miami::SetupWorld()
         transform.position.z = zPos;
 
         auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
+        AssignSprite(sprite, "hotline_miami:Enemy:enemy_pistol");
         sprite.size.x = playerSize;
         sprite.size.y = playerSize;
 
@@ -157,7 +157,7 @@ void hotline_miami::SetupWorld()
         transform.position.z = zPos;
 
         auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
+        AssignSprite(sprite, "hotline_miami:Enemy:enemy_pistol");
         sprite.size.x = playerSize;
         sprite.size.y = playerSize;
 

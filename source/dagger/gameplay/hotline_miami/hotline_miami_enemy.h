@@ -11,6 +11,7 @@ namespace hotline_miami
     {
         bool is_enemy{ true };
         int weapon_type = 0;
+        bool is_dead{ false };
     };
 
     struct HotlineMiamiEnemyBullet
@@ -33,7 +34,7 @@ namespace hotline_miami
         : public System
     {
     public:
-        int interval = 100;
+        int interval = 10;
 
         inline String SystemName() { return "HotlineMiami Enemy Bullet System"; }
 
