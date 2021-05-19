@@ -13,6 +13,8 @@ namespace hotline_miami
         Float32 player_speed = 300.f;
         int weapon_type = 0;
         bool has_key{ false };
+        int health{ 3 };
+        bool end{ true };
     };
 
     class HotlineMiamiPlayerObstacleCollisionSystem
