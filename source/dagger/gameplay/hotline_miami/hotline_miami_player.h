@@ -14,6 +14,7 @@ namespace hotline_miami
         int weapon_type = 0;
         bool has_key{ false };
         int health{ 3 };
+        bool end{ true };
     };
 
     class HotlineMiamiPlayerObstacleCollisionSystem

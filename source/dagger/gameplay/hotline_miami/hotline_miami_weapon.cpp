@@ -72,10 +72,27 @@ void HotlineMiamiWorldEndSystem::Run()
         {
             if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
             {
+                auto& p_transform= viewCollisions.get<Transform>(col.colidedWith);
                 auto& player = viewCollisions.get<HotlineMiamiPlayer>(col.colidedWith);
                 if (player.has_key)
                 {
-                    Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
+                    if (player.end)
+                    {
+                        player.end = false;
+                        auto& engine = Engine::Instance();
+                        auto& reg = engine.Registry();
+                        auto entity = reg.create();
+
+                        auto& transform = reg.emplace<Transform>(entity);
+                        transform.position.x = p_transform.position.x;
+                        transform.position.y = p_transform.position.y;
+                        transform.position.z = 1.f;
+                        auto& sprite = reg.emplace<Sprite>(entity);
+
+                        AssignSprite(sprite, "hotline_miami:EndScreen:good");
+                        sprite.size.x = 800;
+                        sprite.size.y = 600;
+                    }
                 }
 ;            }
             col.colided = false;

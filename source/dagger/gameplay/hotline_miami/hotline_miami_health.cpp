@@ -45,6 +45,24 @@ void HotlineMiamiHealthSystem::Run()
             }
             else if (player.health == 0)
             {
+                if (player.end)
+                {
+                    player.end = false;
+                    auto& engine = Engine::Instance();
+                    auto& reg = engine.Registry();
+                    auto entity = reg.create();
+
+                    auto& transform = reg.emplace<Transform>(entity);
+                    transform.position.x = p_transform.position.x;
+                    transform.position.y = p_transform.position.y;
+                    transform.position.z = 1.f;
+                    auto& sprite = reg.emplace<Sprite>(entity);
+
+                    AssignSprite(sprite, "hotline_miami:EndScreen:bad");
+                    sprite.size.x = 800;
+                    sprite.size.y = 600;
+                   
+                }
                 AssignSprite(sprite, "hotline_miami:Health:health_0");
             }
             sprite.size.x = 160.f;
