@@ -18,6 +18,5 @@ namespace hotline_miami
     public:
 
         inline String SystemName() { return "HotlineMiami Obstacle System"; }
-
     };
 }

@@ -36,3 +36,49 @@ void HotlineMiamiWeaponSystem::Run()
         }
     }
 }
+
+void HotlineMiamiKeySystem::Run()
+{
+    auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiPlayer>();
+    auto view = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiKey>();
+    for (auto entity : view)
+    {
+        auto& col = view.get<SimpleCollision>(entity);
+        auto& key = view.get<HotlineMiamiKey>(entity);
+
+        if (col.colided)
+        {
+            if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
+            {
+                auto& player = viewCollisions.get<HotlineMiamiPlayer>(col.colidedWith);
+                player.has_key = true;
+                Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
+            }
+            col.colided = false;
+        }
+    }
+}
+
+void HotlineMiamiWorldEndSystem::Run()
+{
+    auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiPlayer>();
+    auto view = Engine::Registry().view<Transform, SimpleCollision, HotlineMiamiWorldEnd>();
+    for (auto entity : view)
+    {
+        auto& col = view.get<SimpleCollision>(entity);
+        auto& key = view.get<HotlineMiamiWorldEnd>(entity);
+
+        if (col.colided)
+        {
+            if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
+            {
+                auto& player = viewCollisions.get<HotlineMiamiPlayer>(col.colidedWith);
+                if (player.has_key)
+                {
+                    Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
+                }
+;            }
+            col.colided = false;
+        }
+    }
+}

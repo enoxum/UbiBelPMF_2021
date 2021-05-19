@@ -12,6 +12,7 @@ namespace hotline_miami
         bool is_player{ true };
         Float32 player_speed = 300.f;
         int weapon_type = 0;
+        bool has_key{ false };
     };
 
     class HotlineMiamiPlayerObstacleCollisionSystem
@@ -22,6 +23,7 @@ namespace hotline_miami
 
         void Run() override;
     };
+
 
     class HotlineMiamiPlayerShootingSystem
         : public System

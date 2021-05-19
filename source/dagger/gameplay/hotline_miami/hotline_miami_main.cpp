@@ -58,6 +58,8 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiWeaponSystem>();
+    engine.AddPausableSystem<HotlineMiamiKeySystem>();
+    engine.AddPausableSystem<HotlineMiamiWorldEndSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiEnemyProjectileCollisionSystem>();
@@ -124,6 +126,47 @@ void hotline_miami::SetupWorld()
     }
 
     zPos -= 1.f;
+
+    // world end
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = tileSize* 10;
+        col.size.y = tileSize * 2;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 400;
+        transform.position.y = 400;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_world_end");
+        sprite.size.x = tileSize * 10;
+        sprite.size.y = tileSize * 2;
+
+        auto& key = reg.emplace<HotlineMiamiWorldEnd>(entity);
+        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
+    }
+    
+    // key
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = playerSize;
+        col.size.y = playerSize * 0.5;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 700;
+        transform.position.y = 50;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_key");
+        sprite.size.x = playerSize;
+        sprite.size.y = playerSize * 0.5;
+
+        auto& key = reg.emplace<HotlineMiamiKey>(entity);
+    }
 
     // enemy 1
     {
