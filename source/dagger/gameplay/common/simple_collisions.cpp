@@ -14,10 +14,10 @@ void SimpleCollisionsSystem::Run()
 {
     auto &reg = Engine::Registry();
     auto view = reg.view<SimpleCollision, Transform>();
-    auto bot_view = reg.view<CollisionType::Char, PandemicKarenCharacter>();
+    auto bot_view = reg.view<CollisionType::Char, PandemicKarenCharacter, AICommand>();
     auto hero_view = reg.view<CollisionType::Char, PandemicCharacter>();
     auto wall_view = reg.view<CollisionType::Wall>();
-    auto item_view = reg.view<CollisionType::Item>();
+    auto item_view = reg.view<Item>();
 
 
     auto all_it = view.begin();
@@ -70,7 +70,26 @@ void SimpleCollisionsSystem::Run()
                     collision.colided = true;
                     col.colided = true;
 
-                    resolveDirection( collision, transform, col, tr);
+                    auto &karen_command = reg.get<AICommand>(*it);
+                    auto prob = rand() / (float) RAND_MAX;
+                    Logger::info("\nPROB {}\n", prob);
+                    if( prob > karen_command.pick_probability){
+                        Logger::info("\nKaren pickup_prob {}\n", karen_command.pick_probability);
+                        auto &item = reg.get<Item>(*it2);
+                        auto &sprite = reg.get<Sprite>(*it2);
+                        auto karen = KarenCharacter::Get(*it);
+                        if(!item.hidden){
+                            item.hidden = true;
+                            item.pickable = true;
+                            reg.remove<SimpleCollision>(*it2);
+                            sprite.scale = {0, 0};
+                            karen.inventory.emplace_back(*it2);
+                            karen_command.picked = true;
+                        }
+
+                    }
+                    resolveItem( collision, transform, col, tr, karen_command);
+                    Logger::info("\nPICKED AFTER COLLISION: {}\n", karen_command.picked);
 
                 }
             }
@@ -134,33 +153,35 @@ void SimpleCollisionsSystem::Run()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command ){
+    
+    
+    if(command.picked){
+        resolveDirection(collision, col_transform, other, other_transform);
+        command.picked = false;
+        other.colided = false;
+    }
+    else{
+        resolveDirection(collision, col_transform, other, other_transform); 
+        other.colided = false;
+        collision.colided = false;
+        command.next = {(rand() % AISystem::border_width) - AISystem::border_width, 
+                        (rand() % AISystem::border_height) - AISystem::border_height};
+        command.finishedX = false;
+        command.finishedY = false;
+        command.finished = false;
+        
+           
+    }
+}
 
 
 
 
 void SimpleCollisionsSystem::resolveDirection(SimpleCollision &collision, Transform &col_transform, SimpleCollision &other, Transform& other_transform ){
-    // if (collision.IsCollided(col_transform.position,other, other_transform.position))
-    // {
-    //     Vector2 colSides = collision.GetCollisionSides(col_transform.position, other, other_transform.position);
-    //     col_transform.position.x -= colSides.x / 10;
-    //     col_transform.position.y -= colSides.y / 10;
-    // } 
+    
     if (collision.GetCollisionSides(col_transform.position, collision, other_transform.position).x == 1){
         col_transform.position.x -= collision.size.x/10.f;
     }

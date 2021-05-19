@@ -2,6 +2,7 @@
 #include "core/system.h"
 #include "core/core.h"
 #include "core/game/transforms.h"
+#include "gameplay/PandemicShop/ai_system.h"
 using namespace dagger;
 
 
@@ -38,4 +39,7 @@ public:
 
     void resolveDirection(SimpleCollision &collision, Transform& col_transform, 
                           SimpleCollision& other, Transform &other_transform);
+    void resolveItem(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command);
 };

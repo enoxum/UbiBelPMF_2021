@@ -16,19 +16,22 @@ struct AICommand
 {
     Vector2 current, previous, next;
     Action curr_action = Action::IDLE;
-    bool finished = true;
+    bool finished  = true;
     bool finishedX = true;
     bool finishedY = true;
+    float pick_probability;
+    bool picked = true;
   
 };
 class AISystem : public System
 {
 private: 
-    int border_height = 20;
-    int border_width = 20;
+    
     float delay;
     float counter;
 public:
+    static const int border_height = 20;
+    static const int border_width = 20;
 
     AISystem() { delay = 1.0f; counter = 0.0f;};
     inline String SystemName() { return "AI System"; }
