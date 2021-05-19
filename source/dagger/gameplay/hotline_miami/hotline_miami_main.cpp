@@ -58,6 +58,7 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiWeaponSystem>();
+    engine.AddPausableSystem<HotlineMiamiKeySystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiEnemyProjectileCollisionSystem>();
@@ -124,6 +125,26 @@ void hotline_miami::SetupWorld()
     }
 
     zPos -= 1.f;
+
+    // key
+    {
+        auto entity = reg.create();
+        auto& col = reg.emplace<SimpleCollision>(entity);
+        col.size.x = playerSize;
+        col.size.y = playerSize * 0.5;
+
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 700;
+        transform.position.y = 50;
+        transform.position.z = zPos;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_key");
+        sprite.size.x = playerSize;
+        sprite.size.y = playerSize * 0.5;
+
+        auto& key = reg.emplace<HotlineMiamiKey>(entity);
+    }
 
     // enemy 1
     {

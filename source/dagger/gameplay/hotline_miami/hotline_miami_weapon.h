@@ -13,12 +13,27 @@ namespace hotline_miami
         int type{ 0 };
     };
 
+    struct HotlineMiamiKey
+    {
+        bool is_key{ true };
+    };
+
     class HotlineMiamiWeaponSystem
         : public System
     {
     public:
 
         inline String SystemName() { return "HotlineMiami Weapon System"; }
+
+        void Run() override;
+    };
+
+    class HotlineMiamiKeySystem
+        : public System
+    {
+    public:
+
+        inline String SystemName() { return "HotlineMiami Key System"; }
 
         void Run() override;
     };
