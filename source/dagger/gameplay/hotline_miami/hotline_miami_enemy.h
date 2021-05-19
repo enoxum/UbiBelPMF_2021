@@ -34,7 +34,7 @@ namespace hotline_miami
         : public System
     {
     public:
-        int interval = 10;
+        int interval = 150;
 
         inline String SystemName() { return "HotlineMiami Enemy Bullet System"; }
 

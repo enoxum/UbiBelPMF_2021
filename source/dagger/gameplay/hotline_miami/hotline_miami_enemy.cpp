@@ -47,7 +47,7 @@ void HotlineMiamiEnemyProjectileCollisionSystem::Run()
 void HotlineMiamiEnemyBulletSystem::Run()
 {   
     if (interval-- == 0) {
-        interval = 10;
+        interval = 150;
         auto players = Engine::Registry().view<Transform, HotlineMiamiPlayer>();
         auto enemies = Engine::Registry().view<Transform, Sprite, HotlineMiamiEnemy>();
         for (auto entity : players)
@@ -139,6 +139,8 @@ void HotlineMiamiEnemyBulletPlayerCollisionSystem::Run()
         {
             if (Engine::Registry().valid(col.colidedWith) && viewCollisions.contains(col.colidedWith))
             {
+                auto& player = viewCollisions.get<HotlineMiamiPlayer>(col.colidedWith);
+                player.health -= 1;
                 Engine::Registry().emplace<HotlineMiamiDeleteEntity>(entity);
             }
         }

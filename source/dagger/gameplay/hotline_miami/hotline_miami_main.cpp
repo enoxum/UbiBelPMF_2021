@@ -7,6 +7,7 @@
 #include "gameplay/hotline_miami/hotline_miami_camera_focus.h"
 #include "gameplay/hotline_miami/hotline_miami_weapon.h"
 #include "gameplay/hotline_miami/hotline_miami_enemy.h"
+#include "gameplay/hotline_miami/hotline_miami_health.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -23,6 +24,7 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
+
 
 
 
@@ -55,11 +57,12 @@ void HotlineMiamiGame::GameplaySystemsSetup()
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<HotlineMiamiCameraFollowSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerInputSystem>();
+    engine.AddPausableSystem<HotlineMiamiWorldEndSystem>();
     engine.AddPausableSystem<HotlineMiamiObstacleSystem>();
     engine.AddPausableSystem<HotlineMiamiPlayerObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiWeaponSystem>();
     engine.AddPausableSystem<HotlineMiamiKeySystem>();
-    engine.AddPausableSystem<HotlineMiamiWorldEndSystem>();
+    engine.AddPausableSystem<HotlineMiamiHealthSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileSystem>();
     engine.AddPausableSystem<HotlineMiamiProjectileObstacleCollisionSystem>();
     engine.AddPausableSystem<HotlineMiamiEnemyProjectileCollisionSystem>();
@@ -97,7 +100,7 @@ void hotline_miami::SetupWorld()
     constexpr float tileSize = 80.f;// / static_cast<float>(Width);
     constexpr float playerSize = 40.f;
 
-    float zPos = 1.f;
+    float zPos = 5.f;
 
     constexpr float Space = -0.1f;
     for (int i = 0; i < height; i++)
@@ -126,7 +129,6 @@ void hotline_miami::SetupWorld()
     }
 
     zPos -= 1.f;
-
     // world end
     {
         auto entity = reg.create();
@@ -147,7 +149,22 @@ void hotline_miami::SetupWorld()
         auto& key = reg.emplace<HotlineMiamiWorldEnd>(entity);
         auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
     }
-    
+    // health
+    {
+        auto entity = reg.create();
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position.x = 800;
+        transform.position.y = 50;
+        transform.position.z = zPos - 2.f;
+
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "hotline_miami:Health:health_3");
+        sprite.size.x = 160.f;
+        sprite.size.y = 32.f;
+
+        auto& key = reg.emplace<HotlineMiamiHealth>(entity);
+
+    }
     // key
     {
         auto entity = reg.create();
@@ -432,5 +449,4 @@ void hotline_miami::SetupWorld()
 
         auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
     }
-
 }
