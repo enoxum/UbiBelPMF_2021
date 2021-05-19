@@ -18,6 +18,11 @@ namespace hotline_miami
         bool is_key{ true };
     };
 
+    struct HotlineMiamiWorldEnd
+    {
+        bool the_end{ true };
+    };
+
     class HotlineMiamiWeaponSystem
         : public System
     {
@@ -34,6 +39,16 @@ namespace hotline_miami
     public:
 
         inline String SystemName() { return "HotlineMiami Key System"; }
+
+        void Run() override;
+    };
+
+    class HotlineMiamiWorldEndSystem
+        : public System
+    {
+    public:
+
+        inline String SystemName() { return "HotlineMiami World End System"; }
 
         void Run() override;
     };
