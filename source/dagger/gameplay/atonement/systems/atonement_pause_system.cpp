@@ -7,11 +7,14 @@
 
 using namespace dagger;
 
+bool AtonementPauseSystem::pausedESC = true;
+
 AtonementPauseSystem::AtonementPauseSystem(){
     canBePaused = false;
 };
 void AtonementPauseSystem::SpinUp()
 {
+    pausedESC = true;
     Engine::Dispatcher().sink<KeyboardEvent>().template connect<&AtonementPauseSystem::OnKeyboardEvent>(this);
 }
 
@@ -21,7 +24,7 @@ void AtonementPauseSystem::WindDown()
 }
 void AtonementPauseSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-  if (kEvent_.key == EDaggerKeyboard::KeyEscape && kEvent_.action == EDaggerInputState::Released)
+  if (kEvent_.key == EDaggerKeyboard::KeyEscape && kEvent_.action == EDaggerInputState::Released && pausedESC == false)
         {
             std::cout<<"Pressed ESC\n";
             if (Engine::s_IsPaused == false){
@@ -32,4 +35,9 @@ void AtonementPauseSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
             }
             
         }
+}
+
+void AtonementPauseSystem::setPausedESC(bool value)
+{
+    pausedESC = value;
 }

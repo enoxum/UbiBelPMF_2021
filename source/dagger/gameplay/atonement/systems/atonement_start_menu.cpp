@@ -6,6 +6,7 @@
 #include "gameplay/atonement/atonement_main.h"
 #include "core/graphics/sprite.h"
 #include "core/game/transforms.h"
+#include "atonement_pause_system.h"
 
 
 using namespace dagger;
@@ -25,6 +26,7 @@ void AtonementStartMenu::Run(){
 void AtonementStartMenu::BuildMenu(){
 
     Engine::ToggleSystemsPause(true);
+    AtonementPauseSystem::setPausedESC(true);
     auto& reg = Engine::Registry();
     constexpr int width = 4;
     constexpr int height = 2;
@@ -101,6 +103,7 @@ void AtonementStartMenu::Select(){
 }
 
 void AtonementStartMenu::RemoveFromScreen(){
+    AtonementPauseSystem::setPausedESC(false);
     auto view = Engine::Registry().view<Transform, OnScreenToggle>();
     for (auto entity : view){
         auto& t = view.get<Transform>(entity);
@@ -118,22 +121,22 @@ void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
      Engine::Registry().view<SelectionMapping>().each([&](SelectionMapping& ctrl_)
         {
 
-            if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
-            {
-                ctrl_.input.y += 5;
-            }
-            else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+            if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
             {
                 ctrl_.input.y -= 5;
             }
-            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+            else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
             {
-                 Engine::Dispatcher().trigger<Exit>(); 
+                ctrl_.input.y += 5;
             }
-            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
             {
                 RemoveFromScreen();
                 Engine::ToggleSystemsPause(false);
+            }
+            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+            {
+                 Engine::Dispatcher().trigger<Exit>();                 
             }
             else if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed)
             {

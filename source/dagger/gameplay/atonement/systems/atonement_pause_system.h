@@ -9,6 +9,7 @@ using namespace dagger;
 struct AtonementPauseSystem : public System 
 {
 public:
+    static bool pausedESC;
     AtonementPauseSystem();
 
     inline String SystemName() { return "Atonement Pause System "; }
@@ -16,4 +17,5 @@ public:
     void SpinUp();
     void WindDown();
     void OnKeyboardEvent(KeyboardEvent kEvent_);
+    static void setPausedESC(bool value);
 };
