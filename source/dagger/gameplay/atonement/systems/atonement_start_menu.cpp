@@ -98,6 +98,8 @@ void AtonementStartMenu::Select(){
 
         t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
         t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+
+        //Engine::Registry().destroy(entity);
     }
 
 }
@@ -109,7 +111,7 @@ void AtonementStartMenu::RemoveFromScreen(){
         auto& t = view.get<Transform>(entity);
         auto& ctrl = view.get<OnScreenToggle>(entity); 
 
-        t.position.z = -1;
+        t.position.z = t.position.z * -1;
     }
 }
 
@@ -140,7 +142,7 @@ void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
             }
             else if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed)
             {
-                AtonementStartMenu::BuildMenu();
+                AtonementStartMenu::RemoveFromScreen();
             }
         }
         );
