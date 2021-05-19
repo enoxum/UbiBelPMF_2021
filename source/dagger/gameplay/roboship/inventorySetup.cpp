@@ -65,6 +65,8 @@ void inventory::Inventory::InventoryPositionsSetup()
         transform.position.x = (-1.5f - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
         transform.position.y = (2.65f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
         transform.position.z = zPos;
+
+        reg.emplace<EmptySprite>(entity);
     }
 }
 

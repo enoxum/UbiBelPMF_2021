@@ -34,7 +34,7 @@ namespace fightEnemy
 	std::pair<int, int> checkNeighbor(int i, int j, int k, int len, std::vector<int> comb);
 	void destroyTile();
 	void changeTiles(int a, int b, int c, int d);
-
+	void addShipPart();
 }
 
 

@@ -34,6 +34,10 @@ namespace inventory
         MatrixInv matrix;
     };
 
+    struct EmptySprite {};
+
+    struct MarkedTile {};
+
     class Inventory
     {
         

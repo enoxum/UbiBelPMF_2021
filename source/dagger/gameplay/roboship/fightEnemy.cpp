@@ -109,7 +109,34 @@ void fightEnemy::changeTiles(int a, int b, int c, int d)
     }
 
 
+    addShipPart();
+}
+
+void fightEnemy::addShipPart() 
+{
+    int height = 4;
+    int width = 4;
+    float tileSize = 30.f;
+    float Space = 0.3f;
+
+    auto entity = Engine::Registry().view<EmptySprite>()[0];
+
+    auto& t = Engine::Registry().get<Transform>(entity);
+    auto& s = Engine::Registry().get<Sprite>(entity);
 
 
+    auto entityNew = Engine::Registry().create();
+    auto& sprite = Engine::Registry().emplace<Sprite>(entityNew);
 
+    AssignSprite(sprite, "robot:INVENTORY:part_3");
+
+    sprite.size.x = 15;
+    sprite.size.y = 15;
+
+    auto& transform = Engine::Registry().emplace<Transform>(entityNew);
+    transform.position.x = t.position.x;
+    transform.position.y = t.position.y;
+    transform.position.z = 0.f;
+
+    Engine::Registry().remove<EmptySprite>(entity);
 }

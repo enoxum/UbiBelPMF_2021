@@ -91,7 +91,6 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         s2.size.y = 40;
 
                         auto& t = Engine::Registry().get<Transform>(entity2);
-
                         t.position.z = 1.f;
 
                         auto& controller = Engine::Registry().emplace<ControllerMapping>(entity2);
@@ -100,6 +99,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 
                     Engine::Registry().remove<ControllerMapping>(entity);
                     swap = true;
+                    MarkNeighbors(x, y);
                 }
                 else
                 {
@@ -129,11 +129,108 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     swap = false;
 
                     bool found;
+                    UnmarkNeighbors();
                     found = findCombination({ 1, 1, 1});
                 }
             }
 
         });
+}
+
+void SelectedTileInputSystem::MarkNeighbors(int x, int y)
+{
+    auto view = Engine::Registry().view<Transform, Sprite>();
+
+    for (auto entity : view)
+    {
+        if (Engine::Registry().has<ControllerMapping>(entity))
+            continue;
+
+        if (x - 1 >= 0)
+        {
+            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+
+
+            auto& t = view.get<Transform>(entity);
+            auto& s = view.get<Sprite>(entity);
+
+            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            {
+                AssignSprite(s, "robot:INVENTORY:SpecialTile1");
+                s.size.x = 30.f;
+                s.size.y = 30.f;
+                Engine::Registry().emplace<MarkedTile>(entity);
+            }
+        }
+        if (x + 1 < 4)
+        {
+            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+
+
+            auto& t = view.get<Transform>(entity);
+            auto& s = view.get<Sprite>(entity);
+
+            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            {
+                AssignSprite(s, "robot:INVENTORY:SpecialTile1");
+                s.size.x = 30.f;
+                s.size.y = 30.f;
+                Engine::Registry().emplace<MarkedTile>(entity);
+            }
+        }
+
+        if (y - 1 >= 0)
+        {
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posY = (2.5f + y - 1 + (y - 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+
+
+            auto& t = view.get<Transform>(entity);
+            auto& s = view.get<Sprite>(entity);
+
+            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            {
+                AssignSprite(s, "robot:INVENTORY:SpecialTile1");
+                s.size.x = 30.f;
+                s.size.y = 30.f;
+                Engine::Registry().emplace<MarkedTile>(entity);
+            }
+        }
+
+        if (y + 1 < 4)
+        {
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posY = (2.5f + y + 1 + (y + 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+
+
+            auto& t = view.get<Transform>(entity);
+            auto& s = view.get<Sprite>(entity);
+
+            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            {
+                AssignSprite(s, "robot:INVENTORY:SpecialTile1");
+                s.size.x = 30.f;
+                s.size.y = 30.f;
+                Engine::Registry().emplace<MarkedTile>(entity);
+            }
+        }
+    }
+}
+
+void SelectedTileInputSystem::UnmarkNeighbors()
+{
+    auto view = Engine::Registry().view<Sprite, MarkedTile>();
+
+    for (auto entity : view)
+    {
+        auto& s = view.get<Sprite>(entity);
+        AssignSprite(s, "robot:INVENTORY:Tile");                
+        s.size.x = 30.f;
+        s.size.y = 30.f;
+        Engine::Registry().remove<MarkedTile>(entity);
+    }
 }
 
 void SelectedTileInputSystem::Run()

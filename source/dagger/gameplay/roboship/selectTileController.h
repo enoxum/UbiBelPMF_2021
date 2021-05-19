@@ -34,6 +34,10 @@ namespace robo_game
         bool moveFirst = true;
         bool moveSecond = true;
         bool swap = false;
+        int height = 4;
+        int width = 4;
+        float tileSize = 40.f;
+        float Space = 0.3f;
 
         void SpinUp() override;
         void WindDown() override;
@@ -42,6 +46,8 @@ namespace robo_game
     private:
 
         void OnKeyboardEvent(KeyboardEvent kEvent_);
+        void MarkNeighbors(int x, int y);
+        void UnmarkNeighbors();
     };
 
 }
