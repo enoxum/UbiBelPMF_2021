@@ -1,4 +1,5 @@
 project('dagger', 'c', 'cpp', default_options : ['cpp_std=c++17' ])
+add_global_link_arguments([ '-lstdc++fs' ], language: 'cpp')
 
 deps = [
     dependency('glfw3'),
