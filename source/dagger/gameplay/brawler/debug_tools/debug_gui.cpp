@@ -9,6 +9,7 @@
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/weapon_spawn_system.h"
 #include "gameplay/brawler/systems/hud_system.h"
+#include "gameplay/brawler/level.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -56,6 +57,16 @@ void DebugGui::RenderDebugWindow()
 			ImGui::Text("Speed: %f, %f", m.speed.x, m.speed.y);
 			ImGui::Separator();
 		});
+
+	// Levels
+	if (ImGui::CollapsingHeader("Levels"))
+	{
+		if (ImGui::Button("Default", ImVec2(ImGui::GetWindowSize().x, 0.0f)))
+		{
+			loadLevel = true;
+			levelName = "default";
+		}
+	}
 
 	// Physics
 	if(ImGui::CollapsingHeader("Physics"))
@@ -141,5 +152,10 @@ void DebugGui::OnEndOfFrame()
 	if(activateSpawners) {
 		Engine::GetDefaultResource<WeaponSpawnSystem>()->SpawnAll();
 		activateSpawners = false;
+	}
+
+	if (loadLevel) {
+		Level::Load(levelName);
+		loadLevel = false;
 	}
 }

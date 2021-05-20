@@ -31,6 +31,9 @@ class DebugGui
 
 		bool resetPosition { false };
 		bool activateSpawners { false };
+
+		bool loadLevel{ false };
+		String levelName{};
 };
 
 }
