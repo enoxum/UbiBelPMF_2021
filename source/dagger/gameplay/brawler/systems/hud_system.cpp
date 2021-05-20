@@ -19,8 +19,8 @@ using namespace brawler;
 using namespace dagger;
 
 float HUDSystem::s_weaponDim					= 20.0f;
-float HUDSystem::s_blipWidth					= 1.0f;
-float HUDSystem::s_blipHeight					= 10.0f;
+float HUDSystem::s_blipWidth					= 2.2f;
+float HUDSystem::s_blipHeight					= 15.0f;
 float HUDSystem::s_activeWeaponIndicatorSize	= 10.0f;
 
 float HUDSystem::s_paddingUp		= 20;
@@ -176,7 +176,7 @@ void HUDSystem::Run()
 		rightText.Set("pixel-font", "", { 0, 0, 0 }, false);
 	}
 
-	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp;
+	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp - HUDSystem::s_blipHeight / 2;
 	Engine::Registry().view<HealthBar, Transform, Sprite>().each([&](HealthBar& hb, Transform& hbTransform, Sprite& hbSprite) {
 		
 		float whitePartWidth = 100 * HUDSystem::s_blipWidth;;
@@ -188,13 +188,13 @@ void HUDSystem::Run()
 		if (!hb.side)
 		{
 			redPartWidth = playerLeft.health * HUDSystem::s_blipWidth;
-			redX = BulletSystem::s_CameraBoundLeft + redPartWidth / 2;
-			whiteX = BulletSystem::s_CameraBoundLeft + whitePartWidth / 2;
+			redX = BulletSystem::s_CameraBoundLeft + HUDSystem::s_paddingSide + redPartWidth / 2;
+			whiteX = BulletSystem::s_CameraBoundLeft + HUDSystem::s_paddingSide + whitePartWidth / 2;
 		}
 		else {
 			redPartWidth = playerRight.health * HUDSystem::s_blipWidth;
-			redX = BulletSystem::s_CameraBoundRight - redPartWidth / 2;
-			whiteX = BulletSystem::s_CameraBoundRight - whitePartWidth / 2;
+			redX = BulletSystem::s_CameraBoundRight - HUDSystem::s_paddingSide - redPartWidth / 2;
+			whiteX = BulletSystem::s_CameraBoundRight - HUDSystem::s_paddingSide - whitePartWidth / 2;
 		}
 
 		if (hb.color)
