@@ -19,7 +19,7 @@
 #include "tank_movement.h"
 #include "tilemap.h"
 #include "tank_bullet.h"
-
+#include "tanks_score.h"
 #include <string> 
 #define BLOCK_SIZE 42
 
@@ -51,6 +51,7 @@ void TanksGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddSystem<TilemapSystem>();
     engine_.AddPausableSystem<TankMovement>();
     engine_.AddPausableSystem<TankBulletSystem>();
+    engine_.AddSystem<ScoreSystem>();
     
 #if defined(DAGGER_DEBUG)
     
@@ -180,41 +181,5 @@ void tanks::SetupWorld(Engine& engine_)
         
         auto& col = reg.emplace<SimpleCollision>(entity);
         col.size = sprite.size;
-    }
-    // player 1 Score
-    {
-        
-        auto ui = reg.create();
-        auto& text = reg.emplace<Text>(ui);
-        text.spacing = 0.6f;
-        auto view = Engine::Registry().view<Tank>();
-        for (auto entity : view)
-        {
-            auto& t = view.get<Tank>(entity);
-            if (t.description.compare("tank1") == 0)
-            {
-                
-                String health = std::to_string(t.health);
-                text.Set("pixel-font", "Blue hp: " + health, { (-6) * BLOCK_SIZE,9 * BLOCK_SIZE + 2,0 });
-            }
-        }
-       
-    }
-    // player 2 Score
-    {
-        auto ui = reg.create();
-        auto& text = reg.emplace<Text>(ui);
-        text.spacing = 0.6f;
-        auto view = Engine::Registry().view<Tank>();
-        for (auto entity : view)
-        {
-            auto& t = view.get<Tank>(entity);
-            if (t.description.compare("tank2") == 0)
-            {
-
-                String health = std::to_string(t.health);
-                text.Set("pixel-font", "Red hp: " + health, { (7) * BLOCK_SIZE,9 * BLOCK_SIZE + 2,0 });
-            }
-        }    
     }
 }
