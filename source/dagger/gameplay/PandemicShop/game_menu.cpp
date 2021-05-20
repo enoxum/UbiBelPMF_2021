@@ -18,7 +18,7 @@ bool GameMenuSystem::s_GameOver = false;
 String GameMenuSystem::s_Winner = "";
 
 void GameMenuSystem::Run() {
-  auto &view = Engine::Registry().view<GameMenuButton, Sprite, InputReceiver>();
+  auto view = Engine::Registry().view<GameMenuButton, Sprite, InputReceiver>();
 
   for (auto entity : view) {
     auto &gmb = view.get<GameMenuButton>(entity);

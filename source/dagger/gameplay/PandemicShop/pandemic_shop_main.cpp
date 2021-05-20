@@ -230,7 +230,7 @@ void pandemic_shop::SetupStartScreen(Engine &engine_) {
   input.contexts.push_back("menu");
   gmb.position = sprite.position;
 
-  AssignSprite(sprite, "PandemicShop:restart_button");
+  AssignSprite(sprite, "PandemicShop:start_button");
   gmb.size = sprite.size;
 }
 
@@ -246,6 +246,6 @@ void pandemic_shop::SetupRestartScreen(Engine &engine_, String winner_) {
     input.contexts.push_back("menu");
     gmb.position = sprite.position;
 
-    AssignSprite(sprite, "PandemicShop:restart_button");
+    AssignSprite(sprite, "PandemicShop:replay_button");
     gmb.size = sprite.size;
 }
