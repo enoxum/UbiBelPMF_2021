@@ -60,10 +60,10 @@ void Level::Load(String map)
 	for (auto& background : level->backgrounds) {
 		auto bg = reg.create();
 		auto& transform = reg.get_or_emplace<Transform>(bg);
-		transform.position = { 200, 150, backgroundZ };
+		transform.position = { 320, 180, backgroundZ };
 		auto& sprite = reg.get_or_emplace<Sprite>(bg);
 		AssignSprite(sprite, background.name);
-		sprite.position = { 200, 150, backgroundZ };
+		sprite.position = { 320, 180, backgroundZ };
 		sprite.scale = { background.scaleX, background.scaleY };
 		backgroundZ--;
 	}
