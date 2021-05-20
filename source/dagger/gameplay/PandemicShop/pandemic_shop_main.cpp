@@ -51,7 +51,7 @@ void PandemicShopGame::GameplaySystemsSetup(Engine &engine_) {
   engine_.AddPausableSystem<Pickable>();
 #if defined(DAGGER_DEBUG)
   engine_.AddPausableSystem<ping_pong::PingPongTools>();
-  engine_.AddSystem<GameMenuSystem>();
+  engine_.AddPausableSystem<GameMenuSystem>();
 #endif // defined(DAGGER_DEBUG)
 }
 
@@ -217,34 +217,35 @@ void pandemic_shop::SetupWorld(Engine &engine_) {
   }
 }
 
-//-------------------------------------------pocetni ekran i restart
-//ekrna-------------------------------------
+//-------------------------------------------pocetni ekran i restartekran-------------------------------------
 void pandemic_shop::SetupStartScreen(Engine &engine_) {
   auto &reg = engine_.Registry();
 
   auto entity = reg.create();
   auto &sprite = reg.emplace<Sprite>(entity);
   sprite.position.z = 0;
-  AssignSprite(sprite, "PandemicShop:start_button");
+
+  auto &gmb = reg.emplace<GameMenuButton>(entity);
+  auto &input = reg.emplace<InputReceiver>(entity);
+  input.contexts.push_back("menu");
+  gmb.position = sprite.position;
+
+  AssignSprite(sprite, "PandemicShop:restart_button");
+  gmb.size = sprite.size;
 }
 
 void pandemic_shop::SetupRestartScreen(Engine &engine_, String winner_) {
-  auto &reg = engine_.Registry();
+    auto &reg = engine_.Registry();
 
-  auto entity = reg.create();
-  auto &sprite = reg.emplace<Sprite>(entity);
-  sprite.position.z = 2;
-  AssignSprite(sprite, "PandemicShop:menu");
+    auto entity = reg.create();
+    auto &sprite = reg.emplace<Sprite>(entity);
+    sprite.position.z = 0;
 
-  auto entity2 = reg.create();
-  auto &sprite2 = reg.emplace<Sprite>(entity2);
-  auto &gmb = reg.emplace<GameMenuButton>(entity2);
-  auto &input = reg.emplace<InputReceiver>(entity2);
-  input.contexts.push_back("menu");
-  sprite2.position.z = 1;
-  sprite2.position.y = -100;
-  gmb.position = sprite2.position;
-  AssignSprite(sprite2, "PandmeichShop:start_button");
-  sprite2.size *= 1.5;
-  gmb.size = sprite2.size;
+    auto &gmb = reg.emplace<GameMenuButton>(entity);
+    auto &input = reg.emplace<InputReceiver>(entity);
+    input.contexts.push_back("menu");
+    gmb.position = sprite.position;
+
+    AssignSprite(sprite, "PandemicShop:restart_button");
+    gmb.size = sprite.size;
 }
