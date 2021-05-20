@@ -9,12 +9,18 @@
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 
+#include <math.h>
+
 using namespace dagger;
 using namespace roboship;
 
 static int count = 0;
 static int iteration = 1;
-static int jumpActive = 0;
+static bool jumpActive = false;
+static bool prepareFightMode = false;
+static bool jumpAllow = false;
+static bool jumpAllowed = false;
+static bool atomicJump = false;
 
 void RoboshipPlayerInputSystem::SpinUp()
 {
@@ -46,7 +52,7 @@ void RoboshipPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
             {
                 ctrl_.input.x = 0;
             }
-            else if (kEvent_.key == ctrl_.jumpKey && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed))
+            else if (kEvent_.key == ctrl_.jumpKey && ( kEvent_.action == EDaggerInputState::Released))
             {
                 ctrl_.input.x = 2;
             }
@@ -71,54 +77,73 @@ void RoboshipPlayerInputSystem::Run()
         auto& ctrl = view.get<ControllerMapping>(entity);
         auto& roboshipPlayer = view.get<RoboshipPlayer>(entity);
 
-        if (EPSILON_ZERO(ctrl.input.x))
+        if (EPSILON_ZERO(ctrl.input.x) && !atomicJump)
         {
-            AnimatorPlay(animator, "robot:IDLE");
+            if(!prepareFightMode)
+                AnimatorPlay(animator, "robot:IDLE");
+            else if(prepareFightMode)
+                AnimatorPlay(animator, "robot:MELEE");
         }
-        else{
-            if (ctrl.input.x == 1 || ctrl.input.x == -1) {
+        else if ((ctrl.input.x == 2 && jumpAllowed) || atomicJump) {
+            AnimatorPlay(animator, "robot:JUMP");
+
+            atomicJump = true;
+
+            if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
+                jumpActive = true;
+            else if (sprite.position.y < -30 && jumpActive) {
+                sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
+                sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+            }
+            else if (sprite.position.y + 30 <= 2 && jumpActive) {
+                jumpActive = false;
+                jumpAllow = false;
+            }
+            else if (sprite.position.y > -223 && !jumpActive) {
+                sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
+                sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+            }
+            else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
+                ctrl.input.x = 0;
+                prepareFightMode = false;
+                jumpAllowed = false;
+                atomicJump = false;
+                Engine::Dispatcher().trigger<RPrepareFightModeOff>();
+            }
+        }
+        else if (((ctrl.input.x == 1 || ctrl.input.x == -1) && !prepareFightMode)) {
+            if (!prepareFightMode) {
                 AnimatorPlay(animator, "robot:RUN");
-
                 sprite.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
-        
-            }
-            else if (ctrl.input.x == 2) {
-
-
-
-                AnimatorPlay(animator, "robot:JUMP");
-
-                if (sprite.position.y + 223 <= 2 && jumpActive == 0)
-                    jumpActive = 1;
-                else if (sprite.position.y < -90 && jumpActive == 1){
-                    sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
-                }
-                else if (sprite.position.y + 90 <= 2 && jumpActive == 1)
-                    jumpActive = 0;
-                else if (sprite.position.y > -223 && jumpActive == 0){
-                    sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
-                }
+                jumpAllow = true;
             }
 
-            if (sprite.scale.x * ctrl.input.x < 0) {
+            if (sprite.scale.x * ctrl.input.x < 0 && !prepareFightMode) {
                 
                 sprite.scale.x *= -1;
                 Engine::Dispatcher().trigger<RChangeDirection>();
 
             }
 
-            if (abs(sprite.position.x - 800) <= 2 && iteration == 1)
-            {
-                iteration++;
-                count += 1600;
-                RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
-            }
-            else if (abs((sprite.position.x - 800) - (iteration - 1) * 2000) - 400 * (iteration - 1) <= 2 && iteration > 1) {
-                iteration++;
-                count += 1600;
-                RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
+            if (fmod(sprite.position.x + 160, 800) <= 6 && sprite.position.x + 100 > 6 && !jumpAllowed) {
+                Engine::Dispatcher().trigger<RPrepareFightModeOn>();
+                prepareFightMode = true;
+                AnimatorPlay(animator, "robot:MELEE");
+                jumpAllowed = true;
             }
 
+        }
+
+        if (abs(sprite.position.x - 800) <= 2 && iteration == 1)
+        {
+            iteration++;
+            count += 1600;
+            RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
+        }
+        else if (abs((sprite.position.x - 800) - (iteration - 1) * 2000) - 400 * (iteration - 1) <= 2 && iteration > 1) {
+            iteration++;
+            count += 1600;
+            RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
         }
     }
 }

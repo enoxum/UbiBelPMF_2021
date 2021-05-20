@@ -1,7 +1,7 @@
 #include "gameplay/roboship/roboship_main.h"
+#include "gameplay/roboship/roboship_player_move.h";
 #include "gameplay/roboship/roboship_camera_focus.h"
 #include "gameplay/roboship/roboship_createbackdrop.h"
-#include "gameplay/roboship/roboship_player_move.h";
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -22,9 +22,11 @@
 #include "tools/diagnostics.h"
 
 const int TERRAIN_HEIGHT = 30;
+static int brojac = 0;
 
 using namespace dagger;
 using namespace roboship;
+
 
 void Roboship::GameplaySystemsSetup()
 {
@@ -106,16 +108,37 @@ void Roboship::WorldSetup()
         reg.emplace<ControllerMapping>(entity);
         Engine::Registry().emplace<RCameraFollowFocus>(entity);
     }
-    
+
+    Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::ShowTextPrepareFightMode>(this);
+    Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
+
 
     int n_enemies = 5;
     for (int i = 0; i < n_enemies; i++)
     {
-        REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 200, -200 });
+        REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 800, -200 });
         enemyChar->sprite.scale = { -0.15f, 0.15f };
 
         Engine::Dispatcher().sink<RChangeDirection>().connect<&Roboship::TurnRobots>(this);
     }
+}
+
+void Roboship::ShowTextPrepareFightMode(){
+    Engine& engine = Engine::Instance();
+    auto& reg = engine.Registry();
+    
+
+    if (brojac % 2 == 0) {
+        auto ui = reg.create();
+
+        auto& text = reg.emplace<Text>(ui);
+        text.spacing = 0.6f;
+        text.Set("pixel-font", "Fight(F) / Go on(G)");
+    }
+}
+
+void Roboship::ClearTextPrepareFightMode(){
+
 }
 
 void Roboship::TurnRobots()

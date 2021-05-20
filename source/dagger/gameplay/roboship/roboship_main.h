@@ -35,8 +35,21 @@ namespace roboship
         void WorldSetup() override;
 
         void TurnRobots();
+        void ShowTextPrepareFightMode();
+        void ClearTextPrepareFightMode();
     };
 }
+
+struct RPrepareFightModeOff
+{
+    char _fightmode;
+};
+
+
+struct RPrepareFightModeOn
+{
+    char _fightmode;
+};
 
 struct RChangeDirection
 {
