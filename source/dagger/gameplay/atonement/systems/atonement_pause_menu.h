@@ -6,7 +6,7 @@
 using namespace dagger;
 
 namespace atonement {
-    struct SelectionMappingStart
+    struct SelectionMappingPause
     {
         EDaggerKeyboard upKey = EDaggerKeyboard::KeyUp;
         EDaggerKeyboard downKey = EDaggerKeyboard::KeyDown;
@@ -15,14 +15,13 @@ namespace atonement {
         Vector4 input{ 0, 0, 0, 0};
     };
 
-    struct OnScreenToggleStart
+    struct OnScreenTogglePause
     {
         EDaggerKeyboard enterKey = EDaggerKeyboard::KeyEnter;
         Vector4 input{ 0, 0, 0, 0};
     };
 
-
-    struct AtonementStartMenu : public System {
+    struct AtonementPauseMenu : public System {
         private:
          static bool onScreen;
          void OnKeyboardEvent(KeyboardEvent kEvent_);

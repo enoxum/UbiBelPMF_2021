@@ -60,6 +60,7 @@ sources = [
     'source/dagger/gameplay/atonement/systems/cooldown_manager.cpp',
     'source/dagger/gameplay/atonement/systems/atonement_pause_system.cpp',
     'source/dagger/gameplay/atonement/systems/atonement_start_menu.cpp',
+    'source/dagger/gameplay/atonement/systems/atonement_pause_menu.cpp',
 
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',

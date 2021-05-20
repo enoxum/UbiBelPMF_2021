@@ -27,6 +27,7 @@
 #include "gameplay/atonement/systems/atonement_pause_system.h"
 #include "gameplay/atonement/systems/cooldown_manager.h"
 #include "gameplay/atonement/systems/atonement_start_menu.h"
+#include "gameplay/atonement/systems/atonement_pause_menu.h"
 
 using namespace dagger;
 using namespace atonement;
@@ -113,6 +114,7 @@ void AtonementGame::GameplaySystemsSetup()
     auto& engine = Engine::Instance();
 
     engine.AddSystem<AtonementStartMenu>();
+    engine.AddSystem<AtonementPauseMenu>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<CharacterCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);

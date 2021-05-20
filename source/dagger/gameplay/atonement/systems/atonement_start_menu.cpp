@@ -12,11 +12,14 @@
 using namespace dagger;
 using namespace atonement;
 
+bool AtonementStartMenu::onScreen = true;
+
 String AtonementStartMenu::SystemName(){return "AtonementStartMenu";}
 
 void AtonementStartMenu::SpinUp(){
     Engine::Dispatcher().sink<KeyboardEvent>().template connect<&AtonementStartMenu::OnKeyboardEvent>(this);
     AtonementStartMenu::BuildMenu();
+    AtonementStartMenu::onScreen = true;
 }
 
 void AtonementStartMenu::Run(){
@@ -35,7 +38,7 @@ void AtonementStartMenu::BuildMenu(){
 
     auto entity = reg.create();
     auto& sprite = reg.emplace<Sprite>(entity);
-    AssignSprite(sprite, "MenuTextures:selected");
+    AssignSprite(sprite, "MenuTextures:selection3");
 
     sprite.size.x = tileSize;
     sprite.size.y = tileSize/2;
@@ -46,8 +49,8 @@ void AtonementStartMenu::BuildMenu(){
         transform.position.y = tileSize/2;
         transform.position.z = 1.f;
 
-    auto& controller = reg.emplace<SelectionMapping>(entity);
-    auto& onscreen = reg.emplace<OnScreenToggle>(entity);
+    auto& controller = reg.emplace<SelectionMappingStart>(entity);
+    auto& onscreen = reg.emplace<OnScreenToggleStart>(entity);
     
     
     auto entity2 = reg.create();
@@ -60,7 +63,7 @@ void AtonementStartMenu::BuildMenu(){
     transform2.position.y = (1.277f - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
     transform2.position.z = 2.f;
 
-    auto& onscreen2 = reg.emplace<OnScreenToggle>(entity2);
+    auto& onscreen2 = reg.emplace<OnScreenToggleStart>(entity2);
 
     auto entity3 = reg.create();
     auto& sprite3 = reg.emplace<Sprite>(entity3);
@@ -72,7 +75,7 @@ void AtonementStartMenu::BuildMenu(){
     transform3.position.y = (1.277f + 1 + 1 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize/2;
     transform3.position.z = 2.f;
 
-    auto& onscreen3 = reg.emplace<OnScreenToggle>(entity3);
+    auto& onscreen3 = reg.emplace<OnScreenToggleStart>(entity3);
     
 
     auto entity4 = reg.create();
@@ -85,16 +88,16 @@ void AtonementStartMenu::BuildMenu(){
         transform4.position.y = 2.0f;
         transform4.position.z = 3.f;
 
-    auto& onscreen4 = reg.emplace<OnScreenToggle>(entity4);
+    auto& onscreen4 = reg.emplace<OnScreenToggleStart>(entity4);
 }
 
 void AtonementStartMenu::Select(){
 
- auto view = Engine::Registry().view<Transform, SelectionMapping>();
+ auto view = Engine::Registry().view<Transform, SelectionMappingStart>();
     for (auto entity : view)
     {
         auto& t = view.get<Transform>(entity);
-        auto& ctrl = view.get<SelectionMapping>(entity);
+        auto& ctrl = view.get<SelectionMappingStart>(entity);
 
         t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
         t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
@@ -104,14 +107,26 @@ void AtonementStartMenu::Select(){
 
 }
 
-void AtonementStartMenu::RemoveFromScreen(){
-    AtonementPauseSystem::setPausedESC(false);
-    auto view = Engine::Registry().view<Transform, OnScreenToggle>();
+void AtonementStartMenu::RemoveFromScreenToggle(){
+
+    AtonementPauseSystem::setPausedESC(true);
+    auto view = Engine::Registry().view<Transform, OnScreenToggleStart>();
     for (auto entity : view){
         auto& t = view.get<Transform>(entity);
-        auto& ctrl = view.get<OnScreenToggle>(entity); 
-
+        auto& ctrl = view.get<OnScreenToggleStart>(entity); 
         t.position.z = t.position.z * -1;
+
+        if (t.position.z < 0)
+        {
+            AtonementStartMenu::onScreen = false;
+            AtonementPauseSystem::setPausedESC(false);
+        }
+        else
+        {
+            AtonementPauseSystem::setPausedESC(true);
+            AtonementStartMenu::onScreen = true;
+             
+        }
     }
 }
 
@@ -120,30 +135,35 @@ Engine::Dispatcher().sink<KeyboardEvent>().template disconnect<&AtonementStartMe
 }
 
 void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
-     Engine::Registry().view<SelectionMapping>().each([&](SelectionMapping& ctrl_)
+     Engine::Registry().view<SelectionMappingStart>().each([&](SelectionMappingStart& ctrl_)
         {
-
-            if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
-            {
-                ctrl_.input.y -= 5;
+            if (AtonementStartMenu::onScreen == true){
+                if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+                {
+                    ctrl_.input.y -= 5;
+                }
+                else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+                {
+                    ctrl_.input.y += 5;
+                }
+                else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+                {
+                    RemoveFromScreenToggle();
+                    Engine::ToggleSystemsPause(false);
+                }
+                else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+                {
+                    Engine::Dispatcher().trigger<Exit>();                 
+                }
+                
             }
-            else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
+            /*else
             {
-                ctrl_.input.y += 5;
-            }
-            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
-            {
-                RemoveFromScreen();
-                Engine::ToggleSystemsPause(false);
-            }
-            else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
-            {
-                 Engine::Dispatcher().trigger<Exit>();                 
-            }
-            else if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed)
-            {
-                AtonementStartMenu::RemoveFromScreen();
-            }
+                if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed)
+                {
+                    AtonementStartMenu::RemoveFromScreenToggle();
+                }
+            }*/
         }
         );
         
