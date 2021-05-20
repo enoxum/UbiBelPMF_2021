@@ -72,12 +72,4 @@ void Brawler::WorldSetup()
 {
     SetCamera();
     Level::Load("default");
-
-    HUDSystem::CreateHealthBarLeft();
-    HUDSystem::CreateWeaponsLeft();
-
-    HUDSystem::CreateHealthBarRight();
-    HUDSystem::CreateWeaponsRight();
-
-    HUDSystem::CreateMarkersAndTexts();
 }

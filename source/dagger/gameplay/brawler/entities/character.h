@@ -61,8 +61,6 @@ namespace brawler
             chr.sprite.position = { 0.0f, 0.0f, 0.0f };
             chr.sprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-            chr.col.size = chr.sprite.size;
-
             AssignSprite(chr.sprite, "spritesheets:gunner:" + color_ + ":idle:1");
             AnimatorPlay(chr.animator, "gunner:" + color_ + ":IDLE");
 
