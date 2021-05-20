@@ -161,6 +161,7 @@ void AtonementPauseMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
                     Engine::ToggleSystemsPause(true);
                     AtonementStartMenu::RemoveFromScreenToggle();
                     AtonementPauseMenu::RemoveFromScreenToggle();
+                    AtonementPauseSystem::setPausedESC(true);
 
                 }
                 else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
