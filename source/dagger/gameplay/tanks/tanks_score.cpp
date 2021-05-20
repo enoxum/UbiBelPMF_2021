@@ -24,6 +24,7 @@ void ScoreSystem::SpinUp()
     score2 = reg.create();
     text2 = reg.emplace<Text>(score2);
     text2.spacing = 0.6f;
+
 }
 
 void ScoreSystem::WindDown()
@@ -37,7 +38,8 @@ String ScoreSystem::SystemName()
 }
 void ScoreSystem::Run() 
 {
-    
+    bool tank1Exists = false;
+    bool tank2Exists = false;
     {
         auto view = Engine::Registry().view<Tank>();
         for (auto entity : view)
@@ -45,7 +47,7 @@ void ScoreSystem::Run()
             auto& t = view.get<Tank>(entity);
             if (t.description.compare("tank1") == 0)
             {
-
+                tank1Exists = true;
                 String health = std::to_string(t.health);
                 text1.Set("pixel-font", "Blue hp: " + health, { (-6) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
             }
@@ -58,10 +60,18 @@ void ScoreSystem::Run()
             auto& t = view.get<Tank>(entity);
             if (t.description.compare("tank2") == 0)
             {
-
+                tank2Exists = true;
                 String health = std::to_string(t.health);
-                text2.Set("pixel-font", "Red hp: " + health, { (7) * BLOCK_SIZE,9 * BLOCK_SIZE + 2,0 });
+                text2.Set("pixel-font", "Red hp: " + health, { (7) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
             }
         }
+    }
+    if (!tank1Exists)
+    {
+        text1.Set("pixel-font", "Blue hp: 0", { (-6) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
+    }
+    if (!tank2Exists)
+    {
+        text2.Set("pixel-font", "Red hp: 0", { (7) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
     }
 }
