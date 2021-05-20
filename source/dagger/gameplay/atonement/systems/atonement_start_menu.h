@@ -6,7 +6,7 @@
 using namespace dagger;
 
 namespace atonement {
-    struct SelectionMapping
+    struct SelectionMappingStart
     {
         EDaggerKeyboard upKey = EDaggerKeyboard::KeyUp;
         EDaggerKeyboard downKey = EDaggerKeyboard::KeyDown;
@@ -15,7 +15,7 @@ namespace atonement {
         Vector4 input{ 0, 0, 0, 0};
     };
 
-    struct OnScreenToggle
+    struct OnScreenToggleStart
     {
         EDaggerKeyboard enterKey = EDaggerKeyboard::KeyEnter;
         Vector4 input{ 0, 0, 0, 0};
@@ -24,6 +24,7 @@ namespace atonement {
 
     struct AtonementStartMenu : public System {
         private:
+         static bool onScreen;
          void OnKeyboardEvent(KeyboardEvent kEvent_);
         public:
          void SpinUp() override;
@@ -31,7 +32,7 @@ namespace atonement {
          void WindDown() override;
          void Select();
          static void BuildMenu();
-         void RemoveFromScreen();
+         static void RemoveFromScreenToggle();
          String SystemName();
     };
 };
