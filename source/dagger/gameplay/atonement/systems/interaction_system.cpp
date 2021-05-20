@@ -20,6 +20,38 @@ using namespace atonement;
 void IntearactionSystem::SpinUp() 
 {
     Engine::Dispatcher().sink<KeyboardEvent>().connect<&IntearactionSystem::OnKeyboardEvent>(this);
+    //Create the 'Press E' sprite for interaction
+    {
+        auto& reg = Engine::Registry();
+        auto entity = reg.create();
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "TextAssets:PressE");
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position = Vector3{ 0, 0 , -1 };    //-1 on Z axis so it is not visible on game start
+        PressEPrompt = entity; 
+    }
+
+    //Create the dash tutorial prompt
+    {
+        auto& reg = Engine::Registry();
+        auto entity = reg.create();
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "TextAssets:dash");
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position = Vector3{ 0, 0 , -1 };
+        LShiftPrompt = entity;
+    }
+
+    //Create the dash tutorial prompt
+    {
+        auto& reg = Engine::Registry();
+        auto entity = reg.create();
+        auto& sprite = reg.emplace<Sprite>(entity);
+        AssignSprite(sprite, "TextAssets:walljump");
+        auto& transform = reg.emplace<Transform>(entity);
+        transform.position = Vector3{ 0, 0 , -1 };
+        WJPrompt = entity;
+    }
 }
 
 void IntearactionSystem::WindDown()
@@ -40,18 +72,6 @@ void IntearactionSystem::Run()
         }
 
         loreStonePositionsLoaded = true;
-
-        //also create the 'Press E' sprite for interaction on the first Run()
-        auto& reg = Engine::Registry();
-        auto entity = reg.create();
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "TextAssets:PressE");
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position = Vector3{0, 0 , -1};    //-1 on Z axis so it is not visible on game start
-
-        interactPrompt = entity;
     }
 
     //a nonexistant value
@@ -76,21 +96,47 @@ void IntearactionSystem::Run()
         //if a stone is actually near
         if (interactionInputEnabled)
         {   
-            //show the 'Press E prompt'
-            if (Engine::Registry().has<Transform>(interactPrompt))
+            //show prompts
+            if (Engine::Registry().has<Transform>(PressEPrompt))
             {
-                auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(PressEPrompt);
                 interactPromptTransform.position.x = playerTransform.position.x;
                 interactPromptTransform.position.y = playerTransform.position.y + 130;
-                interactPromptTransform.position.z = 12;
+                interactPromptTransform.position.z = 10;
+            }
+
+            if (Engine::Registry().has<Transform>(LShiftPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(LShiftPrompt);
+                interactPromptTransform.position.x = playerTransform.position.x;
+                interactPromptTransform.position.y = playerTransform.position.y - 130;
+            }
+
+            if (Engine::Registry().has<Transform>(WJPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(WJPrompt);
+                interactPromptTransform.position.x = playerTransform.position.x;
+                interactPromptTransform.position.y = playerTransform.position.y - 130;
             }
         }
         else 
         {
-            //hide the 'Press E prompt'
-            if (Engine::Registry().has<Transform>(interactPrompt))
+            //hide all the displayed prompts
+            if (Engine::Registry().has<Transform>(PressEPrompt))
             {
-                auto& interactPromptTransform = Engine::Registry().get<Transform>(interactPrompt);
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(PressEPrompt);
+                interactPromptTransform.position.z = -1;
+            }
+
+            if (Engine::Registry().has<Transform>(LShiftPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(LShiftPrompt);
+                interactPromptTransform.position.z = -1;
+            }
+
+            if (Engine::Registry().has<Transform>(WJPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(WJPrompt);
                 interactPromptTransform.position.z = -1;
             }
         }
@@ -111,24 +157,36 @@ void IntearactionSystem::UnlockAbility(int abilityId)
 {
     auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver>();
 
-    //auto cdManager = Engine::GetDefaultResource<CooldownManager>();
-    //cdManager->registerCooldown(entity, "some name", 0.3);
-    //if(cdManager->isOnCooldown(entity, "some name")){
-    //
-    //}
-
-    for (const auto& entity : view){
+    for (const auto& entity : view)
+    {
         auto&& input = view.get<InputReceiver>(entity);
+
         // abilityId = 1  -> DASH
-        if (abilityId == 1) {
+        if (abilityId == 1) 
+        {
             input.contexts.pop_back();
             input.contexts.push_back("ATON1");
+
+            //display 
+            if (Engine::Registry().has<Transform>(LShiftPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(LShiftPrompt);
+                interactPromptTransform.position.z = 10;
+            }
         }
         // abilityId = 2  -> JUMP
-        else if (abilityId == 2) {
+        else if (abilityId == 2) 
+        {
             input.contexts.pop_back();
             input.contexts.push_back("ATON2");
+
+            if (Engine::Registry().has<Transform>(WJPrompt))
+            {
+                auto& interactPromptTransform = Engine::Registry().get<Transform>(WJPrompt);
+                interactPromptTransform.position.z = 10;
+            }
         }
-        std::cout << "ability unlocked: id = " << abilityId << std::endl;
+
+        //std::cout << "ability unlocked: id = " << abilityId << std::endl;
     }
 }

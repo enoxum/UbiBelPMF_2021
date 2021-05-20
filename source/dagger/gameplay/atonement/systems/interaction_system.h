@@ -26,6 +26,8 @@ namespace atonement {
         bool loreStonePositionsLoaded = false;
         bool interactionInputEnabled = false;
 
-        entt::entity interactPrompt = entt::null;
+        entt::entity PressEPrompt = entt::null;
+        entt::entity LShiftPrompt = entt::null;
+        entt::entity WJPrompt = entt::null;
     };
 }
