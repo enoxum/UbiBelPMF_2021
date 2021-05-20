@@ -45,7 +45,7 @@ void Level::Load(String map)
 				AssignSprite(sprite, texture.name);
 				sprite.color = { 1, 1, 1, 1 };
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
-				sprite.scale = { texture.scale, texture.scale };
+				sprite.scale = { texture.scaleX, texture.scaleY };
 				sprite.position = { TileToWorld(x, y), 1 };
 			} else if (getTile(x, y) == PlatformType::SPAWNER){
 				auto tile = reg.create();
@@ -64,7 +64,7 @@ void Level::Load(String map)
 		auto& sprite = reg.get_or_emplace<Sprite>(bg);
 		AssignSprite(sprite, background.name);
 		sprite.position = { 200, 150, backgroundZ };
-		sprite.scale = { background.scale, background.scale };
+		sprite.scale = { background.scaleX, background.scaleY };
 		backgroundZ--;
 	}
 
