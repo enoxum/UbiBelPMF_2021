@@ -29,7 +29,7 @@ namespace brawler {
 		static unsigned LEVEL_WIDTH;
 		static unsigned LEVEL_HEIGHT;
 
-		static constexpr float DROPDOWN_OFFSET = 2.0f;
+		static constexpr float DROPDOWN_OFFSET = 5.0f;
 
 		static void Load(String name);
 
