@@ -10,6 +10,7 @@
 #include "core/graphics/textures.h"
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
+#include "core/graphics/text.h"
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
@@ -19,6 +20,7 @@
 #include "tilemap.h"
 #include "tank_bullet.h"
 
+#include <string> 
 #define BLOCK_SIZE 42
 
 using namespace dagger;
@@ -173,11 +175,46 @@ void tanks::SetupWorld(Engine& engine_)
         auto& tank = reg.emplace<Tank>(entity);
         tank.angle = -90.0f;
         tank.description = "tank2";
-        
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerTwoMovement(controller);
         
         auto& col = reg.emplace<SimpleCollision>(entity);
         col.size = sprite.size;
+    }
+    // player 1 Score
+    {
+        
+        auto ui = reg.create();
+        auto& text = reg.emplace<Text>(ui);
+        text.spacing = 0.6f;
+        auto view = Engine::Registry().view<Tank>();
+        for (auto entity : view)
+        {
+            auto& t = view.get<Tank>(entity);
+            if (t.description.compare("tank1") == 0)
+            {
+                
+                String health = std::to_string(t.health);
+                text.Set("pixel-font", "Blue hp: " + health, { (-6) * BLOCK_SIZE,9 * BLOCK_SIZE + 2,0 });
+            }
+        }
+       
+    }
+    // player 2 Score
+    {
+        auto ui = reg.create();
+        auto& text = reg.emplace<Text>(ui);
+        text.spacing = 0.6f;
+        auto view = Engine::Registry().view<Tank>();
+        for (auto entity : view)
+        {
+            auto& t = view.get<Tank>(entity);
+            if (t.description.compare("tank2") == 0)
+            {
+
+                String health = std::to_string(t.health);
+                text.Set("pixel-font", "Red hp: " + health, { (7) * BLOCK_SIZE,9 * BLOCK_SIZE + 2,0 });
+            }
+        }    
     }
 }
