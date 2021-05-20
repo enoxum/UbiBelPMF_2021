@@ -108,7 +108,8 @@ void AtonementStartMenu::Select(){
 }
 
 void AtonementStartMenu::RemoveFromScreenToggle(){
-    
+
+    AtonementPauseSystem::setPausedESC(true);
     auto view = Engine::Registry().view<Transform, OnScreenToggleStart>();
     for (auto entity : view){
         auto& t = view.get<Transform>(entity);
@@ -122,8 +123,9 @@ void AtonementStartMenu::RemoveFromScreenToggle(){
         }
         else
         {
-             AtonementStartMenu::onScreen = true;
-             AtonementPauseSystem::setPausedESC(true);
+            AtonementPauseSystem::setPausedESC(true);
+            AtonementStartMenu::onScreen = true;
+             
         }
     }
 }
