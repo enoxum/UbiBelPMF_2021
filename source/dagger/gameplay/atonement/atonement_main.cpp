@@ -145,34 +145,11 @@ void AtonementGame::WorldSetup(){
     
     
     SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
-    mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
     auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {70, 176});
     mainChar.sprite.scale = { 0.6, 0.6 };
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 
-    /* Parallax setup */
-    /*
-    auto& reg = Engine::Registry();
-    auto entity = reg.create();
-    auto& sprite = reg.get_or_emplace<Sprite>(entity);
-    auto& parallax = reg.get_or_emplace<Parallax>(entity);
-    parallax.lastCameraPosition = camera->position;
-    parallax.strength = 0.1;
-
-    AssignSprite(sprite, "MossyBackground:scrolling_bg1");
-    sprite.position = { 600, -225, 99 };
-
-    auto entity1 = reg.create();
-    auto& sprite1 = reg.get_or_emplace<Sprite>(entity1);
-    auto& parallax1 = reg.get_or_emplace<Parallax>(entity1);
-    parallax1.lastCameraPosition = camera->position;
-    parallax1.strength = 0.1;
-
-    AssignSprite(sprite1, "MossyBackground:scrolling_bg1");
-    sprite1.position = { sprite.position.x + sprite.size.x, -225, 100 };
-    sprite1.scale.x *= -1;*/
 }
 
 
