@@ -227,8 +227,11 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 		transform.position.y -= fallenInLastFrame;
 	}
 	else if (character.fallingAnimationEnded) {
-		transform.position.y += fallenInLastFrame;
-		fallenInLastFrame = 0;
+		auto&& ground = collision.collidedWithDown;
+		auto&& [groundTrans, groundCol] = Engine::Registry().get<Transform, SimpleCollision>(ground);
+		transform.position.y = groundTrans.position.y + (groundCol.size.y + collision.size.y) / 2.f - 5;
+		//transform.position.y += fallenInLastFrame;
+		//fallenInLastFrame = 0;
 		GoTo(ECharStates::Idle, state_);
 	}
 }
