@@ -148,8 +148,8 @@ void AtonementGame::WorldSetup(){
     auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
     mainChar.sprite.scale = { 0.5, 0.5 };
     //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {70, 176});
-    mainChar.sprite.scale = { 0.6, 0.6 };
+    /*auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {70, 176});
+    mainChar.sprite.scale = { 0.6, 0.6 };*/
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
 
     /* Parallax setup */

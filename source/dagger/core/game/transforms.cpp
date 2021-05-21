@@ -3,10 +3,7 @@
 #include "core/graphics/sprite.h"
 
 #include <algorithm>
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 using namespace dagger;
 
 void TransformSystem::Run()
