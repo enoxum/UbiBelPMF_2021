@@ -37,11 +37,11 @@ namespace atonement
 {
     void RestartGame()
     {
-        auto& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
+        auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
         for (const auto& entity : view)
         {
-            auto& input = view.get<InputReceiver>(entity);
-            auto& transf = view.get<Transform>(entity);
+            auto&& input = view.get<InputReceiver>(entity);
+            auto&& transf = view.get<Transform>(entity);
 
             input.contexts.pop_back();
             input.contexts.push_back("ATON");
