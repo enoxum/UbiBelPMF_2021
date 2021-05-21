@@ -100,8 +100,8 @@ void AtonementPauseMenu::BuildMenu(){
 
     auto& transform4 = reg.emplace<Transform>(entity4);
 
-        transform4.position.x = camPosition.x + 0.3f;
-        transform4.position.y = camPosition.y + 2.0f;
+        transform4.position.x = camPosition.x - 100;
+        transform4.position.y = camPosition.y - 100;
         transform4.position.z = -3.f;
 
     auto& onscreen4 = reg.emplace<OnScreenTogglePause>(entity4);
