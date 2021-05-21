@@ -66,6 +66,11 @@ void DebugGui::RenderDebugWindow()
 			loadLevel = true;
 			levelName = "default";
 		}
+		if (ImGui::Button("Factory", ImVec2(ImGui::GetWindowSize().x, 0.0f)))
+		{
+			loadLevel = true;
+			levelName = "factory";
+		}
 	}
 
 	// Physics
