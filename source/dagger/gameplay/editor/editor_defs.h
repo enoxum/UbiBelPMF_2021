@@ -4,11 +4,14 @@
 
 enum class ECommonSaveArchetype
 {
-    None = 0b00000000,
-    Sprite = 0b00000001,
-    Transform = 0b00000010,
-    Animator = 0b00000100,
-    Physics = 0b00001000,
+    None         = 0b00000000,
+    Sprite       = 0b00000001,
+    Transform    = 0b00000010,
+    Animator     = 0b00000100,
+    Physics      = 0b00001000,
+    Bouncy       = 0b00010000,
+    Deadly       = 0b00100000,
+    Interactable = 0b01000000,
     // todo: add new values here
 };
 

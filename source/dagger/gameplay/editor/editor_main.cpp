@@ -16,6 +16,8 @@
 #include "gameplay/common/simple_collisions.h"
 #include "tools/diagnostics.h"
 
+#include "gameplay/atonement/components/marker_components.h"
+
 #include "core/savegame.h"
 #include "gameplay/editor/savegame_system.h"
 #include <iostream>
@@ -54,6 +56,24 @@ ECommonSaveArchetype EditorTestGame::Save(Entity entity_, JSON::json& saveTo_)
         archetype = archetype | ECommonSaveArchetype::Physics;
     }
 
+    if (registry.has<BouncyComponent>(entity_))
+    {
+        saveTo_["bouncy_component"] = SerializeComponent<BouncyComponent>(registry.get<BouncyComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Bouncy;
+    }
+
+    if (registry.has<DeadlyComponent>(entity_))
+    {
+        saveTo_["deadly_component"] = SerializeComponent<DeadlyComponent>(registry.get<DeadlyComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Deadly;
+    }
+
+    if (registry.has<InteractableComponent>(entity_))
+    {
+        saveTo_["interactable_component"] = SerializeComponent<InteractableComponent>(registry.get<InteractableComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Interactable;
+    }
+
     // todo: add new if-block here and don't forget to change archetype
 
     return archetype;
@@ -74,6 +94,15 @@ void EditorTestGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON:
 
     if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Physics))
         DeserializeComponent<SimpleCollision>(loadFrom_["simple_collision"], registry.emplace<SimpleCollision>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Bouncy))
+        DeserializeComponent<BouncyComponent>(loadFrom_["bouncy_component"], registry.emplace<BouncyComponent>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Deadly))
+        DeserializeComponent<DeadlyComponent>(loadFrom_["deadly_component"], registry.emplace<DeadlyComponent>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Interactable))
+        DeserializeComponent<InteractableComponent>(loadFrom_["interactable_component"], registry.emplace<InteractableComponent>(entity_));
 
     // todo: add new if-block here and don't forget to change archetype
 }
@@ -174,14 +203,8 @@ void EditorToolSystem::Run()
                 if (reg.has<Transform>(m_Selected.entity))
                 {
                     auto& transform = reg.get<Transform>(m_Selected.entity);
-                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
+                    knob.position = Vector3{ Input::CursorPositionInWorld(), transform.position.z };
                     transform.position = knob.position;
-                }
-                else if (reg.has<Sprite>(m_Selected.entity))
-                {
-                    auto& sprite = reg.get<Sprite>(m_Selected.entity);
-                    knob.position = Vector3{ Input::CursorPositionInWorld(), 0 };
-                    sprite.position = knob.position;
                 }
             }
         }
@@ -220,7 +243,8 @@ void EditorToolSystem::GUIExecuteCreateEntity()
     auto newEntity = reg.create();
     auto& newSprite = reg.emplace<Sprite>(newEntity);
     AssignSprite(newSprite, "tools:knob2"); 
-    reg.emplace<Transform>(newEntity);
+    auto& transf = reg.emplace<Transform>(newEntity);
+    transf.position = Vector3{ Input::CursorPositionInWorld(), 0 } - Vector3 { 300.f, 300.f, 0.f  };
     //newSprite.UseAsUI();                //Sta radi ovo?
     auto& newSavegame = reg.emplace<SaveGame<ECommonSaveArchetype>>(newEntity);
 }
@@ -336,10 +360,15 @@ void EditorToolSystem::GUIDrawTransformEditor()
 
 void EditorToolSystem::GUIDrawAnimationEditor()
 {
+    static String animFilter;
+
+
     auto& reg = Engine::Registry();
 
     if (reg.has<Animator>(m_Selected.entity) && ImGui::CollapsingHeader("Animator"))
-    {
+    {   
+        ImGui::InputText("Filter", animFilter.data(), 80);
+
         Animator& compAnim = reg.get<Animator>(m_Selected.entity);
         /* Animation */ {
             static int selectedAnim = 0;
@@ -347,8 +376,10 @@ void EditorToolSystem::GUIDrawAnimationEditor()
             int i = 0;
             int currentSelected = 0;
             for (auto& [k, n] : Engine::Res<Animation>())
-            {
-                animations.push_back(k.c_str());
+            {   
+                if (strstr(k.data(), animFilter.data()) != nullptr)
+                    animations.push_back(k.c_str());
+
                 if (k == compAnim.currentAnimation)
                 {
                     selectedAnim = i;
@@ -357,7 +388,10 @@ void EditorToolSystem::GUIDrawAnimationEditor()
             }
 
             currentSelected = selectedAnim;
-            if (ImGui::Combo("Animation", &selectedAnim, animations.data(), animations.size()))
+            String title{};
+            title.reserve(100);
+            sprintf(title.data(), "Animation (%d)", animations.size());
+            if (ImGui::Combo(title.data(), &selectedAnim, animations.data(), animations.size()))
             {
                 if (currentSelected != selectedAnim)
                 {
@@ -406,6 +440,59 @@ void EditorToolSystem::GUIDrawPhysicsEditor()
         if (ImGui::Button("Attach Collision"))
         {
             reg.emplace<SimpleCollision>(m_Selected.entity);
+        }
+    }
+}
+
+void EditorToolSystem::GUIDrawBouncyEditor()
+{
+    auto& reg = Engine::Registry();
+    if (reg.has<BouncyComponent>(m_Selected.entity) && ImGui::CollapsingHeader("Bouncy"))
+    {   
+        auto& compBouncy = reg.get<BouncyComponent>(m_Selected.entity);
+        ImGui::Checkbox("Is bouncy?", &compBouncy.isBouncy);
+    }
+    else if (!reg.has<BouncyComponent>(m_Selected.entity))
+    {
+        if (ImGui::Button("Mark As Bouncy"))
+        {
+            reg.emplace<BouncyComponent>(m_Selected.entity);
+        }
+    }
+}
+
+void EditorToolSystem::GUIDrawDeadlyEditor()
+{
+    auto& reg = Engine::Registry();
+    if (reg.has<DeadlyComponent>(m_Selected.entity) && ImGui::CollapsingHeader("Deadly"))
+    {
+        auto& compDeadly = reg.get<DeadlyComponent>(m_Selected.entity);
+        ImGui::Checkbox("Is Deadly?", &compDeadly.isDeadly);
+    }
+    else if (!reg.has<DeadlyComponent>(m_Selected.entity))
+    {
+        if (ImGui::Button("Mark As Deadly"))
+        {
+            reg.emplace<DeadlyComponent>(m_Selected.entity);
+        }
+    }
+}
+
+void EditorToolSystem::GUIDrawInteractableEditor()
+{
+    auto& reg = Engine::Registry();
+    if (reg.has<InteractableComponent>(m_Selected.entity) && ImGui::CollapsingHeader("Interactable"))
+    {
+        auto& compInteractable = reg.get<InteractableComponent>(m_Selected.entity);
+
+        ImGui::InputInt("ID", &compInteractable.id);
+
+    }
+    else if (!reg.has<InteractableComponent>(m_Selected.entity))
+    {
+        if (ImGui::Button("Mark As Interactable"))
+        {
+            reg.emplace<InteractableComponent>(m_Selected.entity);
         }
     }
 }
@@ -473,6 +560,9 @@ void EditorToolSystem::OnRenderGUI()
             GUIDrawTransformEditor();
             GUIDrawAnimationEditor();
             GUIDrawPhysicsEditor();
+            GUIDrawBouncyEditor();
+            GUIDrawDeadlyEditor();
+            GUIDrawInteractableEditor();
 
             // to add more components, replicate the above functions carefully
             // if you're lost, ping Mika on discord :)

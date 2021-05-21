@@ -18,8 +18,9 @@ void CameraFollowSystem::Run()
     Engine::Registry().view<CameraFollowFocus, Sprite>().each([&](const CameraFollowFocus& focus_, const Sprite& sprite_)
         {
             for (UInt32 i = 0; i < focus_.weight; i++)
-            {
-                center += (Vector2)sprite_.position;
+            {   
+                //+ Vector2{0, 200} je da nebi bio igrac bas u centru nego malo ispod
+                center += (Vector2)sprite_.position + Vector2{0, 200};
             }
             count += focus_.weight;
         });

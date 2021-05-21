@@ -47,6 +47,8 @@ sources = [
     'source/dagger/core/audio_linux.cpp',
     'source/dagger/core/engine.cpp',
     'source/dagger/core/game.cpp',
+    'source/dagger/gameplay/editor/editor_defs.cpp',
+    'source/dagger/gameplay/editor/editor_main.cpp',
     'source/dagger/gameplay/common/jiggle.cpp',
     'source/dagger/gameplay/common/particles.cpp',
     'source/dagger/gameplay/common/simple_collisions.cpp',
@@ -60,10 +62,10 @@ sources = [
     'source/dagger/gameplay/atonement/systems/character_collisions.cpp',
     'source/dagger/gameplay/atonement/systems/cooldown_manager.cpp',
     'source/dagger/gameplay/atonement/systems/atonement_pause_system.cpp',
-
     'source/dagger/gameplay/atonement/systems/atonement_start_menu.cpp',
     'source/dagger/gameplay/atonement/systems/atonement_pause_menu.cpp',
-
+    'source/dagger/gameplay/atonement/systems/checkpoint_system.cpp',
+    'source/dagger/gameplay/atonement/systems/interaction_system.cpp',
     'source/dagger/gameplay/atonement/systems/parallax.cpp',
 
     'source/dagger/tools/console.cpp',
