@@ -28,6 +28,10 @@ void AtonementStartMenu::Run(){
 
 void AtonementStartMenu::BuildMenu(){
 
+     auto* camera = Engine::GetDefaultResource<Camera>();
+     camera->Update();
+     auto camPosition = (Vector2)camera->position;
+
     Engine::ToggleSystemsPause(true);
     AtonementPauseSystem::setPausedESC(true);
     auto& reg = Engine::Registry();
@@ -45,14 +49,14 @@ void AtonementStartMenu::BuildMenu(){
 
     auto& transform = reg.emplace<Transform>(entity);
 
-        transform.position.x = (2.0f) * tileSize;
-        transform.position.y = tileSize/2;
+        transform.position.x = camPosition.x + (2.0f) * tileSize;
+        transform.position.y = camPosition.y + tileSize/2;
         transform.position.z = 1.f;
 
     auto& controller = reg.emplace<SelectionMappingStart>(entity);
     auto& onscreen = reg.emplace<OnScreenToggleStart>(entity);
     
-    
+    /*
     auto entity2 = reg.create();
     auto& sprite2 = reg.emplace<Sprite>(entity2);
     AssignSprite(sprite2, "MenuTextures:exit");
@@ -76,22 +80,25 @@ void AtonementStartMenu::BuildMenu(){
     transform3.position.z = 2.f;
 
     auto& onscreen3 = reg.emplace<OnScreenToggleStart>(entity3);
-    
+    */
 
     auto entity4 = reg.create();
     auto& sprite4 = reg.emplace<Sprite>(entity4);
-    AssignSprite(sprite4, "MenuTextures:start_menu_background");
+    AssignSprite(sprite4, "MenuTextures:start_menu_background2");
 
     auto& transform4 = reg.emplace<Transform>(entity4);
 
-        transform4.position.x = 0.3f;
-        transform4.position.y = 2.0f;
+        transform4.position.x = camPosition.x - 100;
+        transform4.position.y = camPosition.y - 100;
         transform4.position.z = 3.f;
 
     auto& onscreen4 = reg.emplace<OnScreenToggleStart>(entity4);
 }
 
 void AtonementStartMenu::Select(){
+    auto* camera = Engine::GetDefaultResource<Camera>();
+     camera->Update();
+     auto camPosition = (Vector2)camera->position;
 
  auto view = Engine::Registry().view<Transform, SelectionMappingStart>();
     for (auto entity : view)
@@ -99,8 +106,8 @@ void AtonementStartMenu::Select(){
         auto& t = view.get<Transform>(entity);
         auto& ctrl = view.get<SelectionMappingStart>(entity);
 
-        t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
-        t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+        t.position.x = camPosition.x + (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+        t.position.y = camPosition.y + (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
 
         //Engine::Registry().destroy(entity);
     }
@@ -108,12 +115,17 @@ void AtonementStartMenu::Select(){
 }
 
 void AtonementStartMenu::RemoveFromScreenToggle(){
+     auto* camera = Engine::GetDefaultResource<Camera>();
+     camera->Update();
+     auto camPosition = (Vector2)camera->position;
 
     AtonementPauseSystem::setPausedESC(true);
     auto view = Engine::Registry().view<Transform, OnScreenToggleStart>();
     for (auto entity : view){
         auto& t = view.get<Transform>(entity);
         auto& ctrl = view.get<OnScreenToggleStart>(entity); 
+        t.position.x = camPosition.x;
+        t.position.y = camPosition.y;
         t.position.z = t.position.z * -1;
 
         if (t.position.z < 0)
