@@ -29,7 +29,27 @@
 #include "gameplay/atonement/systems/cooldown_manager.h"
 #include "gameplay/atonement/systems/atonement_start_menu.h"
 #include "gameplay/atonement/systems/atonement_pause_menu.h"
+#include "gameplay/atonement/systems/checkpoint_system.h"
+#include "gameplay/atonement/systems/interaction_system.h"
 #include "gameplay/atonement/systems/parallax.h"
+
+namespace atonement
+{
+    void RestartGame()
+    {
+        auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
+        for (const auto& entity : view)
+        {
+            auto&& input = view.get<InputReceiver>(entity);
+            auto&& transf = view.get<Transform>(entity);
+
+            input.contexts.pop_back();
+            input.contexts.push_back("ATON");
+
+            transf.position = Vector3{ -100, -200, 15 };
+        }
+    }
+}
 
 using namespace dagger;
 using namespace atonement;
@@ -75,11 +95,11 @@ struct Character
         auto chr = Character::Get(entity);
 
         chr.sprite.scale = { 1, 1 };
-        chr.sprite.position = { position_, 0.0f };
+        chr.sprite.position = { position_, 15.0f };
         chr.sprite.color = { color_, 1.0f };
 
         chr.collision.size = collision_size_;
-        chr.transform.position = { position_, 0.0f };
+        chr.transform.position = { position_, 15.0f };
 
         AssignSprite(chr.sprite, "BlueWizard:IDLE:idle1");
         AnimatorPlay(chr.animator, "BlueWizard:IDLE");
@@ -126,7 +146,9 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<CooldownManager>();
     engine.AddSystem<AtonementPauseSystem>();
     engine.AddSystem<CameraFollowSystem>();
-    engine.AddPausableSystem<ParallaxSystem>();
+    engine.AddPausableSystem<CheckpointSystem>();
+    engine.AddPausableSystem<IntearactionSystem>();
+    engine.AddSystem<ParallaxSystem>();
 
 #if defined(DAGGER_DEBUG)
 #endif //defined(DAGGER_DEBUG)
@@ -140,42 +162,15 @@ void AtonementGame::WorldSetup(){
     camera->position = { 0, 0, 0 };
     camera->Update();
 
-        //trenutno ucitavamo test scenu, TODO: znapraviti prave velike nivoe
     Engine::Dispatcher().trigger<SaveGameSystem<ECommonSaveArchetype>::LoadRequest>(
-    
-    
-    SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "test_scene.json" });
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {50, 130});
-    mainChar.sprite.scale = { 0.5, 0.5 };
-    //Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
-    /*auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -100 }, {70, 176});
-    mainChar.sprite.scale = { 0.6, 0.6 };*/
+
+    SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
+
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -200 }, {70, 176});
+    mainChar.sprite.scale = { 0.6, 0.6 };
+  
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
-
-    /* Parallax setup */
-    /*
-    auto& reg = Engine::Registry();
-    auto entity = reg.create();
-    auto& sprite = reg.get_or_emplace<Sprite>(entity);
-    auto& parallax = reg.get_or_emplace<Parallax>(entity);
-    parallax.lastCameraPosition = camera->position;
-    parallax.strength = 0.1;
-
-    AssignSprite(sprite, "MossyBackground:scrolling_bg1");
-    sprite.position = { 600, -225, 99 };
-
-    auto entity1 = reg.create();
-    auto& sprite1 = reg.get_or_emplace<Sprite>(entity1);
-    auto& parallax1 = reg.get_or_emplace<Parallax>(entity1);
-    parallax1.lastCameraPosition = camera->position;
-    parallax1.strength = 0.1;
-
-    AssignSprite(sprite1, "MossyBackground:scrolling_bg1");
-    sprite1.position = { sprite.position.x + sprite.size.x, -225, 100 };
-    sprite1.scale.x *= -1;*/
 }
-
-
 
 ECommonSaveArchetype AtonementGame::Save(Entity entity_, JSON::json& saveTo_)
 {
@@ -207,6 +202,24 @@ ECommonSaveArchetype AtonementGame::Save(Entity entity_, JSON::json& saveTo_)
         archetype = archetype | ECommonSaveArchetype::Physics;
     }
 
+    if (registry.has<BouncyComponent>(entity_))
+    {
+        saveTo_["bouncy_component"] = SerializeComponent<BouncyComponent>(registry.get<BouncyComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Bouncy;
+    }
+
+    if (registry.has<DeadlyComponent>(entity_))
+    {
+        saveTo_["deadly_component"] = SerializeComponent<DeadlyComponent>(registry.get<DeadlyComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Deadly;
+    }
+
+    if (registry.has<InteractableComponent>(entity_))
+    {
+        saveTo_["interactable_component"] = SerializeComponent<InteractableComponent>(registry.get<InteractableComponent>(entity_));
+        archetype = archetype | ECommonSaveArchetype::Interactable;
+    }
+
     // todo: add new if-block here and don't forget to change archetype
 
     return archetype;
@@ -227,6 +240,15 @@ void AtonementGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::
 
     if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Physics))
         DeserializeComponent<SimpleCollision>(loadFrom_["simple_collision"], registry.emplace<SimpleCollision>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Bouncy))
+        DeserializeComponent<BouncyComponent>(loadFrom_["bouncy_component"], registry.emplace<BouncyComponent>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Deadly))
+        DeserializeComponent<DeadlyComponent>(loadFrom_["deadly_component"], registry.emplace<DeadlyComponent>(entity_));
+
+    if (IS_ARCHETYPE_SET(archetype_, ECommonSaveArchetype::Interactable))
+        DeserializeComponent<InteractableComponent>(loadFrom_["interactable_component"], registry.emplace<InteractableComponent>(entity_));
 
     // todo: add new if-block here and don't forget to change archetype
 }
