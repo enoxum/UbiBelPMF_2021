@@ -33,26 +33,10 @@
 #include "gameplay/atonement/systems/interaction_system.h"
 #include "gameplay/atonement/systems/parallax.h"
 
-namespace atonement
-{
-    void RestartGame()
-    {
-        auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
-        for (const auto& entity : view)
-        {
-            auto&& input = view.get<InputReceiver>(entity);
-            auto&& transf = view.get<Transform>(entity);
-
-            input.contexts.pop_back();
-            input.contexts.push_back("ATON");
-
-            transf.position = Vector3{ -100, -200, 15 };
-        }
-    }
-}
 
 using namespace dagger;
 using namespace atonement;
+
 
 struct Character
 {
@@ -251,4 +235,19 @@ void AtonementGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::
         DeserializeComponent<InteractableComponent>(loadFrom_["interactable_component"], registry.emplace<InteractableComponent>(entity_));
 
     // todo: add new if-block here and don't forget to change archetype
+}
+
+void AtonementGame::RestartGame()
+{
+    auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
+        for (const auto& entity : view)
+        {
+            auto&& input = view.get<InputReceiver>(entity);
+            auto&& transf = view.get<Transform>(entity);
+
+            input.contexts.pop_back();
+            input.contexts.push_back("ATON");
+
+            transf.position = Vector3{ -100, -200, 15 };
+    }
 }

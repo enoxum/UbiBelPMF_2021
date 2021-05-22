@@ -7,6 +7,7 @@
 #include "core/graphics/sprite.h"
 #include "core/game/transforms.h"
 #include "atonement_pause_system.h"
+#include "gameplay/atonement/atonement_main.h"
 
 
 using namespace dagger;
@@ -161,6 +162,7 @@ void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
                 else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
                 {
                     RemoveFromScreenToggle();
+                    atonement::AtonementGame::RestartGame();
                     Engine::ToggleSystemsPause(false);
                 }
                 else if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 5)
