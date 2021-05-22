@@ -22,22 +22,24 @@ namespace brawler
         Entity entity;
         Bullet& bullet;
         Transform& transform;
+        SimpleCollision& simCol;
         WeaponCollision& col;
         Sprite& sprite;
-        //Player& owner;
 
         static BulletEntity Get(Entity entity)
         {
             auto& reg = Engine::Registry();
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
+            auto& simCol = reg.get_or_emplace<SimpleCollision>(entity);
             auto& col = reg.get_or_emplace<WeaponCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
 
-            return BulletEntity{ entity, bullet, transform, col, sprite };
+            return BulletEntity{ entity, bullet, transform, simCol, col, sprite };
         }
 
         static BulletEntity Create(
+            Entity owner,
             WeaponType weaponType = WeaponType::BANANA,
             int size   = 3,
             int damage = 10,
@@ -49,11 +51,14 @@ namespace brawler
 
             auto bullet = BulletEntity::Get(entity);
 
+            bullet.bullet.owner = owner;
+            bullet.bullet.type = weaponType;
+
             bullet.transform.position = { position_, 0.0f };
 
             bullet.sprite.position = { position_, 0.0f };
             bullet.sprite.size = { 1, 1 };
-            bullet.bullet.type = 0;
+            bullet.bullet.projectile = false;
 
             switch(weaponType){
                 case WeaponType::BAZOOKA:
@@ -85,6 +90,8 @@ namespace brawler
             bullet.bullet.direction = dir;
             bullet.bullet.damage = damage;
             bullet.sprite.scale.x *= dir;
+
+            bullet.simCol.size = {bullet.sprite.size.x*bullet.sprite.scale.x, bullet.sprite.size.y*bullet.sprite.scale.y};
 
             BulletSystem::s_ActiveBullets++;
 

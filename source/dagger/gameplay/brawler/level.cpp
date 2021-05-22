@@ -5,6 +5,8 @@
 #include "gameplay/brawler/systems/level_system.h"
 #include "core/graphics/sprite.h"
 
+#include "gameplay/brawler/components/tile.h"
+
 using namespace dagger;
 using namespace brawler;
 
@@ -41,6 +43,13 @@ void Level::Load(String map)
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
 				sprite.scale = { texture.scale, texture.scale };
 				sprite.position = { TileToWorld(x, y), 1 };
+				
+				auto& transform = reg.get_or_emplace<Transform>(tile);
+				transform.position = sprite.position;
+
+				auto& col = reg.get_or_emplace<SimpleCollision>(tile);
+				col.size = {TILE_WIDTH, TILE_HEIGHT};
+				auto& t = reg.get_or_emplace<Tile>(tile);
 			}
 		}
 	}
@@ -57,8 +66,8 @@ void Level::Load(String map)
 
 	auto player1 = BrawlerCharacter::Create("controller_1", 
 		{ TileToWorldX(level->player1.x), TileToWorldY(level->player1.y) }, level->player1.isLeft);
-	// auto player2 = BrawlerCharacter::Create("controller_2",
-	// 	{ TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, level->player2.isLeft);
+	auto player2 = BrawlerCharacter::Create("controller_1",
+		{ TileToWorldX(level->player2.x), TileToWorldY(level->player2.y) }, level->player2.isLeft);
 }
 
 std::optional<float> Level::getGround(Transform& t, Movable& m, SimpleCollision& c) {

@@ -52,7 +52,7 @@ void ShootingSystem::Run()
 
 	auto view = Engine::Registry().view<Sprite, InputReceiver, Player, Transform, Movable>();
 
-    view.each([](auto &sprite, auto &input, auto& player, auto& transform, auto& movable) {
+    view.each([](const auto entity, auto &sprite, auto &input, auto& player, auto& transform, auto& movable) {
         // TODO cooldown
 
         auto& t = Engine::Registry().get<Transform>(player.currentWeapon);
@@ -82,7 +82,11 @@ void ShootingSystem::Run()
             if(isProjectile(weapon.weaponType())){
                 movable.speed.x -= sprite.scale.x * weapon.recoil();
                 Vector3 pos = {transform.position.x + trans_x, transform.position.y + trans_y, transform.position.z};
-                ProjectileEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
+                if(weapon.weaponType() == WeaponType::C4){
+                    ProjectileEntity::Create(entity, weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1, 3.0, true);
+                }else{
+                    ProjectileEntity::Create(entity, weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
+                }
             }else if(isConsumable(weapon.weaponType())){
         
             }else{
@@ -91,7 +95,7 @@ void ShootingSystem::Run()
                     trans_y *= -1;
                 }
                 Vector3 pos = {transform.position.x, transform.position.y + trans_y, transform.position.z};
-                BulletEntity::Create(weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);        
+                BulletEntity::Create(entity, weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
             }
 
             if(weapon.currentAmmoInClip() == 0){

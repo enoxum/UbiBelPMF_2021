@@ -6,10 +6,10 @@ using namespace dagger;
 
 namespace brawler 
 {
-    class WeaponCollisionSystem : public System
+    class BulletCollisionSystem : public System
     {
     public:
-        inline String SystemName() { return "Weapon Collision System"; }
+        inline String SystemName() { return "Bullet Collision System"; }
 
         void Run() override;
     };
