@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "core/engine.h"
+#include "core/audio.h"
 #include "core/input/inputs.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
@@ -101,6 +102,7 @@ void AtonementGame::CoreSystemsSetup()
 {
     auto& engine = Engine::Instance();
 
+    engine.AddSystem<AudioSystem>();
     engine.AddSystem<WindowSystem>();
     engine.AddSystem<InputSystem>();
     engine.AddSystem<ShaderSystem>();
@@ -139,6 +141,9 @@ void AtonementGame::GameplaySystemsSetup()
 }
 
 void AtonementGame::WorldSetup(){
+
+    Engine::GetDefaultResource<Audio>()->PlayLoop("music1");
+
     auto* camera = Engine::GetDefaultResource<Camera>();
     camera->mode = ECameraMode::FixedResolution;
     camera->size = { 1920, 1080 };
@@ -154,6 +159,7 @@ void AtonementGame::WorldSetup(){
     mainChar.sprite.scale = { 0.6, 0.6 };
   
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
+
 }
 
 ECommonSaveArchetype AtonementGame::Save(Entity entity_, JSON::json& saveTo_)
