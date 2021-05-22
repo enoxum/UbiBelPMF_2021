@@ -89,7 +89,7 @@ void AtonementStartMenu::BuildMenu(){
     auto& transform4 = reg.emplace<Transform>(entity4);
 
         transform4.position.x = camPosition.x - 100;
-        transform4.position.y = camPosition.y - 100;
+        transform4.position.y = camPosition.y ;
         transform4.position.z = 3.f;
 
     auto& onscreen4 = reg.emplace<OnScreenToggleStart>(entity4);
