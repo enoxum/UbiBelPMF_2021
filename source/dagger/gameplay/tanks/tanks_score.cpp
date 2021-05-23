@@ -76,6 +76,7 @@ void ScoreSystem::Run()
         auto& reg = Engine::Registry();
         textWinner.Set("pixel-font", "Red won!");
         text1.Set("pixel-font", "Blue hp: 0", { (-6) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
+        dagger::Engine::ToggleSystemsPause(true);
         
     }
     if (!tank2Exists)
@@ -83,5 +84,6 @@ void ScoreSystem::Run()
         auto& reg = Engine::Registry();
         textWinner.Set("pixel-font", "Blue won!");
         text2.Set("pixel-font", "Red hp: 0", { (7) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
+        dagger::Engine::ToggleSystemsPause(true);
     }
 }
