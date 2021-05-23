@@ -20,10 +20,15 @@ void ScoreSystem::SpinUp()
     auto& reg = Engine::Registry();
     score1 = reg.create();
     text1 = reg.emplace<Text>(score1);
+   
     text1.spacing = 0.6f;
     score2 = reg.create();
     text2 = reg.emplace<Text>(score2);
     text2.spacing = 0.6f;
+
+    winner = reg.create();
+    textWinner = reg.emplace<Text>(winner);
+    textWinner.spacing = 1.0f;
 
 }
 
@@ -68,10 +73,15 @@ void ScoreSystem::Run()
     }
     if (!tank1Exists)
     {
+        auto& reg = Engine::Registry();
+        textWinner.Set("pixel-font", "Red won!");
         text1.Set("pixel-font", "Blue hp: 0", { (-6) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
+        
     }
     if (!tank2Exists)
     {
+        auto& reg = Engine::Registry();
+        textWinner.Set("pixel-font", "Blue won!");
         text2.Set("pixel-font", "Red hp: 0", { (7) * BLOCK_SIZE, 9 * BLOCK_SIZE + 2,0 });
     }
 }

@@ -19,4 +19,6 @@ private:
     Entity score2;
     Text text1;
     Text text2;
+    Entity winner;
+    Text textWinner;
 };
