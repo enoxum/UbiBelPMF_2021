@@ -10,6 +10,7 @@
 #include "core/graphics/textures.h"
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
+#include "core/graphics/text.h"
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
@@ -18,7 +19,8 @@
 #include "tank_movement.h"
 #include "tilemap.h"
 #include "tank_bullet.h"
-
+#include "tanks_score.h"
+#include <string> 
 #define BLOCK_SIZE 42
 
 using namespace dagger;
@@ -49,6 +51,7 @@ void TanksGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddSystem<TilemapSystem>();
     engine_.AddPausableSystem<TankMovement>();
     engine_.AddPausableSystem<TankBulletSystem>();
+    engine_.AddSystem<ScoreSystem>();
     
 #if defined(DAGGER_DEBUG)
     
@@ -173,7 +176,6 @@ void tanks::SetupWorld(Engine& engine_)
         auto& tank = reg.emplace<Tank>(entity);
         tank.angle = -90.0f;
         tank.description = "tank2";
-        
         auto& controller = reg.emplace<ControllerMapping>(entity);
         TankMovement::SetupPlayerTwoMovement(controller);
         
