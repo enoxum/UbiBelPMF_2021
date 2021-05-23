@@ -28,7 +28,7 @@ void ScoreSystem::SpinUp()
 
     winner = reg.create();
     textWinner = reg.emplace<Text>(winner);
-    textWinner.spacing = 1.0f;
+    textWinner.spacing = 1.5f;
 
 }
 
