@@ -142,7 +142,7 @@ void AtonementGame::GameplaySystemsSetup()
 
 void AtonementGame::WorldSetup(){
 
-    Engine::GetDefaultResource<Audio>()->PlayLoop("music1");
+    Engine::GetDefaultResource<Audio>()->PlayLoop("music");
 
     auto* camera = Engine::GetDefaultResource<Camera>();
     camera->mode = ECameraMode::FixedResolution;
