@@ -29,6 +29,7 @@
 #include "gameplay/atonement/systems/cooldown_manager.h"
 #include "gameplay/atonement/systems/atonement_start_menu.h"
 #include "gameplay/atonement/systems/atonement_pause_menu.h"
+#include "gameplay/atonement/systems/atonement_end_screen.h"
 #include "gameplay/atonement/systems/checkpoint_system.h"
 #include "gameplay/atonement/systems/interaction_system.h"
 #include "gameplay/atonement/systems/parallax.h"
@@ -121,6 +122,7 @@ void AtonementGame::GameplaySystemsSetup()
 
     engine.AddSystem<AtonementStartMenu>();
     engine.AddSystem<AtonementPauseMenu>();
+    engine.AddSystem<AtonementEndScreen>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<CharacterCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
