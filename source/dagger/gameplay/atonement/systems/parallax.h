@@ -10,8 +10,24 @@ namespace atonement
 {
     struct Parallax
     {
-        Vector2 lastCameraPosition{ 0, 0 };
-        Float32 strength{ 0 };
+        static Vector2 lastCameraPosition;
+        static Float32 strength;
+        Entity left;
+        Bool assignedLeft = false;
+        Entity right;
+        Bool assignedRight = false;
+
+        Bool moved = false;
+
+        void assignRight(Entity r) {
+            right = r;
+            assignedRight = true;
+        }
+
+        void assignLeft(Entity l) {
+            left = l;
+            assignedLeft = true;
+        }
     };
 
     class ParallaxSystem
@@ -26,7 +42,7 @@ namespace atonement
         void Run() override;
 
     private:
-        Sprite leftmost;
-        Sprite rightmost;
+        Entity leftmost;
+        Entity rightmost;
     };
 }
