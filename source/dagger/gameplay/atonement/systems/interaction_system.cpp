@@ -152,7 +152,6 @@ void IntearactionSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
     {
         //std::cout << "Pressed E\n";
         UnlockAbility(nearestLoreStone.second);
-        Engine::ToggleSystemsPause(true);
     }
 }
 
@@ -192,6 +191,7 @@ void IntearactionSystem::UnlockAbility(int abilityId)
         // abilityId = 3  -> THE END
         else if (abilityId == 3) 
         {
+            Engine::ToggleSystemsPause(true);
             AtonementPauseSystem::setPausedESC(true);
             AtonementEndScreen::RemoveFromScreenToggle();
             
