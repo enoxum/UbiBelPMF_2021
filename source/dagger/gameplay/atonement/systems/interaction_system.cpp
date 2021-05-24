@@ -12,6 +12,8 @@
 #include "gameplay/atonement/components/marker_components.h"
 #include "gameplay/atonement/systems/character_collisions.h"
 #include "gameplay/atonement/atonement_controller.h"
+#include "gameplay/atonement/systems/atonement_end_screen.h"
+#include "gameplay/atonement/systems/atonement_pause_system.h"
 #include <iostream>
 
 using namespace dagger;
@@ -146,7 +148,7 @@ void IntearactionSystem::Run()
 
 void IntearactionSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-    if (interactionInputEnabled && kEvent_.key == EDaggerKeyboard::KeyE)
+    if (interactionInputEnabled && kEvent_.key == EDaggerKeyboard::KeyE && kEvent_.action == EDaggerInputState::Pressed)
     {
         //std::cout << "Pressed E\n";
         UnlockAbility(nearestLoreStone.second);
@@ -185,6 +187,14 @@ void IntearactionSystem::UnlockAbility(int abilityId)
                 auto& interactPromptTransform = Engine::Registry().get<Transform>(WJPrompt);
                 interactPromptTransform.position.z = 10;
             }
+        }
+        // abilityId = 3  -> THE END
+        else if (abilityId == 3) 
+        {
+            Engine::ToggleSystemsPause(true);
+            AtonementPauseSystem::setPausedESC(true);
+            AtonementEndScreen::RemoveFromScreenToggle();
+            
         }
 
         //std::cout << "ability unlocked: id = " << abilityId << std::endl;

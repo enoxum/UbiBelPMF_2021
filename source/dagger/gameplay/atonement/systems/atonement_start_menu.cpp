@@ -94,6 +94,8 @@ void AtonementStartMenu::BuildMenu(){
         transform4.position.z = 3.f;
 
     auto& onscreen4 = reg.emplace<OnScreenToggleStart>(entity4);
+
+    onScreen = true;
 }
 
 void AtonementStartMenu::Select(){
@@ -171,14 +173,16 @@ void AtonementStartMenu::OnKeyboardEvent(KeyboardEvent kEvent_){
                 }
                 
             }
-            /*else
-            {
-                if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed)
-                {
-                    AtonementStartMenu::RemoveFromScreenToggle();
-                }
-            }*/
         }
         );
         
+}
+
+void AtonementStartMenu::DestroyMenu()
+{
+    auto view = Engine::Registry().view<Transform, OnScreenToggleStart>();
+    for (auto entity : view)
+    {
+    Engine::Registry().destroy(entity);
+    }
 }

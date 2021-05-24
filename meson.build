@@ -61,6 +61,7 @@ sources = [
     'source/dagger/gameplay/atonement/systems/atonement_pause_menu.cpp',
     'source/dagger/gameplay/atonement/systems/atonement_pause_system.cpp',
     'source/dagger/gameplay/atonement/systems/atonement_start_menu.cpp',
+    'source/dagger/gameplay/atonement/systems/atonement_end_screen.cpp',
     'source/dagger/gameplay/atonement/systems/character_collisions.cpp',
     'source/dagger/gameplay/atonement/systems/checkpoint_system.cpp',
     'source/dagger/gameplay/atonement/systems/collision_handler_system.cpp',

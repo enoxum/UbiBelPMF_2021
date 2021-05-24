@@ -30,6 +30,7 @@
 #include "gameplay/atonement/systems/cooldown_manager.h"
 #include "gameplay/atonement/systems/atonement_start_menu.h"
 #include "gameplay/atonement/systems/atonement_pause_menu.h"
+#include "gameplay/atonement/systems/atonement_end_screen.h"
 #include "gameplay/atonement/systems/checkpoint_system.h"
 #include "gameplay/atonement/systems/interaction_system.h"
 #include "gameplay/atonement/systems/parallax.h"
@@ -123,6 +124,7 @@ void AtonementGame::GameplaySystemsSetup()
 
     engine.AddSystem<AtonementStartMenu>();
     engine.AddSystem<AtonementPauseMenu>();
+    engine.AddSystem<AtonementEndScreen>();
     engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<CharacterCollisionsSystem>();
     engine.AddSystem<SaveGameSystem<ECommonSaveArchetype>>(this);
@@ -245,7 +247,15 @@ void AtonementGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::
 
 void AtonementGame::RestartGame()
 {
+        auto* camera = Engine::GetDefaultResource<Camera>();
+        camera->mode = ECameraMode::FixedResolution;
+        camera->size = { 1920, 1080 };
+        camera->zoom = 1;
+        camera->position = { 0, 0, 0 };
+        camera->Update();
+    
     auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
+    
         for (const auto& entity : view)
         {
             auto&& input = view.get<InputReceiver>(entity);
@@ -253,6 +263,9 @@ void AtonementGame::RestartGame()
 
             input.contexts.pop_back();
             input.contexts.push_back("ATON");
+
+
+            
 
             transf.position = Vector3{ -100, -200, 15 };
     }
