@@ -6,7 +6,6 @@
 #include "gameplay/brawler/level.h"
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/components/movable.h"
-#include "gameplay/brawler/components/weapon_collision.h"
 #include "gameplay/brawler/components/tile.h"
 
 #include "iostream"
@@ -16,7 +15,7 @@ using namespace dagger;
 
 void BulletCollisionSystem::Run()
 {
-    auto bullets = Engine::Registry().view<Bullet, Transform, WeaponCollision, SimpleCollision>();
+    auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision>();
     auto players = Engine::Registry().view<SimpleCollision, Transform, Movable, Player>();
     auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 

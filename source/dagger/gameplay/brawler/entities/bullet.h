@@ -6,11 +6,11 @@
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 
-#include "gameplay/brawler/components/weapon_collision.h"
 #include "gameplay/brawler/components/bullet.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/weapon.h"
 #include "gameplay/brawler/components/movable.h"
+#include "gameplay/common/simple_collisions.h"
 
 using namespace dagger;
 
@@ -23,7 +23,6 @@ namespace brawler
         Bullet& bullet;
         Transform& transform;
         SimpleCollision& simCol;
-        WeaponCollision& col;
         Sprite& sprite;
 
         static BulletEntity Get(Entity entity)
@@ -32,10 +31,9 @@ namespace brawler
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& simCol = reg.get_or_emplace<SimpleCollision>(entity);
-            auto& col = reg.get_or_emplace<WeaponCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
 
-            return BulletEntity{ entity, bullet, transform, simCol, col, sprite };
+            return BulletEntity{ entity, bullet, transform, simCol, sprite };
         }
 
         static BulletEntity Create(

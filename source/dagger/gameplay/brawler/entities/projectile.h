@@ -5,7 +5,6 @@
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 
-#include "gameplay/brawler/components/weapon_collision.h"
 #include "gameplay/brawler/components/bullet.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/weapon.h"
@@ -24,7 +23,6 @@ namespace brawler
         Movable& mov;
         Transform& transform;
         SimpleCollision& simCol;
-        WeaponCollision& col;
         Sprite& sprite;
         Animator& animator;
 
@@ -35,11 +33,10 @@ namespace brawler
             auto& mov = reg.get_or_emplace<Movable>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
             auto& simCol = reg.get_or_emplace<SimpleCollision>(entity);
-            auto& col = reg.get_or_emplace<WeaponCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
             auto& animator = reg.get_or_emplace<Animator>(entity);
 
-            return ProjectileEntity{ entity, bullet, mov, transform, simCol, col, sprite, animator };
+            return ProjectileEntity{ entity, bullet, mov, transform, simCol, sprite, animator };
         }
 
         static ProjectileEntity Create(
