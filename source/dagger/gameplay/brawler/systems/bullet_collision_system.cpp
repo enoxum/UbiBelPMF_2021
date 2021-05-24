@@ -16,11 +16,8 @@ using namespace dagger;
 
 void BulletCollisionSystem::Run()
 {
-    // Dohvataju se metci i projektili
     auto bullets = Engine::Registry().view<Bullet, Transform, WeaponCollision, SimpleCollision>();
-    // Dohvataju se igraci
     auto players = Engine::Registry().view<SimpleCollision, Transform, Movable, Player>();
-    // Dohvatanje tile-ova
     auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 
     for(auto bullet : bullets){
@@ -35,12 +32,12 @@ void BulletCollisionSystem::Run()
 
         for(auto player : players){
 
+            if(b.owner == player)
+                continue;
+
             auto &col = players.get<SimpleCollision>(player);
             auto &tr = players.get<Transform>(player);
             auto &mov = players.get<Movable>(player);
-            
-            if(b.owner == player)
-                continue;
 
             //processing one collision per frame for each colider
             if (collision.IsCollided(transform.position, col, tr.position))

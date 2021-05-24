@@ -9,18 +9,13 @@
 #include "gameplay/brawler/components/weapon_collision.h"
 #include "gameplay/brawler/components/tile.h"
 
-#include "iostream"
-
 using namespace brawler;
 using namespace dagger;
 
 void ProjectileCollisionSystem::Run()
 {
-    // Dohvataju se metci i projektili
     auto bullets = Engine::Registry().view<Bullet, Transform, WeaponCollision, SimpleCollision, Animator, Movable>();
-    // Dohvataju se igraci
     auto players = Engine::Registry().view<SimpleCollision, Transform, Movable, Player>();
-    // Dohvatanje tile-ova
     auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 
     for(auto bullet : bullets){
@@ -52,7 +47,6 @@ void ProjectileCollisionSystem::Run()
                     AnimatorPlay(animator, "EXPLOSION");
                 }
             }
-            // TODO Timer
             break;
         case WeaponType::MINE:
 
