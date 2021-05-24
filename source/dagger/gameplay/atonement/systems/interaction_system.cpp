@@ -148,10 +148,11 @@ void IntearactionSystem::Run()
 
 void IntearactionSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-    if (interactionInputEnabled && kEvent_.key == EDaggerKeyboard::KeyE)
+    if (interactionInputEnabled && kEvent_.key == EDaggerKeyboard::KeyE && kEvent_.action == EDaggerInputState::Pressed)
     {
         //std::cout << "Pressed E\n";
         UnlockAbility(nearestLoreStone.second);
+        Engine::ToggleSystemsPause(true);
     }
 }
 

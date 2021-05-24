@@ -8,6 +8,7 @@
 #include "core/game/transforms.h"
 #include "atonement_pause_system.h"
 #include "atonement_start_menu.h"
+#include <iostream>
 
 
 using namespace dagger;
@@ -66,7 +67,6 @@ void AtonementEndScreen::RemoveFromScreenToggle(){
         if (t.position.z < 0)
         {
             AtonementEndScreen::onScreen = false;
-            AtonementPauseSystem::setPausedESC(false);
         }
         else
         {
@@ -87,10 +87,14 @@ void AtonementEndScreen::OnKeyboardEvent(KeyboardEvent kEvent_){
             if (AtonementEndScreen::onScreen == true){
                 if (kEvent_.key == ctrl_.enterKey && kEvent_.action == EDaggerInputState::Pressed)
                 {
+                   
+                    Engine::ToggleSystemsPause(true);
                     atonement::AtonementGame::RestartGame();
-                    AtonementStartMenu::RemoveFromScreenToggle();
+                    AtonementStartMenu::DestroyMenu();
+                    //AtonementStartMenu::RemoveFromScreenToggle();
+                    AtonementStartMenu::BuildMenu();
                     RemoveFromScreenToggle();
-
+                    AtonementPauseSystem::setPausedESC(true);
                 }
                 
                 

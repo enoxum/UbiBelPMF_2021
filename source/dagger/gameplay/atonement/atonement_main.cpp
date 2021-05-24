@@ -152,7 +152,7 @@ void AtonementGame::WorldSetup(){
 
     SaveGameSystem<ECommonSaveArchetype>::LoadRequest{ "level_1.json" });
 
-    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { -100, -200 }, {70, 176});
+    auto mainChar = Character::Create("ATON", { 1, 1, 1 }, { 8500, -800 }, {70, 176});
     mainChar.sprite.scale = { 0.6, 0.6 };
   
     Engine::Registry().emplace<CameraFollowFocus>(mainChar.entity);
@@ -241,7 +241,15 @@ void AtonementGame::Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::
 
 void AtonementGame::RestartGame()
 {
+        auto* camera = Engine::GetDefaultResource<Camera>();
+        camera->mode = ECameraMode::FixedResolution;
+        camera->size = { 1920, 1080 };
+        camera->zoom = 1;
+        camera->position = { 0, 0, 0 };
+        camera->Update();
+    
     auto&& view = Engine::Registry().view<AtonementController::AtonementCharacter, InputReceiver, Transform>();
+    
         for (const auto& entity : view)
         {
             auto&& input = view.get<InputReceiver>(entity);
@@ -249,6 +257,9 @@ void AtonementGame::RestartGame()
 
             input.contexts.pop_back();
             input.contexts.push_back("ATON");
+
+
+            
 
             transf.position = Vector3{ -100, -200, 15 };
     }

@@ -33,6 +33,7 @@ namespace atonement {
          void Select();
          static void BuildMenu();
          static void RemoveFromScreenToggle();
+         static void DestroyMenu();
          String SystemName();
     };
 };
