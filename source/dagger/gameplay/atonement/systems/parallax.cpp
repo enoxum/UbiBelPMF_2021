@@ -35,13 +35,13 @@ void ParallaxSystem::Run()
                 sprite_.position.y = camPosition.y;
 
                 if (parallax_.assignedLeft) {
-                    auto& [para, spr] = reg.get<Parallax, Sprite>(parallax_.left);
+                    auto&& [para, spr] = reg.get<Parallax, Sprite>(parallax_.left);
                     spr.position.x = sprite_.position.x - sprite_.size.x;
                     spr.position.y = camPosition.y;
                     para.moved = true;
                 }
                 if (parallax_.assignedRight) {
-                    auto& [para, spr] = reg.get<Parallax, Sprite>(parallax_.right);
+                    auto&& [para, spr] = reg.get<Parallax, Sprite>(parallax_.right);
                     spr.position.x = sprite_.position.x + sprite_.size.x;
                     spr.position.y = camPosition.y;
                     para.moved = true;
