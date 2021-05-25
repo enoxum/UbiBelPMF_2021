@@ -58,5 +58,6 @@ void MenuPause::OnRestart()
 void MenuPause::OnQuit()
 {
 	Toggle();
+	Engine::Registry().clear();
 	Engine::GetDefaultResource<MenuMain>()->Toggle();
 }

@@ -22,7 +22,8 @@ public:
     void DestroyMenu() override;
 
 private:
-    void OnPlay();
+    void OnPlayLevel1();
+    void OnPlayLevel2();
     void OnQuit();
 
     Entity background;

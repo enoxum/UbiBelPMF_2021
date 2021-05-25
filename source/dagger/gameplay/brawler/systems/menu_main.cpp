@@ -28,9 +28,11 @@ void MenuMain::CreateMenu()
 		backgroundSprite.scale = { 1280.0f, 720.0f };
 		backgroundSprite.color = { 0.0f, 0.0f, 0.0f, 0.9f };
 	}
-	Button &bPlay = AddButton(0, 100, "Play", "ui:button_blue", "ui:button_blue_selected");
-	bPlay.onSelected.connect<&MenuMain::OnPlay>(this);
-	Button &bQuit = AddButton(0, -100, "Quit", "ui:button_red", "ui:button_red_selected");
+	Button &bPlay1 = AddButton(0, 150, "Play Level 1", "ui:button_blue", "ui:button_blue_selected");
+	bPlay1.onSelected.connect<&MenuMain::OnPlayLevel1>(this);
+	Button& bPlay2 = AddButton(0, 0, "Play Level 2", "ui:button_blue", "ui:button_blue_selected");
+	bPlay2.onSelected.connect<&MenuMain::OnPlayLevel2>(this);
+	Button &bQuit = AddButton(0, -150, "Quit", "ui:button_red", "ui:button_red_selected");
 	bQuit.onSelected.connect<&MenuMain::OnQuit>(this);
 }
 
@@ -41,10 +43,16 @@ void brawler::MenuMain::DestroyMenu()
 	reg.destroy(background);
 }
 
-void MenuMain::OnPlay()
+void MenuMain::OnPlayLevel1()
 {
 	Toggle();
 	Level::Load("default");
+}
+
+void MenuMain::OnPlayLevel2()
+{
+	Toggle();
+	Level::Load("factory");
 }
 
 void MenuMain::OnQuit()
