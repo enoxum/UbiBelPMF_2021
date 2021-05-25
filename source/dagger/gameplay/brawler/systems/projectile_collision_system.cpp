@@ -11,6 +11,54 @@
 using namespace brawler;
 using namespace dagger;
 
+float ProjectileCollisionSystem::s_grenadeSquaredRange = 200.0f;
+float ProjectileCollisionSystem::s_c4SquaredRange = 300.0f;
+
+
+
+
+float ProjectileCollisionSystem::getDamageCoeff(const Vector3& playerPosition, const Vector3& projectilePosition, float range)
+{
+    float dist = sqrt((playerPosition.x - projectilePosition.x) * (playerPosition.x - projectilePosition.x) + (playerPosition.y - projectilePosition.y) * (playerPosition.y - projectilePosition.y));
+    if (dist > range)
+        return 0.0f;
+
+    return 1/dist;
+    
+}
+
+
+bool ProjectileCollisionSystem::explodePlayer(Player& player,
+                                              Movable& playerMovable,
+                                              Bullet& bullet,
+                                              const Vector3& playerPosition,
+                                              const Vector3& bulletPosition,
+                                              float bulletSquareRange)
+{
+    float damage_coeff = getDamageCoeff(playerPosition, bulletPosition, bulletSquareRange);
+    if (damage_coeff == 0) {
+        return false;
+    }
+
+    damage_coeff *= 100;
+
+    auto vec = bulletPosition - playerPosition;
+
+    float mag = sqrt(vec.x * vec.x + vec.y * vec.y);
+    if (mag == 0) {
+        mag = 1;
+    }
+    Vector2 frljukVec = {100*damage_coeff * vec.x / mag, 100*damage_coeff * vec.y / mag };
+    playerMovable.speed -= frljukVec;
+
+    bool dead = player.dealDamage(damage_coeff * bullet.damage);
+    Logger::info("Dealing damage: {}", damage_coeff * bullet.damage);
+    Logger::info("Frljuk: {}, {}", frljukVec.x, frljukVec.y);
+
+    return dead;
+
+}
+
 void ProjectileCollisionSystem::Run()
 {
     auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision, Animator, Movable>();
@@ -44,6 +92,18 @@ void ProjectileCollisionSystem::Run()
                 if(b.duration < 0){
                     b.timer = false;
                     AnimatorPlay(animator, "EXPLOSION");
+                    if (b.done)
+                        break;
+                    b.done = true;
+                    for (auto affectedPlayerEntity : players)
+                    {
+                        explodePlayer(players.get<Player>(affectedPlayerEntity),
+                            players.get<Movable>(affectedPlayerEntity), 
+                            b, 
+                            players.get<Transform>(affectedPlayerEntity).position, 
+                            transform.position, ProjectileCollisionSystem::s_c4SquaredRange);
+                    }
+
                 }
             }
             break;
@@ -53,6 +113,7 @@ void ProjectileCollisionSystem::Run()
                 auto &col = players.get<SimpleCollision>(player);
                 auto &tr = players.get<Transform>(player);
                 auto &mov = players.get<Movable>(player);
+                auto &p = players.get<Player>(player);
                 
                 if(b.owner == player)
                     continue;
@@ -66,7 +127,7 @@ void ProjectileCollisionSystem::Run()
                     auto vec = transform.position - tr.position;
 
                     mov.speed -= Vector2{vec.x*50, vec.y*50};
-                    // TODO Reduce health
+                    bool dead = p.dealDamage(b.damage);
                     break;
                 }
             }   
@@ -74,6 +135,20 @@ void ProjectileCollisionSystem::Run()
         case WeaponType::GRANADE:
             if(movable.isOnGround){
                 AnimatorPlay(animator, "EXPLOSION");
+                if (b.done)
+                    break;
+                b.done = true;
+
+                for (auto affectedPlayerEntity : players)
+                {
+                    explodePlayer(players.get<Player>(affectedPlayerEntity),
+                        players.get<Movable>(affectedPlayerEntity),
+                        b,
+                        players.get<Transform>(affectedPlayerEntity).position,
+                        transform.position, 
+                        ProjectileCollisionSystem::s_grenadeSquaredRange);
+                }
+
             }
             break;
         default:

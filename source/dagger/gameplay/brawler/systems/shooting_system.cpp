@@ -88,7 +88,23 @@ void ShootingSystem::Run()
                     ProjectileEntity::Create(entity, weapon.weaponType(), weapon.bulletSize(), weapon.damage(), pos, sprite.scale.x>=0.0f? 1 : -1);
                 }
             }else if(isConsumable(weapon.weaponType())){
-        
+                if (weapon.weaponType() == WeaponType::BANANA)
+                {
+                    float eeeeee = rand() % 20;
+                    bool what = rand() % 2 == 0;
+                    if (what)
+                    {
+                        player.dealDamage(eeeeee);
+                    }
+                    else {
+                        player.giveHealth(eeeeee);
+                    }
+                    
+                }
+
+                else {
+                    player.giveHealth(20);
+                }
             }else{
                 movable.speed.x -= sprite.scale.x * weapon.recoil();
                 if(trans_y < 0){

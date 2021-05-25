@@ -37,12 +37,15 @@ void BulletCollisionSystem::Run()
             auto &col = players.get<SimpleCollision>(player);
             auto &tr = players.get<Transform>(player);
             auto &mov = players.get<Movable>(player);
+            
 
             //processing one collision per frame for each colider
             if (collision.IsCollided(transform.position, col, tr.position))
             {
                 // Logic
                 // TODO Reduce health
+                auto& p = players.get<Player>(player);
+                bool dead = p.dealDamage(b.damage);
                 mov.speed.x += b.direction*b.damage;
                 Engine::Registry().destroy(bullet);
                 break;

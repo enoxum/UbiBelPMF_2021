@@ -17,4 +17,6 @@ struct Bullet
 	WeaponType type;
 	Float32 duration;
 	bool timer;
+
+	bool done{ false };
 };
