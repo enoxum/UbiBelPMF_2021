@@ -109,22 +109,25 @@ void hotline_miami::SetupWorld()
     loadWorldEdges(zPos);
 
     zPos -= 1.f;
+
+    loadObstacles(zPos);
+
     // world end
     {
         auto entity = reg.create();
         auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize* 10;
-        col.size.y = tileSize * 2;
+        col.size.x = tileSize* 2;
+        col.size.y = tileSize * 10;
 
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 400;
-        transform.position.y = 400;
+        transform.position.x = 700;
+        transform.position.y = -350;
         transform.position.z = zPos;
 
         auto& sprite = reg.emplace<Sprite>(entity);
         AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_world_end");
-        sprite.size.x = tileSize * 10;
-        sprite.size.y = tileSize * 2;
+        sprite.size.x = tileSize * 2;
+        sprite.size.y = tileSize * 10;
 
         auto& key = reg.emplace<HotlineMiamiWorldEnd>(entity);
         auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
@@ -154,7 +157,7 @@ void hotline_miami::SetupWorld()
         col.size.y = playerSize * 0.5;
 
         auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 700;
+        transform.position.x = -800;
         transform.position.y = 50;
         transform.position.z = zPos;
 
@@ -269,165 +272,5 @@ void hotline_miami::SetupWorld()
         auto& camera = reg.emplace<HotlineMiamiCameraFollowFocus>(entity);
 
         HotlineMiamiPlayerInputSystem::SetupPlayerInput(controller);
-    }
-
-    // obstacle house
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 4;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 200;
-        transform.position.y = -200;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_house_1");
-        sprite.size.x = tileSize * 4;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle house
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 2;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = -150;
-        transform.position.y = 0;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_house_2");
-        sprite.size.x = tileSize * 2;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle house
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 4;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 100;
-        transform.position.y = 200;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_house_1");
-        sprite.size.x = tileSize * 4;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle tree
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 2;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = -400;
-        transform.position.y = -400;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_tree_1");
-        sprite.size.x = tileSize * 2;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle tree
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 2;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = -550;
-        transform.position.y = -550;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_tree_2");
-        sprite.size.x = tileSize * 2;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle tree
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 2;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = 800;
-        transform.position.y = 500;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_tree_3");
-        sprite.size.x = tileSize * 2;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle rock
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize;
-        col.size.y = tileSize;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = -300;
-        transform.position.y = 300;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_rock_2");
-        sprite.size.x = tileSize;
-        sprite.size.y = tileSize;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
-    }
-
-    // obstacle rock
-    {
-        auto entity = reg.create();
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size.x = tileSize * 2;
-        col.size.y = tileSize * 2;
-
-        auto& transform = reg.emplace<Transform>(entity);
-        transform.position.x = -400;
-        transform.position.y = 400;
-        transform.position.z = zPos;
-
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "hotline_miami:Obstacle:obstacle_rock_3");
-        sprite.size.x = tileSize * 2;
-        sprite.size.y = tileSize * 2;
-
-        auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
     }
 }
