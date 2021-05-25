@@ -27,7 +27,7 @@
 #include "gameplay/atonement/systems/collision_handler_system.h"
 #include "gameplay/atonement/systems/character_collisions.h"
 #include "gameplay/atonement/systems/atonement_pause_system.h"
-#include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/common/cooldown_manager.h"
 #include "gameplay/atonement/systems/atonement_start_menu.h"
 #include "gameplay/atonement/systems/atonement_pause_menu.h"
 #include "gameplay/atonement/systems/atonement_end_screen.h"
@@ -131,7 +131,7 @@ void AtonementGame::GameplaySystemsSetup()
     engine.AddPausableSystem<AtonementController::AtonementControllerSystem>();
     engine.AddPausableSystem<GroundednessDetectionSystem>();
     engine.AddPausableSystem<CollisionHandlerSystem>();
-    engine.AddPausableSystem<CooldownManager>();
+    engine.AddPausableSystem<CooldownManager<std::string>>();
     engine.AddSystem<AtonementPauseSystem>();
     engine.AddSystem<CameraFollowSystem>();
     engine.AddPausableSystem<CheckpointSystem>();

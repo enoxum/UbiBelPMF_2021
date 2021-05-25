@@ -7,7 +7,7 @@
 #include "core/game/transforms.h"
 #include <gameplay/atonement/atonement_controller.h>
 
-#include "gameplay/atonement/systems/cooldown_manager.h"
+#include "gameplay/common/cooldown_manager.h"
 #include "gameplay/atonement/systems/character_collisions.h"
 
 #include <iostream>
@@ -144,7 +144,7 @@ void CharControllerFSM::JumpWindup::Run(CharControllerFSM::StateComponent& state
 		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 			//transform.position.x -= movedInLastFrame;
 			//movedInLastFrame = 0;
-			auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+			auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 			if (!cdManager->isOnCooldown(state_.entity, "wall jump")) {
 				GoTo(ECharStates::WallJump, state_);
 			}
@@ -211,7 +211,7 @@ void CharControllerFSM::JumpWinddown::Run(CharControllerFSM::StateComponent& sta
 		if ((collision.collidedLeft && sprite.scale.x < 0) || (collision.collidedRight && sprite.scale.x > 0)) {
 			//transform.position.x -= movedInLastFrame;
 			//movedInLastFrame = 0;
-			auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+			auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 			if (!cdManager->isOnCooldown(state_.entity, "wall jump")) {
 				GoTo(ECharStates::WallJump, state_);
 			}
@@ -243,7 +243,7 @@ void CharControllerFSM::Dashing::Enter(CharControllerFSM::StateComponent& state_
 
 	character.dashingAnimationEnded = false;
 
-	auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+	auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 	cdManager->registerCooldown(state_.entity, "dash", character.dashCooldown);
 }
 
@@ -320,7 +320,7 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 
 	if (EPSILON_NOT_ZERO(input.Get("wall")) && !jumping)
 	{
-		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+		auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 		if(!cdManager->isOnCooldown(state_.entity, "boost")){
 			cdManager->registerCooldown(state_.entity, "boost", 0.3);
 			auto&& animator = Engine::Registry().get<Animator>(state_.entity);
@@ -353,7 +353,7 @@ void CharControllerFSM::WallJump::Run(CharControllerFSM::StateComponent& state_)
 		}
 	}
 	else {
-		auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+		auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 		if (cdManager->isOnCooldown(state_.entity, "boost")) {
 			movedInLastFrame = character.boostSide * sprite.scale.x * Engine::DeltaTime();
 			transform.position.x += movedInLastFrame;
@@ -397,7 +397,7 @@ void CharControllerFSM::OnAnimationEnd(ViewPtr<Animation> animation) {
 }
 
 Bool CharControllerFSM::canDash(Entity entity) {
-	auto cdManager = Engine::GetDefaultResource<CooldownManager>();
+	auto cdManager = Engine::GetDefaultResource<CooldownManager<std::string>>();
 	auto&& character = Engine::Registry().get<AtonementController::AtonementCharacter>(entity);
 	return !cdManager->isOnCooldown(entity, "dash") && !character.dashJumped;
 }
