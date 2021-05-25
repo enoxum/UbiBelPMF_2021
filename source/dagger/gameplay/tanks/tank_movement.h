@@ -16,10 +16,12 @@ namespace tanks
         EDaggerKeyboard left_key;
         EDaggerKeyboard right_key;
         EDaggerKeyboard fire_key;
+        EDaggerKeyboard special_fire_key;
 
         Float32 move{0};
         Float32 rotation{0};
         Float32 fire{0};
+        Float32 special_fire{0};
     };
 
     class TankMovement
@@ -40,6 +42,7 @@ namespace tanks
             controllerMapping_.left_key = EDaggerKeyboard::KeyA;
             controllerMapping_.right_key = EDaggerKeyboard::KeyD;
             controllerMapping_.fire_key = EDaggerKeyboard::KeySpace;
+            controllerMapping_.special_fire_key = EDaggerKeyboard::KeyRightAlt;
         }
 
         static void SetupPlayerTwoMovement(ControllerMapping& controllerMapping_)
@@ -49,6 +52,7 @@ namespace tanks
             controllerMapping_.left_key = EDaggerKeyboard::KeyLeft;
             controllerMapping_.right_key = EDaggerKeyboard::KeyRight;
             controllerMapping_.fire_key = EDaggerKeyboard::KeyP;
+            controllerMapping_.special_fire_key = EDaggerKeyboard::KeyO;
         }
 
     private:

@@ -41,12 +41,35 @@ void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3
     auto& ball = reg.emplace<TankBullet>(entity);
     ball.speed = speed_ * tileSize_;
     ball.tank = desc;
+    ball.special_bullet = false;
 
     auto& col = reg.emplace<SimpleCollision>(entity);
     col.size.x = tileSize_;
     col.size.y = tileSize_;
 }
 
+void CreateSpecialTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3 pos_, String desc)
+{
+    auto& reg = Engine::Registry();
+    auto entity = reg.create();
+    auto& sprite = reg.emplace<Sprite>(entity);
+    AssignSprite(sprite, "bullet");
+    sprite.size = Vector2(1, 1) * tileSize_;
+
+    sprite.color = color_;
+
+    auto& transform = reg.emplace<Transform>(entity);
+    transform.position = pos_;
+    transform.position.z = pos_.z;
+    auto& ball = reg.emplace<TankBullet>(entity);
+    ball.speed = speed_ * tileSize_;
+    ball.tank = desc;
+    ball.special_bullet = true;
+
+    auto& col = reg.emplace<SimpleCollision>(entity);
+    col.size.x = tileSize_;
+    col.size.y = tileSize_;
+}
 
 
 void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
@@ -73,6 +96,10 @@ void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
 
             if (kEvent_.key == ctrl_.fire_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed)) {
                 ctrl_.fire = 1;
+            }
+
+            if (kEvent_.key == ctrl_.special_fire_key && (kEvent_.action == EDaggerInputState::Held || kEvent_.action == EDaggerInputState::Pressed)) {
+                ctrl_.special_fire = 1;
             }
 
             if (kEvent_.key == ctrl_.up_key && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
@@ -184,7 +211,7 @@ void TankMovement::Run()
             ctrl.fire = 0;
             if(tank.description == "tank1" && tank1_num_bullets < 5){
                 tank1_num_bullets += 1;
-                CreateTankBullet(
+                CreateSpecialTankBullet(
                     20, 
                     ColorRGBA(1, 1, 1, 1), 
                     { sin(-s.rotation * PI / 180.0f) * 10 ,
@@ -201,9 +228,48 @@ void TankMovement::Run()
             }
             if(tank.description == "tank2" && tank2_num_bullets < 5){
                 tank2_num_bullets += 1;
-                CreateTankBullet(
+                CreateSpecialTankBullet(
                     20, 
                     ColorRGBA(1, 1, 1, 1), 
+                    { sin(-s.rotation * PI / 180.0f) * 10 ,
+                      cos(-s.rotation * PI / 180.0f) * 10 ,
+                      0 
+                    },
+
+                    {   tank.pos.x + 42 * cos(rad),
+                        tank.pos.y + 42 * sin(rad),
+                      0 
+                    },
+                    tank.description
+                );
+            }
+        }
+
+        if(ctrl.special_fire){
+            ctrl.special_fire = 0;
+
+            if(tank.description == "tank1" && tank1_num_bullets < 5){
+                tank1_num_bullets += 1;
+                CreateTankBullet(
+                    20, 
+                    ColorRGBA(233, 212, 96, 1), 
+                    { sin(-s.rotation * PI / 180.0f) * 10 ,
+                      cos(-s.rotation * PI / 180.0f) * 10 ,
+                      0 
+                    },
+
+                    {   tank.pos.x + 42 * cos(rad),
+                        tank.pos.y + 42 * sin(rad),
+                      0 
+                    },
+                    tank.description
+                );
+            }
+            if(tank.description == "tank2" && tank2_num_bullets < 5){
+                tank2_num_bullets += 1;
+                CreateTankBullet(
+                    20, 
+                    ColorRGBA(233, 212, 96, 1), 
                     { sin(-s.rotation * PI / 180.0f) * 10 ,
                       cos(-s.rotation * PI / 180.0f) * 10 ,
                       0 

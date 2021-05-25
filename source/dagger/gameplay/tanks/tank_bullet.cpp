@@ -30,50 +30,52 @@ void TankBulletSystem::Run()
         {
 
             //std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
-
-            if(ball.tank == "tank1"){
+            if(!ball.special_bullet){
+                if(ball.tank == "tank1"){
                 tank1_num_bullets -= 1;
+                }
+                else if (ball.tank == "tank2"){
+                    tank2_num_bullets -= 1;
+                }
+                Engine::Registry().destroy(entity);
             }
-            else if (ball.tank == "tank2"){
-                tank2_num_bullets -= 1;
-            }
-            Engine::Registry().destroy(entity);
-
-            /*
-            if (Engine::Registry().valid(col.colidedWith))
-            {
-                SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
-                Transform& transform = viewCollisions.get<Transform>(col.colidedWith);
-
-                Vector2 collisionSides = col.GetCollisionSides(t.position, collision, transform.position);
-
-                do
+            else{
+                if (Engine::Registry().valid(col.colidedWith))
                 {
-                    // get back for 1 frame 
-                    Float32 dt = Engine::DeltaTime();
+                    SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
+                    Transform& transform = viewCollisions.get<Transform>(col.colidedWith);
+
+                    Vector2 collisionSides = col.GetCollisionSides(t.position, collision, transform.position);
+
+                    do
+                    {
+                        // get back for 1 frame 
+                        Float32 dt = Engine::DeltaTime();
+                        if (std::abs(collisionSides.x) > 0)
+                        {
+                            t.position.x -= (ball.speed.x * dt);
+                        }
+
+                        if (std::abs(collisionSides.y) > 0)
+                        {
+                            t.position.y -= (ball.speed.y * dt);
+                        }
+
+                    } while (col.IsCollided(t.position, collision, transform.position));
+
                     if (std::abs(collisionSides.x) > 0)
                     {
-                        t.position.x -= (ball.speed.x * dt);
+                        ball.speed.x *= -1;
                     }
 
                     if (std::abs(collisionSides.y) > 0)
                     {
-                        t.position.y -= (ball.speed.y * dt);
+                        ball.speed.y *= -1;
                     }
-
-                } while (col.IsCollided(t.position, collision, transform.position));
-
-                if (std::abs(collisionSides.x) > 0)
-                {
-                    ball.speed.x *= -1;
-                }
-
-                if (std::abs(collisionSides.y) > 0)
-                {
-                    ball.speed.y *= -1;
                 }
             }
-            */
+            
+
 
             col.colided = false;
         }
