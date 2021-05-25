@@ -47,7 +47,6 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<CharacterControllerSystem>();
     engine.AddPausableSystem<MapCollisionSystem>();
 
-    engine.AddPausableSystem<SimpleCollisionsSystem>();
     engine.AddPausableSystem<ShootingSystem>();
     engine.AddPausableSystem<BulletSystem>();
     engine.AddPausableSystem<WeaponSpawnSystem>();

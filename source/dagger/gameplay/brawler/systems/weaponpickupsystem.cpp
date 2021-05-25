@@ -28,51 +28,59 @@ void WeaponPickupSystem::Run()
 
     auto wpColView = Engine::Registry().view<WeaponPickup, Transform, SimpleCollision>();
     auto playerColView = Engine::Registry().view<Player, Transform, SimpleCollision>();
-   
+
     for (auto wpColEntity: wpColView)
     {
         auto wpData = WeaponPickupEntity::Get(wpColEntity);
+        auto wpTransform = wpColView.get<Transform>(wpColEntity);
         auto& wpCol = wpData.col;
 
-        if (!wpCol.colided)
-            continue;
+        
+        
+        
+
         for (auto playerColEntity : playerColView)
         {
             const auto& playerCol = playerColView.get<SimpleCollision>(playerColEntity);
-            if (!playerCol.colided || playerCol.colidedWith != wpColEntity)
-                continue;
-
-            auto& player = playerColView.get<Player>(playerColEntity);
-            auto& playerWeapons = player.weapons;
-            auto& pickedUpWeapon = wpData.weaponPickup.weapon;
-
-            if (player.pickedUpWeapons == player.maxWeapons)
-                continue;
-
-            auto existingWeaponIt 
-                = std::find_if(std::begin(playerWeapons),
-                              std::end(playerWeapons),
-                              [&pickedUpWeapon](const auto& w) {
-                                    return w.weaponType() == pickedUpWeapon.weaponType();
-                              });
-            if (existingWeaponIt == std::end(playerWeapons)) {
-                playerWeapons.push_back(pickedUpWeapon);
-                player.pickedUpWeapons++;
-                if (playerWeapons.size() == 1) {
-                    player.active_weapon_idx = 0;
-                    
-                    auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
-                    int dir = weaponSprite.scale.x>=0.0f? 1 : -1;
-                    weaponSprite.position.x += pickedUpWeapon.translate().x * dir;
-                    weaponSprite.position.y += pickedUpWeapon.translate().y;
-                    ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
-                }
-            }
-            else
+            const auto& playerTransform = playerColView.get<Transform>(playerColEntity);
+            if (wpCol.IsCollided(wpTransform.position, playerCol, playerTransform.position)) 
             {
-                existingWeaponIt->transferAmmo(pickedUpWeapon);
+
+                auto& player = playerColView.get<Player>(playerColEntity);
+                auto& playerWeapons = player.weapons;
+                auto& pickedUpWeapon = wpData.weaponPickup.weapon;
+
+                if (player.pickedUpWeapons == player.maxWeapons)
+                    continue;
+
+                auto existingWeaponIt
+                    = std::find_if(std::begin(playerWeapons),
+                        std::end(playerWeapons),
+                        [&pickedUpWeapon](const auto& w) {
+                            return w.weaponType() == pickedUpWeapon.weaponType();
+                        });
+                if (existingWeaponIt == std::end(playerWeapons)) {
+                    playerWeapons.push_back(pickedUpWeapon);
+                    player.pickedUpWeapons++;
+                    if (playerWeapons.size() == 1) {
+                        player.active_weapon_idx = 0;
+
+                        auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
+                        int dir = weaponSprite.scale.x >= 0.0f ? 1 : -1;
+                        weaponSprite.position.x += pickedUpWeapon.translate().x * dir;
+                        weaponSprite.position.y += pickedUpWeapon.translate().y;
+                        ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
+                    }
+                }
+                else
+                {
+                    existingWeaponIt->transferAmmo(pickedUpWeapon);
+                }
+                Engine::Registry().destroy(wpColEntity);
+
+
             }
-            Engine::Registry().destroy(wpColEntity);            
+           
         }
     }
 
