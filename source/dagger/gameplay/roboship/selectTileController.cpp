@@ -64,7 +64,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     inv->SwapMatrix(x, y, swapX, swapY);
                     printf("nisam");
                 }
-                
+
                 */
 
                 if (!swap)
@@ -103,40 +103,41 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 }
                 else
                 {
-                    if (ctrl_.input.x != (x + 1) && ctrl_.input.x != (x - 1) && ctrl_.input.y != (y - 1) && ctrl_.input.y != (y + 1))
-                        return;
-
-                    swapX = ctrl_.input.x;
-                    swapY = ctrl_.input.y;
-                    
-                    Inventory* inv = new Inventory();
-                    inv->SwapMatrix(x, y, swapX, swapY);
-
-                    auto view = Engine::Registry().view<Tile>();
-
-                    for (auto entity : view)
+                    if ((ctrl_.input.x == (x) && ctrl_.input.y == (y - 1)) || (ctrl_.input.x == (x) && ctrl_.input.y == (y + 1)) || (ctrl_.input.x == (x - 1) && ctrl_.input.y == (y)) || (ctrl_.input.x == (x + 1) && ctrl_.input.y == (y)))
                     {
-                        if (Engine::Registry().has<ControllerMapping>(entity))
-                            continue;
 
-                        auto& s = Engine::Registry().get<Sprite>(entity);
+                        swapX = ctrl_.input.x;
+                        swapY = ctrl_.input.y;
 
-                        AssignSprite(s, "robot:INVENTORY:SelectedTile");                        
-                        s.size.x = 30;
-                        s.size.y = 30;
+                        Inventory* inv = new Inventory();
+                        inv->SwapMatrix(x, y, swapX, swapY);
 
-                        auto& t = Engine::Registry().get<Transform>(entity);
-                        t.position.z = 4.f;
+                        auto view = Engine::Registry().view<Tile>();
+
+                        for (auto entity : view)
+                        {
+                            if (Engine::Registry().has<ControllerMapping>(entity))
+                                continue;
+
+                            auto& s = Engine::Registry().get<Sprite>(entity);
+
+                            AssignSprite(s, "robot:INVENTORY:SelectedTile");
+                            s.size.x = 30;
+                            s.size.y = 30;
+
+                            auto& t = Engine::Registry().get<Transform>(entity);
+                            t.position.z = 4.f;
+                        }
+
+                        swap = false;
+
+                        bool found;
+                        UnmarkNeighbors();
+                        found = findCombination({ 1, 1 });
                     }
-
-                    swap = false;
-
-                    bool found;
-                    UnmarkNeighbors();
-                    found = findCombination({ 1, 1});
                 }
             }
-
+            else return;
         });
 }
 
