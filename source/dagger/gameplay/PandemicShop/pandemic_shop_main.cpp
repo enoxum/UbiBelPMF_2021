@@ -233,7 +233,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         // auto& collider = reg.get<SimpleCollision>(entTS);
         // collider.size = {32, 32};
 
-//**********************************************************************
+//******************************SHELVES****************************************
         auto entTS = reg.create();
         auto& spriteTS = reg.emplace<Sprite>(entTS);
         AssignSprite(spriteTS, "PandemicShop:shelf1");
@@ -308,10 +308,64 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         transformTS5.position.z = 0.f;
 
 
+//****************************PLANTS*******************************************
+
+        auto entTR1 = reg.create();
+        auto& spriteTR1 = reg.emplace<Sprite>(entTR1);
+        AssignSprite(spriteTR1, "PandemicShop:tree1");
+        auto &colliderTR1 = reg.emplace<SimpleCollision>(entTR1);
+        reg.emplace<CollisionType::Wall>(entTR1);
+        colliderTR1.size.x = 32;
+        colliderTR1.size.y = 32;
+        auto& transformTR1 = reg.emplace<Transform>(entTR1);
+        transformTR1.position.x = -250;
+        transformTR1.position.y =  200;
+        transformTR1.position.z = 0.f;
+
+        auto entTR2 = reg.create();
+        auto& spriteTR2 = reg.emplace<Sprite>(entTR2);
+        AssignSprite(spriteTR2, "PandemicShop:tree1");
+        auto &colliderTR2 = reg.emplace<SimpleCollision>(entTR2);
+        reg.emplace<CollisionType::Wall>(entTR2);
+        colliderTR2.size.x = 32;
+        colliderTR2.size.y = 32;
+        auto& transformTR2 = reg.emplace<Transform>(entTR2);
+        transformTR2.position.x = -250;
+        transformTR2.position.y = -160;
+        transformTR2.position.z = 0.f;
+
+        auto entTR3 = reg.create();
+        auto& spriteTR3 = reg.emplace<Sprite>(entTR3);
+        AssignSprite(spriteTR3, "PandemicShop:tree1");
+        auto &colliderTR3 = reg.emplace<SimpleCollision>(entTR3);
+        reg.emplace<CollisionType::Wall>(entTR3);
+        colliderTR3.size.x = 32;
+        colliderTR3.size.y = 32;
+        auto& transformTR3 = reg.emplace<Transform>(entTR3);
+        transformTR3.position.x = 250;
+        transformTR3.position.y = -160;
+        transformTR3.position.z = 0.f;
+
+
+        auto entTR4 = reg.create();
+        auto& spriteTR4 = reg.emplace<Sprite>(entTR4);
+        AssignSprite(spriteTR4, "PandemicShop:tree1");
+        auto &colliderTR4 = reg.emplace<SimpleCollision>(entTR4);
+        reg.emplace<CollisionType::Wall>(entTR4);
+        colliderTR4.size.x = 32;
+        colliderTR4.size.y = 32;
+        auto& transformTR4 = reg.emplace<Transform>(entTR4);
+        transformTR4.position.x = 250;
+        transformTR4.position.y = 200;
+        transformTR4.position.z = 0.f;
+
+//******************************************************************************
+
+
        
         auto ent4 = reg.create();
         auto item4 = reg.emplace<Item>(ent4);
-        item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, -128});
+        item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-200, -200});
 
         // auto ent2 = reg.create();
         // auto item2 = reg.emplace<Item>(ent2);
