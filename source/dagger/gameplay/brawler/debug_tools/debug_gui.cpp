@@ -8,6 +8,7 @@
 #include "gameplay/brawler/systems/physics.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/weapon_spawn_system.h"
+#include "gameplay/brawler/systems/projectile_collision_system.h"
 #include "gameplay/brawler/systems/hud_system.h"
 #include "gameplay/brawler/level.h"
 
@@ -96,6 +97,9 @@ void DebugGui::RenderDebugWindow()
 		ImGui::Text("Active bullets: %d", BulletSystem::s_ActiveBullets);
 		ImGui::SliderFloat("Bullet Speed", &BulletSystem::s_BulletSpeed, 0.0f, 800.0f);
 		ImGui::SliderFloat("Recoil Speed", &BulletSystem::s_PlayerRecoil, 0.0f, 100.0f);
+		ImGui::SliderFloat("Grenade range", &ProjectileCollisionSystem::s_grenadeSquaredRange, 0.0f, 500.0f);
+		ImGui::SliderFloat("C4 range", &ProjectileCollisionSystem::s_c4SquaredRange, 0.0f, 500.0f);
+		
 	}
 
 	if (ImGui::CollapsingHeader("Weapons"))

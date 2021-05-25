@@ -27,5 +27,15 @@ namespace brawler
 		std::vector<Weapon>		weapons;
 		int						active_weapon_idx{ -1 };
 		Entity 					currentWeapon;
+
+
+		bool dealDamage(int damage)
+		{
+			health -= damage;
+			if (health < 0) {
+				health = 0;
+			}
+			return health == 0;
+		}
 	};
 }

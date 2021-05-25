@@ -28,7 +28,7 @@ float HUDSystem::s_paddingSide		= 12;
 float HUDSystem::s_midPaddingUp		= 7.5f;
 float HUDSystem::s_midPaddingSide	= 7.5f;
 
-int HUDSystem::s_leftPlayerHealth = 60;
+int HUDSystem::s_leftPlayerHealth = 100;
 int HUDSystem::s_rightPlayerHealth = 100;
 
 Entity HUDSystem::leftMarker{ entt::null };
@@ -155,8 +155,8 @@ void HUDSystem::Run()
 	auto playerLeft = Engine::Registry().get<Player>(Level::Player1());
 	auto playerRight = Engine::Registry().get<Player>(Level::Player2());
 
-	playerLeft.health = HUDSystem::s_leftPlayerHealth;
-	playerRight.health = HUDSystem::s_rightPlayerHealth;
+//	playerLeft.health = HUDSystem::s_leftPlayerHealth;
+//	playerRight.health = HUDSystem::s_rightPlayerHealth;
 
 	auto& leftText	= Engine::Registry().get<Text>(HUDSystem::leftText);
 	auto& rightText = Engine::Registry().get<Text>(HUDSystem::rightText);
