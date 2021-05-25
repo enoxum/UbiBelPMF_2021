@@ -8,7 +8,7 @@ void AISystem::Run(){
     auto &reg = Engine::Registry();
     auto item_view = reg.view<Item>();
     auto karens = reg.view<PandemicKarenCharacter>();
-    srand(time(0));
+    
 
     counter += Engine::DeltaTime();
 	if (counter >= delay) {

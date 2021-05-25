@@ -183,9 +183,11 @@ void SimpleCollisionsSystem::resolveWalls(SimpleCollision &collision, Transform 
     other.colided = false;
     collision.colided = false;
     command.previous = command.next;
-    command.current = command.next;    
-    command.next = {(rand() % AISystem::border_width) - AISystem::border_width/2, 
-                    (rand() % AISystem::border_height) - AISystem::border_height/2};
+    command.current = command.next;   
+    // srand(time(0)); 
+    
+    command.next = {(rand() % (2*AISystem::border_width)) - AISystem::border_width, 
+                    (rand() % (2*AISystem::border_height)) - AISystem::border_height};
     command.finishedX = false;
     command.finishedY = false;
     command.finished = false;
@@ -208,9 +210,9 @@ void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &
         collision.colided = false;
         command.previous = command.next;
         command.current = command.next;
-        command.next = {(rand() % AISystem::border_width) - AISystem::border_width/2, 
-                        (rand() % AISystem::border_height) - AISystem::border_height/2};
-        
+        command.next = {(rand() % (2*AISystem::border_width)) - AISystem::border_width, 
+                    (rand() % (2*AISystem::border_height)) - AISystem::border_height};
+    
         command.finishedX = false;
         command.finishedY = false;
         command.finished = false;

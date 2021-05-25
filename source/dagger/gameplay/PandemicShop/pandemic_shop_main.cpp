@@ -219,12 +219,12 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         KarenCharacter::Create("Pandemic", {0.5, 0.5, 0.5}, {128, 128});
         KarenCharacter::Create("Pandemic", {0.7, 0.7, 0.7}, {-128, 128});
 
-        // auto ent1 = reg.create();
-        // auto item1 = reg.emplace<Item>(ent1);
+        auto ent1 = reg.create();
+        auto item1 = reg.emplace<Item>(ent1);
         
-        // item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
-        // auto& collider = reg.get<SimpleCollision>(ent1);
-        // collider.size = {32, 32};
+        item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
+        auto& collider = reg.get<SimpleCollision>(ent1);
+        collider.size = {32, 32};
 
         // auto ent2 = reg.create();
         // auto item2 = reg.emplace<Item>(ent2);
@@ -234,9 +234,9 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         // auto item3 = reg.emplace<Item>(ent3);
         // item3.Create(ent3, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, 128});
 
-        // auto ent4 = reg.create();
-        // auto item4 = reg.emplace<Item>(ent4);
-        // item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, -128});
+        auto ent4 = reg.create();
+        auto item4 = reg.emplace<Item>(ent4);
+        item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, -128});
 
         // if(item.hidden){
         //     printf("\nhidden\n");
