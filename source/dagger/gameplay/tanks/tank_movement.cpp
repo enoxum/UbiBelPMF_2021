@@ -5,6 +5,7 @@
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/common/particles.h"
 #include "tank.h"
 
 #include <iostream>
@@ -42,15 +43,16 @@ void CreateTankBullet(float tileSize_, bool spec, String desc, Vector3 speed_, V
     auto& ball = reg.emplace<TankBullet>(entity);
     ball.speed = speed_ * tileSize_;
     ball.tank = desc;
-    
-    if (spec)
-    	ball.special_bullet = true;
-    else
-		ball.special_bullet = false;
+    ball.damage = 25;
+    ball.special_bullet = spec;
 
     auto& col = reg.emplace<SimpleCollision>(entity);
     col.size.x = tileSize_;
     col.size.y = tileSize_;
+    
+    common_res::ParticleSpawnerSettings settings;
+    settings.Setup(0.02f, {1.5f, 1.5f}, {-0.3f, -0.3f}, {0.3f, 0.3f});
+    common_res::ParticleSystem::SetupParticleSystem(entity, settings);
 }
 
 void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
@@ -147,8 +149,11 @@ void TankMovement::Run()
             bool tankDestroyed = false;
 
             for (auto entityBullet : viewBullet){
+            
+            	auto& ball = viewBullet.get<TankBullet>(entityBullet);
+            	
                 if (col.colidedWith == entityBullet){
-                    tank.health -= 25;   
+                    tank.health -= ball.damage;   
                 }
                 if(tank.health <= 0){
                     Engine::Registry().destroy(entity);

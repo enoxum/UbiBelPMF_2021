@@ -10,12 +10,11 @@ namespace tanks
     struct TankBullet
     {
         Vector3 speed{ 0, 0, 0 };
-
-        int damage{ 0 };
-
+        int damage;
         String tank{""};
         bool special_bullet{false};
         int number_of_collisions{0};
+        UInt64 time{0};
     };
 
 

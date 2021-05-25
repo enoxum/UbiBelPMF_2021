@@ -97,10 +97,10 @@ void racing_game::SetupWorld(Engine &engine_)
     // player
     {
         auto entity = reg.create();
-        auto& sprite = reg.emplace<Sprite>(entity);
-        AssignSprite(sprite, "Racing:police-car-bmw-z4");
-        float ratio = sprite.size.y / sprite.size.x;
-        sprite.size = { 2 * TileSize, 2 * TileSize * ratio };
+        //auto& sprite = reg.emplace<Sprite>(entity);
+        //AssignSprite(sprite, "Racing:police-car-bmw-z4");
+        //float ratio = sprite.size.y / sprite.size.x;
+        //sprite.size = { 2 * TileSize, 2 * TileSize * ratio };
 
         auto& transform = reg.emplace<Transform>(entity);
         transform.position = { -TileSize * 4, -TileSize * 4, zPos };
@@ -110,12 +110,11 @@ void racing_game::SetupWorld(Engine &engine_)
 
         reg.emplace<ControllerMapping>(entity);
 
-        auto& col = reg.emplace<SimpleCollision>(entity);
-        col.size = sprite.size;
+        //auto& col = reg.emplace<SimpleCollision>(entity);
+        //col.size = sprite.size;
 
         common_res::ParticleSpawnerSettings settings;
-        settings.Setup(0.05f, {4.f, 4.f}, {-0.2f, -1.4f}, {0.2f, -0.6f}, 
-                        {0.6f,0.6f,0.6f,1}, {1,1,1,1}, "EmptyWhitePixel");
+        settings.Setup(0.02f, {1.5f, 1.5f}, {-0.3f, -0.3f}, {0.3f, 0.3f});
         common_res::ParticleSystem::SetupParticleSystem(entity, settings);
     }
 

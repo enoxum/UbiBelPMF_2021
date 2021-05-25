@@ -18,18 +18,16 @@ using namespace tanks;
 void TankBulletSystem::Run()
 {
     auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision>();
-    auto view = Engine::Registry().view<TankBullet, Transform, SimpleCollision>();
+    auto view = Engine::Registry().view<TankBullet, Transform, SimpleCollision, Sprite>();
     for (auto entity : view)
     {
         auto& t = view.get<Transform>(entity);
         auto& ball = view.get<TankBullet>(entity);
         auto& col = view.get<SimpleCollision>(entity);
+		auto& s = view.get<Sprite>(entity);
 
+        if (col.colided){
 
-        if (col.colided)
-        {
-
-            //std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
             if(!ball.special_bullet){
                 if(ball.tank == "tank1"){
                     tank1_num_bullets -= 1;
@@ -37,7 +35,14 @@ void TankBulletSystem::Run()
                 else if (ball.tank == "tank2"){
                     tank2_num_bullets -= 1;
                 }
-                Engine::Registry().destroy(entity);
+     
+                if (ball.time == 0){
+                	ball.time = Engine::FrameCount();
+                	s.size = {0, 0};
+                	ball.damage = 0;
+                }	
+                else if (Engine::FrameCount() - ball.time > 30)
+                	Engine::Registry().destroy(entity);
             }
             else{
                 if (Engine::Registry().valid(col.colidedWith))
@@ -100,14 +105,9 @@ void TankBulletSystem::Run()
 
                 }
             }
-            
-
-
             col.colided = false;
         }
         else
-        {
             t.position += (ball.speed * Engine::DeltaTime());
-        }
     }
 }

@@ -14,6 +14,7 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/common/particles.h"
 #include "tanks_main.h"
 #include "tank.h"
 #include "tank_movement.h"
@@ -48,6 +49,7 @@ void TanksGame::GameplaySystemsSetup(Engine& engine_)
 {
 
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
+    engine_.AddSystem<common_res::ParticleSystem>();
     engine_.AddSystem<TilemapSystem>();
     engine_.AddPausableSystem<TankMovement>();
     engine_.AddPausableSystem<TankBulletSystem>();
