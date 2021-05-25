@@ -15,10 +15,9 @@ namespace brawler {
 		BAZOOKA 	= 7,
 		C4 			= 8,
 		GRANADE 	= 9,
-		FLASH 		= 10,
-		MINE    	= 11,
-		MEDKIT 		= 12,
-		BANANA 		= 13
+		MINE    	= 10,
+		MEDKIT 		= 11,
+		BANANA 		= 12
 	};
 
 	class Weapon
@@ -26,12 +25,12 @@ namespace brawler {
 	public:
 		static Weapon Pistol(int numClips)
 		{
-			return Weapon(WeaponType::PISTOL, "Pistol", 2, 10, 3, 7, numClips, "pistol", {5.0, 2.0}, {0.8, 0.8});
+			return Weapon(WeaponType::PISTOL, "Pistol", 3, 10, 3, 7, numClips, "pistol", {5.0, 2.0}, {0.8, 0.8});
 		}
 
 		static Weapon MachineGun(int numClips)
 		{
-			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 10, 20, 4, 70, numClips, "machinegun", {1.0, 1.0}, {0.8, 0.8});
+			return Weapon(WeaponType::MACHINE_GUN, "Machine Gun", 7, 20, 4, 70, numClips, "machinegun", {1.0, 1.0}, {0.8, 0.8});
 		}
 
 		static Weapon M4A1(int numClips)
@@ -74,11 +73,6 @@ namespace brawler {
 			return Weapon(WeaponType::GRANADE, "Granade", 25, 0, 3, 1, numClips, "granade", {1.0, 1.0}, {0.8, 0.8}); 
 		}
 
-		static Weapon Flash(int numClips)
-		{
-			return Weapon(WeaponType::FLASH, "Flash", 0, 0, 3, 1, numClips, "flash", {1.0, 1.0}, {0.8, 0.8}); 
-		}
-
 		static Weapon Mine(int numClips)
 		{
 			return Weapon(WeaponType::MINE, "Mine", 50, 0, 3, 1, numClips, "mine", {1.0, 1.0}, {0.7, 0.8}); 
@@ -95,7 +89,7 @@ namespace brawler {
 		}
 
 		static Weapon CreateRandom() {
-			WeaponType randomType = static_cast<WeaponType>(rand() % 14);
+			WeaponType randomType = static_cast<WeaponType>(rand() % 13);
 			switch (randomType) {
 			case WeaponType::PISTOL:
 				return Pistol(1 + rand() % 7);
@@ -108,23 +102,21 @@ namespace brawler {
 			case WeaponType::P90:
 				return P90(1 + rand() % 4);
 			case WeaponType::SNIPER:
-				return Sniper(1 + rand() % 2);
+				return Sniper(1 + rand() % 3);
 			case WeaponType::UZI:
 				return Uzi(1 + rand() % 4);
 			case WeaponType::BAZOOKA:
-				return Bazooka(1 + rand() % 100);
+				return Bazooka(1 + rand() % 2);
 			case WeaponType::C4:
-				return C4(1 + rand() % 100);
+				return C4(1 + rand() % 3);
 			case WeaponType::GRANADE:
-				return Granade(1 + rand() % 7);
-			case WeaponType::FLASH:
-				return Flash(1 + rand() % 7);
+				return Granade(1 + rand() % 5);
 			case WeaponType::MINE:
-				return Mine(1 + rand() % 7);
+				return Mine(1 + rand() % 5);
 			case WeaponType::MEDKIT:
-				return Medkit(1 + rand() % 100);
+				return Medkit(1 + rand() % 2);
 			case WeaponType::BANANA:
-				return Banana(1 + rand() % 100);
+				return Banana(1 + rand() % 3);
 			default:
 				throw "Unknown weapon type!";
 			}

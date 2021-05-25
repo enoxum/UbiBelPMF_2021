@@ -32,7 +32,6 @@ Bool ShootingSystem::isProjectile(WeaponType wp)
     {
     case WeaponType::C4:
     case WeaponType::GRANADE:
-    case WeaponType::FLASH:
     case WeaponType::MINE:
         return true;
     default:
