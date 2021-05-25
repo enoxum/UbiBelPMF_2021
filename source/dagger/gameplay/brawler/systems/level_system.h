@@ -12,7 +12,8 @@ namespace brawler {
 struct TextureData
 {
 	String name;
-	float scale;
+	float scaleX;
+	float scaleY;
 };
 
 struct TileData

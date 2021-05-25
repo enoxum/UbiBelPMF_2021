@@ -1,9 +1,11 @@
 #include "level.h"
 
+#include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 #include "gameplay/brawler/components/weapon_spawner.h"
 #include "gameplay/brawler/systems/level_system.h"
+#include "gameplay/brawler/systems/hud_system.h"
 
 using namespace dagger;
 using namespace brawler;
@@ -36,12 +38,14 @@ void Level::Load(String map)
 			tiles[y].push_back(level->tileset[level->tilemap[y][x]].type);
 			if(getTile(x, y) == PlatformType::BLOCK || getTile(x, y) == PlatformType::ONEWAY) {
 				auto tile = reg.create();
+				auto& transform = reg.emplace<Transform>(tile);
+				transform.position = { TileToWorld(x, y), 1 };
 				auto& sprite = reg.emplace<Sprite>(tile);
 				auto texture = level->tileset[level->tilemap[y][x]].texture;
 				AssignSprite(sprite, texture.name);
 				sprite.color = { 1, 1, 1, 1 };
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
-				sprite.scale = { texture.scale, texture.scale };
+				sprite.scale = { texture.scaleX, texture.scaleY };
 				sprite.position = { TileToWorld(x, y), 1 };
 			} else if (getTile(x, y) == PlatformType::SPAWNER){
 				auto tile = reg.create();
@@ -55,10 +59,12 @@ void Level::Load(String map)
 	float backgroundZ = 100.0f;
 	for (auto& background : level->backgrounds) {
 		auto bg = reg.create();
+		auto& transform = reg.get_or_emplace<Transform>(bg);
+		transform.position = { 320, 180, backgroundZ };
 		auto& sprite = reg.get_or_emplace<Sprite>(bg);
 		AssignSprite(sprite, background.name);
-		sprite.position = { 200, 150, backgroundZ };
-		sprite.scale = { background.scale, background.scale };
+		sprite.position = { 320, 180, backgroundZ };
+		sprite.scale = { background.scaleX, background.scaleY };
 		backgroundZ--;
 	}
 
@@ -77,6 +83,8 @@ void Level::Load(String map)
 
 	player1 = player1char.entity;
 	player2 = player2char.entity;
+
+	HUDSystem::Init();
 }
 
 Entity Level::Player1()

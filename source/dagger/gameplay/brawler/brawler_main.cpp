@@ -62,9 +62,9 @@ void Brawler::SetCamera()
 {
     auto* camera = Engine::GetDefaultResource<Camera>();
     camera->mode = ECameraMode::FixedResolution;
-    camera->size = { 800, 600 };
+    camera->size = { 1280, 720 };
     camera->zoom = 2;
-    camera->position = { 200, 150, 0 };
+    camera->position = { 320, 180, 0 };
     camera->Update();
 }
 
@@ -72,12 +72,4 @@ void Brawler::WorldSetup()
 {
     SetCamera();
     Level::Load("default");
-
-    HUDSystem::CreateHealthBarLeft();
-    HUDSystem::CreateWeaponsLeft();
-
-    HUDSystem::CreateHealthBarRight();
-    HUDSystem::CreateWeaponsRight();
-
-    HUDSystem::CreateMarkersAndTexts();
 }

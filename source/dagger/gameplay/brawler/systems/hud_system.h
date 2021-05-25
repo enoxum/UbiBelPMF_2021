@@ -1,13 +1,11 @@
 #pragma once
 
-#include "core/system.h"
 #include "core/core.h"
-
+#include "core/system.h"
 
 using namespace dagger;
 
 namespace brawler {
-
 
     class HUDSystem : public System
     {
@@ -32,8 +30,6 @@ namespace brawler {
         static      Entity rightMarker;
         static      Entity leftText;
         static      Entity rightText;
-        
-
 
         static void CreateHealthBar(bool side);
         static void CreateHealthBarLeft();
@@ -43,7 +39,6 @@ namespace brawler {
         static void CreateWeaponsRight();
         static void CreateWeapons(bool side);
 
-
         static void CreateMarkersAndTexts();
 
     public:
@@ -52,7 +47,7 @@ namespace brawler {
             return "HUD System";
         }
 
-
+        static void Init();
         void Run() override;
 
     };

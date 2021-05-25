@@ -125,7 +125,8 @@ TextureData LevelSystem::LoadTexture(JSON::json& input_)
 {
 	TextureData texture;
 	texture.name = input_.value("texture", "EmptyWhitePixel");
-	texture.scale = input_.value("scale", 1.0f);
+	texture.scaleX = input_.value("scale_x", 1.0f);
+	texture.scaleY = input_.value("scale_y", 1.0f);
 	return texture;
 }
 

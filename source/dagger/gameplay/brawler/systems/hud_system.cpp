@@ -19,8 +19,8 @@ using namespace brawler;
 using namespace dagger;
 
 float HUDSystem::s_weaponDim					= 20.0f;
-float HUDSystem::s_blipWidth					= 1.0f;
-float HUDSystem::s_blipHeight					= 10.0f;
+float HUDSystem::s_blipWidth					= 2.2f;
+float HUDSystem::s_blipHeight					= 15.0f;
 float HUDSystem::s_activeWeaponIndicatorSize	= 10.0f;
 
 float HUDSystem::s_paddingUp		= 20;
@@ -35,6 +35,17 @@ Entity HUDSystem::leftMarker{ entt::null };
 Entity HUDSystem::rightMarker{ entt::null };
 Entity HUDSystem::leftText{ entt::null };
 Entity HUDSystem::rightText{ entt::null };
+
+void HUDSystem::Init()
+{
+	CreateHealthBarLeft();
+	CreateWeaponsLeft();
+
+	CreateHealthBarRight();
+	CreateWeaponsRight();
+
+	CreateMarkersAndTexts();
+}
 
 void HUDSystem::CreateHealthBar(bool side)
 {
@@ -63,12 +74,16 @@ void HUDSystem::CreateHealthBar(bool side)
 	rwh.side = true;
 	rwh.color = false;
 
+	auto& lrt = Engine::Registry().emplace<Transform>(lr);
 	auto& lrs = Engine::Registry().emplace<Sprite>(lr);
 	AssignSprite(lrs, "EmptyWhitePixel");
+	auto& lwt = Engine::Registry().emplace<Transform>(lw);
 	auto& lws = Engine::Registry().emplace<Sprite>(lw);
 	AssignSprite(lws, "EmptyWhitePixel");
+	auto& rrt = Engine::Registry().emplace<Transform>(rr);
 	auto& rrs = Engine::Registry().emplace<Sprite>(rr);
 	AssignSprite(rrs, "EmptyWhitePixel");
+	auto& rwt = Engine::Registry().emplace<Transform>(rw);
 	auto& rws = Engine::Registry().emplace<Sprite>(rw);
 	AssignSprite(rws, "EmptyWhitePixel");
 }
@@ -95,7 +110,6 @@ void HUDSystem::CreateWeaponsRight()
 
 void HUDSystem::CreateWeapons(bool side)
 {
-	
 	for (int i = 0; i < 5; i++)
 	{
 		auto entity = Engine::Registry().create();
@@ -162,8 +176,8 @@ void HUDSystem::Run()
 		rightText.Set("pixel-font", "", { 0, 0, 0 }, false);
 	}
 
-	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp;
-	Engine::Registry().view<HealthBar, Sprite>().each([&](HealthBar& hb, Sprite& hbSprite) {
+	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp - HUDSystem::s_blipHeight / 2;
+	Engine::Registry().view<HealthBar, Transform, Sprite>().each([&](HealthBar& hb, Transform& hbTransform, Sprite& hbSprite) {
 		
 		float whitePartWidth = 100 * HUDSystem::s_blipWidth;;
 		float whiteX = 0;
@@ -174,18 +188,19 @@ void HUDSystem::Run()
 		if (!hb.side)
 		{
 			redPartWidth = playerLeft.health * HUDSystem::s_blipWidth;
-			redX = BulletSystem::s_CameraBoundLeft + redPartWidth / 2;
-			whiteX = BulletSystem::s_CameraBoundLeft + whitePartWidth / 2;
+			redX = BulletSystem::s_CameraBoundLeft + HUDSystem::s_paddingSide + redPartWidth / 2;
+			whiteX = BulletSystem::s_CameraBoundLeft + HUDSystem::s_paddingSide + whitePartWidth / 2;
 		}
 		else {
 			redPartWidth = playerRight.health * HUDSystem::s_blipWidth;
-			redX = BulletSystem::s_CameraBoundRight - redPartWidth / 2;
-			whiteX = BulletSystem::s_CameraBoundRight - whitePartWidth / 2;
+			redX = BulletSystem::s_CameraBoundRight - HUDSystem::s_paddingSide - redPartWidth / 2;
+			whiteX = BulletSystem::s_CameraBoundRight - HUDSystem::s_paddingSide - whitePartWidth / 2;
 		}
 
 		if (hb.color)
 		{
 			// Red
+			hbTransform.position = { redX, offsetY, 0.0f };
 			hbSprite.scale = { redPartWidth / hbSprite.size.x, HUDSystem::s_blipHeight / hbSprite.size.y};
 			hbSprite.color = { 1.0f, 0.0f, 0.0f, 1.0f };
 			hbSprite.position = { redX, offsetY, 0.0f };
@@ -193,6 +208,7 @@ void HUDSystem::Run()
 		else
 		{
 			// White
+			hbTransform.position = { whiteX, offsetY, 1.0f };
 			hbSprite.scale = { whitePartWidth / hbSprite.size.x , HUDSystem::s_blipHeight  / hbSprite.size.y};
 			hbSprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 			hbSprite.position = { whiteX, offsetY, 1.0f };
