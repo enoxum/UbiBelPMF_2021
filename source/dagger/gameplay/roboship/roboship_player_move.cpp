@@ -118,7 +118,6 @@ void RoboshipPlayerInputSystem::Run()
         }
         else if ((ctrl.input.x == 3 && jumpAllowed) || atomicFight) {
             Engine::Dispatcher().trigger<RFightModeOn>();
-            printf("proba\n");
             AnimatorPlay(animator, "robot:JUMP");
 
             atomicFight = true;
