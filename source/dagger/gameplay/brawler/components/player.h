@@ -37,5 +37,12 @@ namespace brawler
 			}
 			return health == 0;
 		}
+
+		void giveHealth(int heal)
+		{
+			health += heal;
+			if (health > 100)
+				health = 100;
+		}
 	};
 }
