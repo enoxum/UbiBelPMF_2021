@@ -65,6 +65,8 @@ sources = [
     'source/dagger/gameplay/tanks/tanks_main.cpp',
     'source/dagger/gameplay/tanks/tilemap.cpp',
     'source/dagger/gameplay/tanks/tank_movement.cpp',
+    'source/dagger/gameplay/tanks/tank_bullet.cpp',
+    'source/dagger/gameplay/tanks/tanks_score.cpp',
     'source/dagger/tools/console.cpp',
     'source/dagger/tools/diagnostics.cpp',
     'source/dagger/tools/plotvar.cpp',
