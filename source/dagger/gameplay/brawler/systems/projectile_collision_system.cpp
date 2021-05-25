@@ -52,11 +52,8 @@ bool ProjectileCollisionSystem::explodePlayer(Player& player,
     playerMovable.speed -= frljukVec;
 
     bool dead = player.dealDamage(damage_coeff * bullet.damage);
-    Logger::info("Dealing damage: {}", damage_coeff * bullet.damage);
-    Logger::info("Frljuk: {}, {}", frljukVec.x, frljukVec.y);
 
     return dead;
-
 }
 
 void ProjectileCollisionSystem::Run()
@@ -103,7 +100,6 @@ void ProjectileCollisionSystem::Run()
                             players.get<Transform>(affectedPlayerEntity).position, 
                             transform.position, ProjectileCollisionSystem::s_c4SquaredRange);
                     }
-
                 }
             }
             break;
@@ -118,7 +114,6 @@ void ProjectileCollisionSystem::Run()
                 if(b.owner == player)
                     continue;
 
-                //processing one collision per frame for each colider
                 if (collision.IsCollided(transform.position, col, tr.position))
                 {
                     collision.colided = true;
@@ -152,7 +147,6 @@ void ProjectileCollisionSystem::Run()
                         transform.position, 
                         ProjectileCollisionSystem::s_grenadeSquaredRange);
                 }
-
             }
             break;
         default:

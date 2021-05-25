@@ -54,11 +54,11 @@ void ShootingSystem::Run()
     view.each([](const auto entity, auto &sprite, auto &input, auto& player, auto& transform, auto& movable) {
         // TODO cooldown
 
-        auto& t = Engine::Registry().get<Transform>(player.currentWeapon);
-        auto& s = Engine::Registry().get<Sprite>(player.currentWeapon);
-
         if (player.active_weapon_idx == -1)
             return;
+
+        auto& t = Engine::Registry().get<Transform>(player.currentWeapon);
+        auto& s = Engine::Registry().get<Sprite>(player.currentWeapon);
 
         auto& weapon = player.weapons[player.active_weapon_idx];
 
@@ -99,9 +99,7 @@ void ShootingSystem::Run()
                         player.giveHealth(eeeeee);
                     }
                     
-                }
-
-                else {
+                } else {
                     player.giveHealth(20);
                 }
             }else{
@@ -147,6 +145,5 @@ void ShootingSystem::Run()
             } 
             return;
         }
-
     });
 }
