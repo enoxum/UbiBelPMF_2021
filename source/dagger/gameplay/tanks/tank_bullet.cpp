@@ -29,12 +29,10 @@ void TankBulletSystem::Run()
         if (col.colided){
 
             if(!ball.special_bullet){
-                if(ball.tank == "tank1"){
+                if(ball.tank == "tank1")
                     tank1_num_bullets -= 1;
-                }
-                else if (ball.tank == "tank2"){
+                else if (ball.tank == "tank2")
                     tank2_num_bullets -= 1;
-                }
      
                 if (ball.time == 0){
                 	ball.time = Engine::FrameCount();
@@ -45,64 +43,45 @@ void TankBulletSystem::Run()
                 	Engine::Registry().destroy(entity);
             }
             else{
-                if (Engine::Registry().valid(col.colidedWith))
-                {
-                    SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
-                    Transform& transform = viewCollisions.get<Transform>(col.colidedWith);
+            
+                SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
+                Transform& transform = viewCollisions.get<Transform>(col.colidedWith);
 
-                    Vector2 collisionSides = col.GetCollisionSides(t.position, collision, transform.position);
-                    ball.number_of_collisions += 1;
-                    do
-                    {
-                        // get back for 1 frame 
-                        Float32 dt = Engine::DeltaTime();
-                        if (std::abs(collisionSides.x) > 0)
-                        {
-                            t.position.x -= (ball.speed.x * dt);
-                        }
-
-                        if (std::abs(collisionSides.y) > 0)
-                        {
-                            t.position.y -= (ball.speed.y * dt);
-                        }
-
-                    } while (col.IsCollided(t.position, collision, transform.position));
-
+                Vector2 collisionSides = col.GetCollisionSides(t.position, collision, transform.position);
+                ball.number_of_collisions += 1;
+                
+                do{
+                    Float32 dt = Engine::DeltaTime();
                     if (std::abs(collisionSides.x) > 0)
-                    {
-                        ball.speed.x *= -1;
-                    }
-
+                        t.position.x -= (ball.speed.x * dt);
                     if (std::abs(collisionSides.y) > 0)
-                    {
-                        ball.speed.y *= -1;
-                    }
+                        t.position.y -= (ball.speed.y * dt);
 
-                    if(ball.number_of_collisions == 3){
-                        if(ball.tank == "tank1"){
+                } while (col.IsCollided(t.position, collision, transform.position));
+
+                if (std::abs(collisionSides.x) > 0)
+                    ball.speed.x *= -1;
+                if (std::abs(collisionSides.y) > 0)
+                    ball.speed.y *= -1;
+
+                if(ball.number_of_collisions == 3){
+                    if(ball.tank == "tank1")
+                        tank1_num_bullets -= 1;
+                    else if (ball.tank == "tank2")
+                        tank2_num_bullets -= 1;
+                    Engine::Registry().destroy(entity);
+                }
+
+                auto viewTank = Engine::Registry().view<Tank, Transform, SimpleCollision>();
+
+                for (auto entityTank : viewTank){
+                    if (col.colidedWith == entityTank){
+                        if(ball.tank == "tank1")
                             tank1_num_bullets -= 1;
-                        }
-                        else if (ball.tank == "tank2"){
+                        else if (ball.tank == "tank2")
                             tank2_num_bullets -= 1;
-                        }
                         Engine::Registry().destroy(entity);
                     }
-
-                    auto viewTank = Engine::Registry().view<Tank, Transform, SimpleCollision>();
-
-                    for (auto entityTank : viewTank){
-                        if (col.colidedWith == entityTank){
-                            if(ball.tank == "tank1"){
-                                tank1_num_bullets -= 1;
-                            }
-                            else if (ball.tank == "tank2"){
-                                tank2_num_bullets -= 1;
-                            }
-                            Engine::Registry().destroy(entity);    
-                        }
-                        
-                    }
-
                 }
             }
             col.colided = false;

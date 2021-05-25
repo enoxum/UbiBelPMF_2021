@@ -26,7 +26,7 @@ void TankMovement::WindDown()
     Engine::Dispatcher().sink<KeyboardEvent>().disconnect<&TankMovement::OnKeyboardEvent>(this);
 }
 
-void CreateTankBullet(float tileSize_, bool spec, String desc, Vector3 speed_, Vector3 pos_)
+void CreateTankBullet(float tileSize_, bool spec, String desc, int dmg, Vector3 speed_, Vector3 pos_)
 {
     auto& reg = Engine::Registry();
     auto entity = reg.create();
@@ -43,7 +43,7 @@ void CreateTankBullet(float tileSize_, bool spec, String desc, Vector3 speed_, V
     auto& ball = reg.emplace<TankBullet>(entity);
     ball.speed = speed_ * tileSize_;
     ball.tank = desc;
-    ball.damage = 25;
+    ball.damage = dmg;
     ball.special_bullet = spec;
 
     auto& col = reg.emplace<SimpleCollision>(entity);
@@ -196,22 +196,24 @@ void TankMovement::Run()
         if (ctrl.fire || ctrl.special_fire) {
         
         	bool spec = true;
+        	int dmg = 15;
         	if (ctrl.fire){
             	ctrl.fire = 0;
             	spec = false;
+            	dmg = 25;
             }
             else
             	ctrl.special_fire = 0;
             
-            if(tank.description == "tank1" && tank1_num_bullets < 5){
+            if(tank.description == "tank1" && tank1_num_bullets < 1){
                 tank1_num_bullets += 1;
-                CreateTankBullet(20, spec, tank.description,
+                CreateTankBullet(20, spec, tank.description, dmg,
 		            {sin(-s.rotation * PI / 180.0f) * 30, cos(-s.rotation * PI / 180.0f) * 30, 0},
 					{tank.pos.x + 42 * cos(rad), tank.pos.y + 42 * sin(rad), 0 });
 			}
-            if(tank.description == "tank2" && tank2_num_bullets < 5){
+            if(tank.description == "tank2" && tank2_num_bullets < 1){
                 tank2_num_bullets += 1;
-                CreateTankBullet(20, spec, tank.description,
+                CreateTankBullet(20, spec, tank.description, dmg,
 		            {sin(-s.rotation * PI / 180.0f) * 30, cos(-s.rotation * PI / 180.0f) * 30, 0},
 					{tank.pos.x + 42 * cos(rad), tank.pos.y + 42 * sin(rad), 0 });
 			}
