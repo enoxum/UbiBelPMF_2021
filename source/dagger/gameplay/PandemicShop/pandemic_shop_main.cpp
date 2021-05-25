@@ -359,9 +359,33 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         transformTR4.position.y = 200;
         transformTR4.position.z = 0.f;
 
-//******************************************************************************
+//*****************************OTHER SHELVES*******************************************
 
+        auto entS1 = reg.create();
+        auto& spriteS1 = reg.emplace<Sprite>(entS1);
+        AssignSprite(spriteS1, "PandemicShop:shelf2");
+        auto &colliderS1 = reg.emplace<SimpleCollision>(entS1);
+        reg.emplace<CollisionType::Wall>(entS1);
+        colliderS1.size.x = 32;
+        colliderS1.size.y = 32;
+        auto& transformS1 = reg.emplace<Transform>(entS1);
+        transformS1.position.x = 0;
+        transformS1.position.y = 70;
+        transformS1.position.z = 0.f;
 
+        auto entS2 = reg.create();
+        auto& spriteS2 = reg.emplace<Sprite>(entS2);
+        AssignSprite(spriteS2, "PandemicShop:shelf2");
+        auto &colliderS2 = reg.emplace<SimpleCollision>(entS2);
+        reg.emplace<CollisionType::Wall>(entS2);
+        colliderS2.size.x = 32;
+        colliderS2.size.y = 32;
+        auto& transformS2 = reg.emplace<Transform>(entS2);
+        transformS2.position.x =  0;
+        transformS2.position.y = -60;
+        transformS2.position.z = 0.f;
+
+//****************************************************************************************
        
         auto ent4 = reg.create();
         auto item4 = reg.emplace<Item>(ent4);
