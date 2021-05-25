@@ -10,3 +10,5 @@ void loadTiles(float zPos);
 void loadWorldEdges(float zPos);
 
 void loadObstacles(float zPos);
+
+void loadEnemies(float zPos, float size);
