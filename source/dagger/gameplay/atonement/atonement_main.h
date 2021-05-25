@@ -26,5 +26,7 @@ namespace atonement
 
         ECommonSaveArchetype Save(Entity entity_, JSON::json& saveTo_) override;
         void Load(ECommonSaveArchetype archetype_, Entity entity_, JSON::json& loadFrom_) override;
+        public:
+        static void RestartGame();
     };
 }
