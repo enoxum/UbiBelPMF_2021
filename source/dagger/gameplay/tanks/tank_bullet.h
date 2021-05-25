@@ -15,7 +15,7 @@ namespace tanks
 
         String tank{""};
         bool special_bullet{false};
-        int number_of_collision{0};
+        int number_of_collisions{0};
     };
 
 

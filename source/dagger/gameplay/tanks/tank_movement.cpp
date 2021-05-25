@@ -252,7 +252,7 @@ void TankMovement::Run()
                 tank1_num_bullets += 1;
                 CreateTankBullet(
                     20, 
-                    ColorRGBA(233, 212, 96, 1), 
+                    ColorRGBA(1, 1, 1, 1), 
                     { sin(-s.rotation * PI / 180.0f) * 10 ,
                       cos(-s.rotation * PI / 180.0f) * 10 ,
                       0 
@@ -269,7 +269,7 @@ void TankMovement::Run()
                 tank2_num_bullets += 1;
                 CreateTankBullet(
                     20, 
-                    ColorRGBA(233, 212, 96, 1), 
+                    ColorRGBA(1, 1, 1, 1), 
                     { sin(-s.rotation * PI / 180.0f) * 10 ,
                       cos(-s.rotation * PI / 180.0f) * 10 ,
                       0 

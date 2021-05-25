@@ -32,7 +32,7 @@ void TankBulletSystem::Run()
             //std::cout <<"\n\n"<<"Milica Sudar " << t.position.x<<" "<< t.position.y<<" "<<t.position.z<< "\n\n";
             if(!ball.special_bullet){
                 if(ball.tank == "tank1"){
-                tank1_num_bullets -= 1;
+                    tank1_num_bullets -= 1;
                 }
                 else if (ball.tank == "tank2"){
                     tank2_num_bullets -= 1;
@@ -46,7 +46,7 @@ void TankBulletSystem::Run()
                     Transform& transform = viewCollisions.get<Transform>(col.colidedWith);
 
                     Vector2 collisionSides = col.GetCollisionSides(t.position, collision, transform.position);
-
+                    ball.number_of_collisions += 1;
                     do
                     {
                         // get back for 1 frame 
@@ -72,6 +72,32 @@ void TankBulletSystem::Run()
                     {
                         ball.speed.y *= -1;
                     }
+
+                    if(ball.number_of_collisions == 3){
+                        if(ball.tank == "tank1"){
+                            tank1_num_bullets -= 1;
+                        }
+                        else if (ball.tank == "tank2"){
+                            tank2_num_bullets -= 1;
+                        }
+                        Engine::Registry().destroy(entity);
+                    }
+
+                    auto viewTank = Engine::Registry().view<Tank, Transform, SimpleCollision>();
+
+                    for (auto entityTank : viewTank){
+                        if (col.colidedWith == entityTank){
+                            if(ball.tank == "tank1"){
+                                tank1_num_bullets -= 1;
+                            }
+                            else if (ball.tank == "tank2"){
+                                tank2_num_bullets -= 1;
+                            }
+                            Engine::Registry().destroy(entity);    
+                        }
+                        
+                    }
+
                 }
             }
             
