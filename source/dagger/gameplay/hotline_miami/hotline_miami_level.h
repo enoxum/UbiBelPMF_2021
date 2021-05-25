@@ -5,9 +5,6 @@
 
 using namespace dagger;
 
-namespace hotline_miami
-{
-    void loadTiles();
+void loadTiles(float zPos);
 
-    void loadObstacles();
-}
+void loadObstacles();

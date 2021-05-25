@@ -8,6 +8,7 @@
 #include "gameplay/hotline_miami/hotline_miami_weapon.h"
 #include "gameplay/hotline_miami/hotline_miami_enemy.h"
 #include "gameplay/hotline_miami/hotline_miami_health.h"
+#include "gameplay/hotline_miami/hotline_miami_level.h"
 
 #include "core/core.h"
 #include "core/engine.h"
@@ -24,6 +25,7 @@
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
+
 
 
 
@@ -102,31 +104,7 @@ void hotline_miami::SetupWorld()
 
     float zPos = 5.f;
 
-    constexpr float Space = -0.1f;
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            auto entity = reg.create();
-            auto& sprite = reg.emplace<Sprite>(entity);
-
-            if (j >= 22 && j <= 24) 
-            {
-                AssignSprite(sprite, "hotline_miami:Terrain:terrain_pavement");
-            }
-            else
-            {
-                AssignSprite(sprite, "hotline_miami:Terrain:terrain_grass");
-            }
-
-            sprite.size = scale * tileSize;
-
-            auto& transform = reg.emplace<Transform>(entity);
-            transform.position.x = (j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-            transform.position.y = (i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
-            transform.position.z = zPos;
-        }
-    }
+    loadTiles(zPos);
 
     zPos -= 1.f;
     // world end
@@ -149,6 +127,7 @@ void hotline_miami::SetupWorld()
         auto& key = reg.emplace<HotlineMiamiWorldEnd>(entity);
         auto& obstacle = reg.emplace<HotlineMiamiObstacle>(entity);
     }
+
     // health
     {
         auto entity = reg.create();
