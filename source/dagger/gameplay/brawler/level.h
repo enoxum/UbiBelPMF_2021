@@ -9,7 +9,7 @@ using namespace dagger;
 
 namespace brawler {
 
-	enum PlatformType 
+	enum class PlatformType 
 	{
 		EMPTY,
 		BLOCK,
@@ -32,6 +32,7 @@ namespace brawler {
 		static constexpr float DROPDOWN_OFFSET = 5.0f;
 
 		static void Load(String name);
+		static void Reload();
 
 		static Entity Player1();
 		static Entity Player2();
@@ -49,6 +50,7 @@ namespace brawler {
 		static std::optional<float> getLeftWall(Transform& t, Movable& m, SimpleCollision& c);
 		static std::optional<float> getRightWall(Transform& t, Movable& m, SimpleCollision& c);
 	private:
+		static String name;
 		static Tilemap tiles;
 
 		static Entity player1;

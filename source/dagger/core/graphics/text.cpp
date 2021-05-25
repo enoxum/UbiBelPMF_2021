@@ -46,7 +46,7 @@ void Text::Set(String font_, String message_, Vector3 pos_, Bool ui_)
 		auto& sprite = registry.emplace<Sprite>(entity);
 
 		if (ui_) sprite.UseAsUI();
-		sprite.position = { positionX - xOffsetDueToAlign, position.y, position.z };
+		sprite.position = { positionX - xOffsetDueToAlign + (letterSize.x / sprite.size.x)*spacing/2, position.y, position.z };
 		AssignSprite(sprite, spritesheet);
 		sprite.scale = { letterSize.x / sprite.size.x, letterSize.y / sprite.size.y};
 

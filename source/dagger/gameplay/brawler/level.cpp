@@ -15,6 +15,7 @@ using namespace brawler;
 unsigned Level::LEVEL_WIDTH = 0;
 unsigned Level::LEVEL_HEIGHT = 0;
 
+String Level::name{};
 Tilemap Level::tiles{};
 Entity Level::player1 {entt::null};
 Entity Level::player2 {entt::null};
@@ -25,6 +26,7 @@ void Level::Load(String map)
 	reg.clear();
 
 	const auto* level = Engine::Res<LevelData>()[map];
+	name = level->name;
 
 	LEVEL_WIDTH = level->mapWidth;
 	LEVEL_HEIGHT = level->mapHeight;
@@ -91,6 +93,16 @@ void Level::Load(String map)
 	player2 = player2char.entity;
 
 	HUDSystem::Init();
+}
+
+void Level::Reload()
+{
+	if (name.empty())
+	{
+		Logger::error("No map is loaded. Can't reload");
+		return;
+	}
+	Load(name);
 }
 
 Entity Level::Player1()
