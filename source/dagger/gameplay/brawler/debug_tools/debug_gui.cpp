@@ -97,8 +97,8 @@ void DebugGui::RenderDebugWindow()
 		ImGui::Text("Active bullets: %d", BulletSystem::s_ActiveBullets);
 		ImGui::SliderFloat("Bullet Speed", &BulletSystem::s_BulletSpeed, 0.0f, 800.0f);
 		ImGui::SliderFloat("Recoil Speed", &BulletSystem::s_PlayerRecoil, 0.0f, 100.0f);
-		ImGui::SliderFloat("Grenade range", &ProjectileCollisionSystem::s_grenadeSquaredRange, 0.0f, 500.0f);
-		ImGui::SliderFloat("C4 range", &ProjectileCollisionSystem::s_c4SquaredRange, 0.0f, 500.0f);
+		ImGui::SliderFloat("Grenade range", &ProjectileCollisionSystem::s_grenadeSquaredRange, 0.0f, 1000.0f);
+		ImGui::SliderFloat("C4 range", &ProjectileCollisionSystem::s_c4SquaredRange, 0.0f, 1000.0f);
 		
 	}
 

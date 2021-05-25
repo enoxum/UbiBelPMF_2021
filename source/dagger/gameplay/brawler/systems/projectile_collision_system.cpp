@@ -19,7 +19,7 @@ float ProjectileCollisionSystem::s_c4SquaredRange = 300.0f;
 
 float ProjectileCollisionSystem::getDamageCoeff(const Vector3& playerPosition, const Vector3& projectilePosition, float range)
 {
-    float dist = (playerPosition.x - projectilePosition.x) * (playerPosition.x - projectilePosition.x) + (playerPosition.y - projectilePosition.y) * (playerPosition.y - projectilePosition.y);
+    float dist = sqrt((playerPosition.x - projectilePosition.x) * (playerPosition.x - projectilePosition.x) + (playerPosition.y - projectilePosition.y) * (playerPosition.y - projectilePosition.y));
     if (dist > range)
         return 0.0f;
 
@@ -40,10 +40,20 @@ bool ProjectileCollisionSystem::explodePlayer(Player& player,
         return false;
     }
 
+    damage_coeff *= 100;
+
     auto vec = bulletPosition - playerPosition;
 
-    playerMovable.speed -= Vector2{ vec.x * 50, vec.y * 50 };
-    bool dead = player.dealDamage(100* damage_coeff * bullet.damage);
+    float mag = sqrt(vec.x * vec.x + vec.y * vec.y);
+    if (mag == 0) {
+        mag = 1;
+    }
+    Vector2 frljukVec = {100*damage_coeff * vec.x / mag, 100*damage_coeff * vec.y / mag };
+    playerMovable.speed -= frljukVec;
+
+    bool dead = player.dealDamage(damage_coeff * bullet.damage);
+    Logger::info("Dealing damage: {}", damage_coeff * bullet.damage);
+    Logger::info("Frljuk: {}, {}", frljukVec.x, frljukVec.y);
 
     return dead;
 
@@ -82,6 +92,9 @@ void ProjectileCollisionSystem::Run()
                 if(b.duration < 0){
                     b.timer = false;
                     AnimatorPlay(animator, "EXPLOSION");
+                    if (b.done)
+                        break;
+                    b.done = true;
                     for (auto affectedPlayerEntity : players)
                     {
                         explodePlayer(players.get<Player>(affectedPlayerEntity),
@@ -122,6 +135,9 @@ void ProjectileCollisionSystem::Run()
         case WeaponType::GRANADE:
             if(movable.isOnGround){
                 AnimatorPlay(animator, "EXPLOSION");
+                if (b.done)
+                    break;
+                b.done = true;
 
                 for (auto affectedPlayerEntity : players)
                 {
