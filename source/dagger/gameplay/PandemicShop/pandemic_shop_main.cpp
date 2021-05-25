@@ -214,12 +214,17 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     //1st player
     {
-        // Character::Create("Pandemic", {1, 1, 1}, {64, 64});
+        Character::Create("Pandemic", {1, 1, 1}, {64, 64});
         KarenCharacter::Create("Pandemic", {1, 1, 1}, {0, 0});
+        KarenCharacter::Create("Pandemic", {0.5, 0.5, 0.5}, {128, 128});
+        KarenCharacter::Create("Pandemic", {0.7, 0.7, 0.7}, {-128, 128});
 
         // auto ent1 = reg.create();
         // auto item1 = reg.emplace<Item>(ent1);
-        // item1.Create(ent1, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {128, 128});
+        
+        // item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
+        // auto& collider = reg.get<SimpleCollision>(ent1);
+        // collider.size = {32, 32};
 
         // auto ent2 = reg.create();
         // auto item2 = reg.emplace<Item>(ent2);

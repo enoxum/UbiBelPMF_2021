@@ -94,7 +94,7 @@ void KarenControllerFSM::Running::Run(
     if(abs(dist) < 1 || (abs(command.next.x - command.current.x) < 1 
         && abs(command.next.y - command.current.y) < 1)){
       command.curr_action = Action::IDLE;
-      command.previous = command.current;
+      command.previous = command.next;
       command.current = command.next;
       command.finishedX = true;
       command.finishedY = true;

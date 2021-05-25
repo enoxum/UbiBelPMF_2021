@@ -146,6 +146,29 @@ void SimpleCollisionsSystem::Run()
             }
             it2++;
         }
+
+        auto b_it2 = bot_view.begin();
+        while(b_it2 != bot_view.end())
+        {
+            if(reg.has<SimpleCollision>(*b_it2)){
+                auto &col = view.get<SimpleCollision>(*b_it2);
+                auto &tr = view.get<Transform>(*b_it2);
+                
+                if (collision.IsCollided(transform.position, col, tr.position))
+                {
+                    collision.colidedWith = *b_it2;   
+                    col.colidedWith = *h_it;
+
+                    collision.colided = true;
+                    col.colided = true;
+                    Logger::info("Player hit a bot");
+                    // resolveDirection( collision, transform, col, tr);
+
+                }
+            }
+            b_it2++;
+        }
+
         h_it++;
     }
 }
@@ -159,10 +182,10 @@ void SimpleCollisionsSystem::resolveWalls(SimpleCollision &collision, Transform 
     resolveDirection(collision, col_transform, other, other_transform); 
     other.colided = false;
     collision.colided = false;
-    command.previous = command.current;
+    command.previous = command.next;
     command.current = command.next;    
-    command.next = {(rand() % AISystem::border_width) - AISystem::border_width, 
-                    (rand() % AISystem::border_height) - AISystem::border_height};
+    command.next = {(rand() % AISystem::border_width) - AISystem::border_width/2, 
+                    (rand() % AISystem::border_height) - AISystem::border_height/2};
     command.finishedX = false;
     command.finishedY = false;
     command.finished = false;
@@ -183,10 +206,10 @@ void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &
         resolveDirection(collision, col_transform, other, other_transform); 
         other.colided = false;
         collision.colided = false;
-        command.previous = command.current;
+        command.previous = command.next;
         command.current = command.next;
-        command.next = {(rand() % AISystem::border_width) - AISystem::border_width, 
-                        (rand() % AISystem::border_height) - AISystem::border_height};
+        command.next = {(rand() % AISystem::border_width) - AISystem::border_width/2, 
+                        (rand() % AISystem::border_height) - AISystem::border_height/2};
         
         command.finishedX = false;
         command.finishedY = false;

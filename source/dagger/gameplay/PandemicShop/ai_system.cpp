@@ -1,14 +1,15 @@
 #include "gameplay/PandemicShop/ai_system.h"
 #include "gameplay/PandemicShop/item.h"
 #include "gameplay/PandemicShop/karen.h"
-
+#include <time.h>
 void AISystem::Run(){
 
 
     auto &reg = Engine::Registry();
     auto item_view = reg.view<Item>();
     auto karens = reg.view<PandemicKarenCharacter>();
-    
+    srand(time(0));
+
     counter += Engine::DeltaTime();
 	if (counter >= delay) {
 		counter = 0.0f;
@@ -18,7 +19,7 @@ void AISystem::Run(){
             Vector2 karen_pos = {karen.transform.position.x, karen.transform.position.y};
 
             if(karen.command.finished && karen.command.picked){
-                Vector2 next_position = {(rand() % border_width) - border_width, rand() % border_height - border_height};
+                Vector2 next_position = {(rand() % (2*border_width)) - border_width, rand() % (2*border_height) - border_height};
                 // Vector2 next_position = {-128, -128};
                 karen.command.finished = false;
                 karen.command.finishedY = false;
@@ -42,7 +43,7 @@ void AISystem::Run(){
             Logger::info("\nDISTANCE {}\n", curr_distance);
             if(abs(curr_distance) < 1){
                 // prev = curr;
-                karen.command.previous = karen.command.current;
+                karen.command.previous = karen.command.next;
                 // curr = next;
                 karen.command.current = karen.command.next;
                 karen.command.curr_action = Action::IDLE;
