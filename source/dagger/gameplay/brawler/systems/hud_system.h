@@ -22,10 +22,6 @@ namespace brawler {
         static float s_midPaddingUp;
         static float s_midPaddingSide;
 
-        // debug
-        static int   s_leftPlayerHealth;
-        static int   s_rightPlayerHealth;
-
         static      Entity leftMarker;
         static      Entity rightMarker;
         static      Entity leftText;
