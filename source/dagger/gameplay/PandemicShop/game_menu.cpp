@@ -8,12 +8,16 @@
 #include "core/graphics/sprite.h"
 #include "core/graphics/window.h"
 #include "core/input/inputs.h"
+#include "core/graphics/text.h"
+#include "gameplay/PandemicShop/player.h"
 
 #include "gameplay/PandemicShop/pandemic_shop_main.h"
 
 using namespace pandemic;
+using namespace pandemic_shop;
 using namespace dagger;
 
+//promeni
 bool GameMenuSystem::s_GameOver = false;
 String GameMenuSystem::s_Winner = "";
 
@@ -25,23 +29,24 @@ void GameMenuSystem::Run() {
     auto &sprite = view.get<Sprite>(entity);
     auto &input = view.get<InputReceiver>(entity);
 
+
     if (IsMouseOver(gmb)) {
-      if (gmb.type == EGameMenuType::StartScreen) {
+      /*if (gmb.type == EGameMenuType::StartScreen) {
         AssignSprite(sprite, "PandemicShop:start_button");
       } else if (gmb.type == EGameMenuType::RestartScreen) {
-        AssignSprite(sprite, "PandemicShop:tree1");
+        AssignSprite(sprite, "PandemicShop:replay_button");
       }
-      sprite.size = gmb.size;
+      sprite.size = gmb.size;*/
       if (EPSILON_NOT_ZERO(input.Get("start"))) {
         m_LoadGame = true;
-      }
+      } 
     } else {
-      if (gmb.type == EGameMenuType::StartScreen) {
+      /*if (gmb.type == EGameMenuType::StartScreen) {
         AssignSprite(sprite, "PandemicShop:start_button");
       } else if (gmb.type == EGameMenuType::RestartScreen) {
-        AssignSprite(sprite, "PandemicShop:tree1");
+        AssignSprite(sprite, "PandemicShop:replay_button");
       }
-      sprite.size = gmb.size;
+      sprite.size = gmb.size;*/
     }
   }
 }
@@ -52,19 +57,20 @@ void GameMenuSystem::SpinUp() {
 }
 
 void GameMenuSystem::WindDown() {
-  Engine::Dispatcher()
-      .sink<NextFrame>()
-      .disconnect<&GameMenuSystem::OnEndOfFrame>(this);
+  Engine::Dispatcher().sink<NextFrame>().disconnect<&GameMenuSystem::OnEndOfFrame>(this);
 }
 
 void GameMenuSystem::OnEndOfFrame() {
   if (m_LoadGame) {
     m_LoadGame = false;
     Engine::Registry().clear();
+    pandemic_shop::SetupWorld(Engine::Instance());
   }
   if (s_GameOver) {
     s_GameOver = false;
     Engine::Registry().clear();
+    //ovde ne treba da pise 7  i 11 vec broj pokupljenih itema i koliko je bilo itema
+    pandemic_shop::SetupRestartScreen(Engine::Instance(), "7", "11");
   }
 }
 

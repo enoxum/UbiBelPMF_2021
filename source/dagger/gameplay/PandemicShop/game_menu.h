@@ -1,6 +1,4 @@
 #pragma once
-#pragma once
-
 #include "core/core.h"
 #include "core/system.h"
 

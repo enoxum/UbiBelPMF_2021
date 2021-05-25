@@ -22,6 +22,8 @@ struct Character {
   Transform &transform;
   SimpleCollision &collision;
   std::vector<Entity> inventory;
+  //Maro ovo treba da se pormeni kada je kraj igrice
+  bool isCollided;
 
 
   static Character Get(Entity entity) {
@@ -54,6 +56,8 @@ struct Character {
     chr.sprite.scale = {2, 2};
     chr.sprite.position = {position_, 0.0f};
     chr.sprite.color = {color_, 1.0f};
+
+    chr.isCollided = false;
 
     AssignSprite(chr.sprite, "PandemicShop:BOB_IDLE:FRONT:bob_idle1");
     AnimatorPlay(chr.animator, "PandemicShop:IDLE_FRONT");

@@ -62,13 +62,12 @@ void PandemicShopGame::WorldSetup(Engine &engine_) {
   camera->zoom = 1;
   camera->position = {0, 0, 0};
   camera->Update();
-  SetupWorld(engine_);
+ // pandemic_shop::SetupRestartScreen(engine_, "Bob");
+  pandemic_shop::SetupStartScreen(engine_);
 }
 //---------------------------------------------------------
 
 void pandemic_shop::SetupWorld(Engine &engine_) {
-
-  pandemic_shop::SetupStartScreen(engine_);
   Vector2 scale(1, 1);
 
   auto &reg = engine_.Registry();
@@ -202,7 +201,7 @@ void pandemic_shop::SetupWorld(Engine &engine_) {
 
   // 1st player
   {
-    Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+    auto chr = Character::Create("Pandemic", {1, 1, 1}, {0, 0});
 
     /*auto ent = reg.create();
     auto item = reg.emplace<Item>(ent);
@@ -215,6 +214,7 @@ void pandemic_shop::SetupWorld(Engine &engine_) {
         printf("\n not hidden \n");
     }*/
   }
+
 }
 
 //-------------------------------------------pocetni ekran i restartekran-------------------------------------
@@ -232,9 +232,23 @@ void pandemic_shop::SetupStartScreen(Engine &engine_) {
 
   AssignSprite(sprite, "PandemicShop:start_button");
   gmb.size = sprite.size;
+
+  //text
+  auto entityt = reg.create();
+  auto &text = reg.emplace<Text>(entityt);
+  text.spacing = 0.6f;
+  text.Set("pixel-font","Pandemic Shop Game", {10, 175, 98});
+
+  auto entityt2 = reg.create();
+  auto &text2 = reg.emplace<Text>(entityt2);
+  text2.spacing = 0.5f;
+  text2.Set("pixel-font", "Start", {10, 100, 98});
 }
 
-void pandemic_shop::SetupRestartScreen(Engine &engine_, String winner_) {
+void pandemic_shop::SetupRestartScreen(Engine &engine_,
+                                       String number_of_collected_items_,
+                                       String number_of_items_
+    ) {
     auto &reg = engine_.Registry();
 
     auto entity = reg.create();
@@ -248,4 +262,25 @@ void pandemic_shop::SetupRestartScreen(Engine &engine_, String winner_) {
 
     AssignSprite(sprite, "PandemicShop:replay_button");
     gmb.size = sprite.size;
+
+    auto entityt = reg.create();
+    auto &text = reg.emplace<Text>(entityt);
+    text.spacing = 0.6f;
+    text.alignment = TextAlignment::CENTER;
+
+    //if(pobeda){
+    //text.Set("pixel-font", "Game Over!", {10, 175, 98});
+
+    //else{
+    text.Set("pixel-font", "Victory!", {10, 175, 98});
+
+    auto entityt1 = reg.create();
+    auto &text1 = reg.emplace<Text>(entityt1);
+    //Collected 7/11 (na primer)
+    text1.spacing = 0.6f;
+    text1.Set("pixel-font", "Collected "+number_of_collected_items_+"/"+number_of_items_ + " items", {10, 100, 98});
+
+    /*text.Set("pixel-font",
+             fmt::format("Raid: {}s left!", (UInt32)player.timeLeft),
+             {10, 260, 98});*/
 }
