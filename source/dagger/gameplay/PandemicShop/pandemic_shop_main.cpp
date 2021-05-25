@@ -19,8 +19,11 @@
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
+#include "gameplay/PandemicShop/karen_controller.h"
 #include "gameplay/PandemicShop/item.h"
 #include "gameplay/PandemicShop/player.h"
+#include "gameplay/PandemicShop/karen.h"
+#include "gameplay/PandemicShop/ai_system.h"
 
 
 using namespace dagger;
@@ -50,8 +53,10 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
 {
     engine_.AddPausableSystem<SimpleCollisionsSystem>();
     engine_.AddPausableSystem<PandemicControllerSystem>();
+    engine_.AddPausableSystem<KarenControllerSystem>();
     engine_.AddPausableSystem<CollisionDetectionSystem>();
     engine_.AddPausableSystem<Pickable>();
+    engine_.AddPausableSystem<AISystem>();
 #if defined(DAGGER_DEBUG)
     engine_.AddPausableSystem<ping_pong::PingPongTools>();
 #endif //defined(DAGGER_DEBUG)
@@ -122,6 +127,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 sprite.color.b = 0.0f;
 
                 auto &col = reg.emplace<SimpleCollision>(entity);
+                reg.emplace<CollisionType::Wall>(entity);
                 col.size.x = tileSize;
                 col.size.y = tileSize;
                 
@@ -203,22 +209,42 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             -(width - 2) * (tileSize + Space + 5) / 2.f);
         stats->PlayerSpeed = tileSize * 14.f;
         Engine::Instance().PutDefaultResource<pandemic_shop::GameStats>(stats);
+        Engine::Instance();
     }
 
     //1st player
     {
-        Character::Create("Pandemic", {1, 1, 1}, {0, 0});
+        Character::Create("Pandemic", {1, 1, 1}, {64, 64});
+        KarenCharacter::Create("Pandemic", {1, 1, 1}, {0, 0});
+        KarenCharacter::Create("Pandemic", {0.5, 0.5, 0.5}, {128, 128});
+        KarenCharacter::Create("Pandemic", {0.7, 0.7, 0.7}, {-128, 128});
 
-        auto ent = reg.create();
-        auto item = reg.emplace<Item>(ent);
-        item.Create(ent, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {32, 32});
-        if(item.hidden){
-            printf("\nhidden\n");
-        }
-        else{
+        // auto ent1 = reg.create();
+        // auto item1 = reg.emplace<Item>(ent1);
+        
+        // item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
+        // auto& collider = reg.get<SimpleCollision>(ent1);
+        // collider.size = {32, 32};
 
-            printf("\n not hidden \n");
-        }
+        // auto ent2 = reg.create();
+        // auto item2 = reg.emplace<Item>(ent2);
+        // item2.Create(ent2, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {128, -128});
+
+        // auto ent3 = reg.create();
+        // auto item3 = reg.emplace<Item>(ent3);
+        // item3.Create(ent3, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, 128});
+
+        // auto ent4 = reg.create();
+        // auto item4 = reg.emplace<Item>(ent4);
+        // item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, -128});
+
+        // if(item.hidden){
+        //     printf("\nhidden\n");
+        // }
+        // else{
+
+        //     printf("\n not hidden \n");
+        // }
     }
     
     

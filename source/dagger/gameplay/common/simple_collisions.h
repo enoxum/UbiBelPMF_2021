@@ -2,14 +2,20 @@
 #include "core/system.h"
 #include "core/core.h"
 #include "core/game/transforms.h"
+#include "gameplay/PandemicShop/ai_system.h"
 using namespace dagger;
 
-enum struct CollisionType {Wall, Item};
+
+namespace CollisionType{
+    struct Wall{};
+    struct Item{};
+    struct Char{};
+}
+
 struct SimpleCollision
 {
     Vector2 size;
     Vector2 pivot {-0.5f, -0.5f};
-    CollisionType type = CollisionType::Wall;
 
     bool colided = false;
     entt::entity colidedWith;
@@ -25,6 +31,7 @@ struct SimpleCollision
 
 class SimpleCollisionsSystem : public System
 {
+
 public:
     inline String SystemName() { return "Simple Collisions System"; }
 
@@ -32,4 +39,10 @@ public:
 
     void resolveDirection(SimpleCollision &collision, Transform& col_transform, 
                           SimpleCollision& other, Transform &other_transform);
+    void resolveItem(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command);
+    void resolveWalls(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command);
 };

@@ -5,6 +5,7 @@
 #include "core/graphics/animations.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
 #include "gameplay/PandemicShop/item.h"
+#include "gameplay/PandemicShop/karen.h"
 
 using namespace dagger;
 using namespace pandemic;
@@ -12,17 +13,29 @@ using namespace pandemic;
 void SimpleCollisionsSystem::Run()
 {
     auto &reg = Engine::Registry();
-    auto view = reg.view<SimpleCollision, Transform, Sprite>();
+    auto view = reg.view<SimpleCollision, Transform>();
+    auto bot_view = reg.view<CollisionType::Char, PandemicKarenCharacter, AICommand>();
+    auto hero_view = reg.view<CollisionType::Char, PandemicCharacter>();
+    auto wall_view = reg.view<CollisionType::Wall>();
+    auto item_view = reg.view<Item>();
 
-    auto it = view.begin();
-    while(it != view.end())
+
+    auto all_it = view.begin();
+    while (all_it != view.end())
+    {
+        auto& col = view.get<SimpleCollision>(*all_it);
+        col.colided = false;
+        all_it++;
+    }
+
+    auto it = bot_view.begin();
+    while(it != bot_view.end())
     {
         auto &collision = view.get<SimpleCollision>(*it);
         auto &transform = view.get<Transform>(*it);
 
-        auto it2 = it;
-        it2++;
-        while(it2 != view.end())
+        auto it2 = wall_view.begin();
+        while(it2 != wall_view.end())
         {
             auto &col = view.get<SimpleCollision>(*it2);
             auto &tr = view.get<Transform>(*it2);
@@ -35,21 +48,182 @@ void SimpleCollisionsSystem::Run()
 
                 collision.colided = true;
                 col.colided = true;
+                auto &command = reg.get<AICommand>(*it);
+                resolveWalls( collision, transform, col, tr, command);
 
-                if(collision.type != CollisionType::Item){
-                    resolveDirection(collision, transform, col, tr);
-                }
-                else{
-                    resolveDirection( col, tr, collision, transform);
-                }
+            }
+            it2++;
+        }
+        it2 = item_view.begin();
+        while(it2 != item_view.end())
+        {
+            
+            if(reg.has<SimpleCollision>(*it2)){
+                auto &col = view.get<SimpleCollision>(*it2);
+                auto &tr = view.get<Transform>(*it2);
+                
+                if (collision.IsCollided(transform.position, col, tr.position))
+                {
+                    collision.colidedWith = *it2;   
+                    col.colidedWith = *it;
 
+                    collision.colided = true;
+                    col.colided = true;
+
+                    auto &karen_command = reg.get<AICommand>(*it);
+                    auto prob = rand() / (float) RAND_MAX;
+                    Logger::info("\nPROB {}\n", prob);
+                    if( prob > karen_command.pick_probability){
+                        Logger::info("\nKaren pickup_prob {}\n", karen_command.pick_probability);
+                        auto &item = reg.get<Item>(*it2);
+                        auto &sprite = reg.get<Sprite>(*it2);
+                        auto karen = KarenCharacter::Get(*it);
+                        if(!item.hidden){
+                            item.hidden = true;
+                            item.pickable = true;
+                            reg.remove<SimpleCollision>(*it2);
+                            sprite.scale = {0, 0};
+                            karen.inventory.emplace_back(*it2);
+                            karen_command.picked = true;
+                        }
+
+                    }
+                    resolveItem( collision, transform, col, tr, karen_command);
+                    Logger::info("\nPICKED AFTER COLLISION: {}\n", karen_command.picked);
+
+                }
             }
             it2++;
         }
         it++;
     }
+
+
+    auto h_it = hero_view.begin();
+    while(h_it != hero_view.end())
+    {
+        auto &collision = view.get<SimpleCollision>(*h_it);
+        auto &transform = view.get<Transform>(*h_it);
+
+        auto it2 = wall_view.begin();
+        while(it2 != wall_view.end())
+        {
+            auto &col = view.get<SimpleCollision>(*it2);
+            auto &tr = view.get<Transform>(*it2);
+            
+            // processing one collision per frame for each colider
+            if (collision.IsCollided(transform.position, col, tr.position))
+            {
+                collision.colidedWith = *it2;   
+                col.colidedWith = *h_it;
+
+                collision.colided = true;
+                col.colided = true;
+
+                resolveDirection( collision, transform, col, tr);
+
+            }
+            it2++;
+        }
+        it2 = item_view.begin();
+        while(it2 != item_view.end())
+        {
+            if(reg.has<SimpleCollision>(*it2)){
+                auto &col = view.get<SimpleCollision>(*it2);
+                auto &tr = view.get<Transform>(*it2);
+                
+                if (collision.IsCollided(transform.position, col, tr.position))
+                {
+                    collision.colidedWith = *it2;   
+                    col.colidedWith = *h_it;
+
+                    collision.colided = true;
+                    col.colided = true;
+
+                    resolveDirection( collision, transform, col, tr);
+
+                }
+            }
+            it2++;
+        }
+
+        auto b_it2 = bot_view.begin();
+        while(b_it2 != bot_view.end())
+        {
+            if(reg.has<SimpleCollision>(*b_it2)){
+                auto &col = view.get<SimpleCollision>(*b_it2);
+                auto &tr = view.get<Transform>(*b_it2);
+                
+                if (collision.IsCollided(transform.position, col, tr.position))
+                {
+                    collision.colidedWith = *b_it2;   
+                    col.colidedWith = *h_it;
+
+                    collision.colided = true;
+                    col.colided = true;
+                    Logger::info("Player hit a bot");
+                    // resolveDirection( collision, transform, col, tr);
+
+                }
+            }
+            b_it2++;
+        }
+
+        h_it++;
+    }
 }
+
+void SimpleCollisionsSystem::resolveWalls(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command ){
+    
+    
+   
+    resolveDirection(collision, col_transform, other, other_transform); 
+    other.colided = false;
+    collision.colided = false;
+    command.previous = command.next;
+    command.current = command.next;    
+    command.next = {(rand() % AISystem::border_width) - AISystem::border_width/2, 
+                    (rand() % AISystem::border_height) - AISystem::border_height/2};
+    command.finishedX = false;
+    command.finishedY = false;
+    command.finished = false;
+}
+
+
+void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &col_transform, 
+                                            SimpleCollision &other, Transform& other_transform,
+                                            AICommand& command ){
+    
+    
+    if(command.picked){
+        resolveDirection(collision, col_transform, other, other_transform);
+        command.picked = false;
+        other.colided = false;
+    }
+    else{
+        resolveDirection(collision, col_transform, other, other_transform); 
+        other.colided = false;
+        collision.colided = false;
+        command.previous = command.next;
+        command.current = command.next;
+        command.next = {(rand() % AISystem::border_width) - AISystem::border_width/2, 
+                        (rand() % AISystem::border_height) - AISystem::border_height/2};
+        
+        command.finishedX = false;
+        command.finishedY = false;
+        command.finished = false;
+        
+           
+    }
+}
+
+
+
+
 void SimpleCollisionsSystem::resolveDirection(SimpleCollision &collision, Transform &col_transform, SimpleCollision &other, Transform& other_transform ){
+    
     if (collision.GetCollisionSides(col_transform.position, collision, other_transform.position).x == 1){
         col_transform.position.x -= collision.size.x/10.f;
     }
@@ -116,3 +290,4 @@ Vector3 SimpleCollision::GetCollisionCenter(const Vector3& pos_, const SimpleCol
 
     return res;
 }
+
