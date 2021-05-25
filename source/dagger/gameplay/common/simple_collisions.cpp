@@ -16,7 +16,7 @@ void SimpleCollisionsSystem::Run()
     auto view = reg.view<SimpleCollision, Transform>();
     auto bot_view = reg.view<CollisionType::Char, PandemicKarenCharacter, AICommand>();
     auto hero_view = reg.view<CollisionType::Char, PandemicCharacter>();
-    auto wall_view = reg.view<CollisionType::Wall>();
+    auto wall_view = reg.view<CollisionType::Wall, SimpleCollision>();
     auto item_view = reg.view<Item>();
 
 
@@ -54,17 +54,17 @@ void SimpleCollisionsSystem::Run()
             }
             it2++;
         }
-        it2 = item_view.begin();
-        while(it2 != item_view.end())
+        auto i_it2 = item_view.begin();
+        while(i_it2 != item_view.end())
         {
             
-            if(reg.has<SimpleCollision>(*it2)){
-                auto &col = view.get<SimpleCollision>(*it2);
-                auto &tr = view.get<Transform>(*it2);
+            if(reg.has<SimpleCollision>(*i_it2)){
+                auto &col = view.get<SimpleCollision>(*i_it2);
+                auto &tr = view.get<Transform>(*i_it2);
                 
                 if (collision.IsCollided(transform.position, col, tr.position))
                 {
-                    collision.colidedWith = *it2;   
+                    collision.colidedWith = *i_it2;   
                     col.colidedWith = *it;
 
                     collision.colided = true;
@@ -75,15 +75,15 @@ void SimpleCollisionsSystem::Run()
                     Logger::info("\nPROB {}\n", prob);
                     if( prob > karen_command.pick_probability){
                         Logger::info("\nKaren pickup_prob {}\n", karen_command.pick_probability);
-                        auto &item = reg.get<Item>(*it2);
-                        auto &sprite = reg.get<Sprite>(*it2);
+                        auto &item = reg.get<Item>(*i_it2);
+                        auto &sprite = reg.get<Sprite>(*i_it2);
                         auto karen = KarenCharacter::Get(*it);
                         if(!item.hidden){
                             item.hidden = true;
                             item.pickable = true;
-                            reg.remove<SimpleCollision>(*it2);
+                            reg.remove<SimpleCollision>(*i_it2);
                             sprite.scale = {0, 0};
-                            karen.inventory.emplace_back(*it2);
+                            karen.inventory.emplace_back(*i_it2);
                             karen_command.picked = true;
                         }
 
@@ -93,7 +93,7 @@ void SimpleCollisionsSystem::Run()
 
                 }
             }
-            it2++;
+            i_it2++;
         }
         it++;
     }
@@ -108,30 +108,13 @@ void SimpleCollisionsSystem::Run()
         auto it2 = wall_view.begin();
         while(it2 != wall_view.end())
         {
-            auto &col = view.get<SimpleCollision>(*it2);
-            auto &tr = view.get<Transform>(*it2);
-            
-            // processing one collision per frame for each colider
-            if (collision.IsCollided(transform.position, col, tr.position))
-            {
-                collision.colidedWith = *it2;   
-                col.colidedWith = *h_it;
-
-                collision.colided = true;
-                col.colided = true;
-
-                resolveDirection( collision, transform, col, tr);
-
-            }
-            it2++;
-        }
-        it2 = item_view.begin();
-        while(it2 != item_view.end())
-        {
             if(reg.has<SimpleCollision>(*it2)){
+                            
+                            
                 auto &col = view.get<SimpleCollision>(*it2);
                 auto &tr = view.get<Transform>(*it2);
                 
+                // processing one collision per frame for each colider
                 if (collision.IsCollided(transform.position, col, tr.position))
                 {
                     collision.colidedWith = *it2;   
@@ -144,7 +127,29 @@ void SimpleCollisionsSystem::Run()
 
                 }
             }
+
             it2++;
+        }
+        auto i_it2 = item_view.begin();
+        while(i_it2 != item_view.end())
+        {
+            if(reg.has<SimpleCollision>(*i_it2)){
+                auto &col = view.get<SimpleCollision>(*i_it2);
+                auto &tr = view.get<Transform>(*i_it2);
+                
+                if (collision.IsCollided(transform.position, col, tr.position))
+                {
+                    collision.colidedWith = *i_it2;   
+                    col.colidedWith = *h_it;
+
+                    collision.colided = true;
+                    col.colided = true;
+
+                    resolveDirection( collision, transform, col, tr);
+
+                }
+            }
+            i_it2++;
         }
 
         auto b_it2 = bot_view.begin();

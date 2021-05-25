@@ -88,7 +88,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     constexpr int screenWidth = 800;
     constexpr int screenHeight = 600;
 
-    constexpr int height = 20;
+    constexpr int height = 19;
     constexpr int width = 26;
     constexpr float tileSize = 20.f;// / static_cast<float>(Width);
 
@@ -214,17 +214,104 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     //1st player
     {
-        Character::Create("Pandemic", {1, 1, 1}, {64, 64});
+        Character::Create("Pandemic", {1, 1, 1}, {64, 0});
         KarenCharacter::Create("Pandemic", {1, 1, 1}, {0, 0});
-        KarenCharacter::Create("Pandemic", {0.5, 0.5, 0.5}, {128, 128});
-        KarenCharacter::Create("Pandemic", {0.7, 0.7, 0.7}, {-128, 128});
+        KarenCharacter::Create("Pandemic", {0.5, 0.5, 0.5}, {128, 0});
+        KarenCharacter::Create("Pandemic", {0.7, 0.7, 0.7}, {-128, 0});
 
-        auto ent1 = reg.create();
-        auto item1 = reg.emplace<Item>(ent1);
+        // auto ent1 = reg.create();
+        // auto item1 = reg.emplace<Item>(ent1);
         
-        item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
-        auto& collider = reg.get<SimpleCollision>(ent1);
-        collider.size = {32, 32};
+        // item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
+        // auto& collider = reg.get<SimpleCollision>(ent1);
+        // collider.size = {32, 32};
+
+        // auto entTS = reg.create();
+        // auto itemTS = reg.emplace<Item>(entTS);
+        
+        // itemTS.Create(entTS, "spritesheets:shelf1:three_shelfs", {1, 1, 1}, {100, 100});
+        // auto& collider = reg.get<SimpleCollision>(entTS);
+        // collider.size = {32, 32};
+
+//**********************************************************************
+        auto entTS = reg.create();
+        auto& spriteTS = reg.emplace<Sprite>(entTS);
+        AssignSprite(spriteTS, "PandemicShop:shelf1");
+        auto &colliderTS = reg.emplace<SimpleCollision>(entTS);
+        reg.emplace<CollisionType::Wall>(entTS);
+        colliderTS.size.x = 100;
+        colliderTS.size.y = 64;
+        auto& transformTS = reg.emplace<Transform>(entTS);
+        transformTS.position.x = -150;
+        transformTS.position.y = 110;
+        transformTS.position.z = 0.f;
+
+
+        auto entTS1 = reg.create();
+        auto& spriteTS1 = reg.emplace<Sprite>(entTS1);
+        AssignSprite(spriteTS1, "PandemicShop:shelf1");
+        auto &colliderTS1 = reg.emplace<SimpleCollision>(entTS1);
+        reg.emplace<CollisionType::Wall>(entTS1);
+        colliderTS1.size.x = 100;
+        colliderTS1.size.y = 64;
+        auto& transformTS1 = reg.emplace<Transform>(entTS1);
+        transformTS1.position.x = -150;
+        transformTS1.position.y = 0;
+        transformTS1.position.z = 0.f;
+
+        auto entTS2 = reg.create();
+        auto& spriteTS2 = reg.emplace<Sprite>(entTS2);
+        AssignSprite(spriteTS2, "PandemicShop:shelf1");
+        auto &colliderTS2 = reg.emplace<SimpleCollision>(entTS2);
+        reg.emplace<CollisionType::Wall>(entTS2);
+        colliderTS2.size.x = 100;
+        colliderTS2.size.y = 64;
+        auto& transformTS2 = reg.emplace<Transform>(entTS2);
+        transformTS2.position.x = -150;
+        transformTS2.position.y = -110;
+        transformTS2.position.z = 0.f;
+
+        auto entTS3 = reg.create();
+        auto& spriteTS3 = reg.emplace<Sprite>(entTS3);
+        AssignSprite(spriteTS3, "PandemicShop:shelf1");
+        auto &colliderTS3 = reg.emplace<SimpleCollision>(entTS3);
+        reg.emplace<CollisionType::Wall>(entTS3);
+        colliderTS3.size.x = 100;
+        colliderTS3.size.y = 64;
+        auto& transformTS3 = reg.emplace<Transform>(entTS3);
+        transformTS3.position.x =  150;
+        transformTS3.position.y = -110;
+        transformTS3.position.z = 0.f;
+
+        auto entTS4 = reg.create();
+        auto& spriteTS4 = reg.emplace<Sprite>(entTS4);
+        AssignSprite(spriteTS4, "PandemicShop:shelf1");
+        auto &colliderTS4 = reg.emplace<SimpleCollision>(entTS4);
+        reg.emplace<CollisionType::Wall>(entTS4);
+        colliderTS4.size.x = 100;
+        colliderTS4.size.y = 64;
+        auto& transformTS4 = reg.emplace<Transform>(entTS4);
+        transformTS4.position.x = 150;
+        transformTS4.position.y = 0;
+        transformTS4.position.z = 0.f;
+
+        auto entTS5 = reg.create();
+        auto& spriteTS5 = reg.emplace<Sprite>(entTS5);
+        AssignSprite(spriteTS5, "PandemicShop:shelf1");
+        auto &colliderTS5 = reg.emplace<SimpleCollision>(entTS5);
+        reg.emplace<CollisionType::Wall>(entTS5);
+        colliderTS5.size.x = 100;
+        colliderTS5.size.y = 64;
+        auto& transformTS5 = reg.emplace<Transform>(entTS5);
+        transformTS5.position.x = 150;
+        transformTS5.position.y = 110;
+        transformTS5.position.z = 0.f;
+
+
+       
+        auto ent4 = reg.create();
+        auto item4 = reg.emplace<Item>(ent4);
+        item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, -128});
 
         // auto ent2 = reg.create();
         // auto item2 = reg.emplace<Item>(ent2);
@@ -234,9 +321,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         // auto item3 = reg.emplace<Item>(ent3);
         // item3.Create(ent3, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, 128});
 
-        auto ent4 = reg.create();
-        auto item4 = reg.emplace<Item>(ent4);
-        item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, -128});
+
 
         // if(item.hidden){
         //     printf("\nhidden\n");
