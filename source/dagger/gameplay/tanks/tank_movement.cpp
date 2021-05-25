@@ -5,6 +5,7 @@
 #include "core/game/transforms.h"
 #include "core/graphics/sprite.h"
 #include "gameplay/common/simple_collisions.h"
+#include "gameplay/common/particles.h"
 #include "tank.h"
 
 #include <iostream>
@@ -25,15 +26,16 @@ void TankMovement::WindDown()
     Engine::Dispatcher().sink<KeyboardEvent>().disconnect<&TankMovement::OnKeyboardEvent>(this);
 }
 
-void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3 pos_, String desc)
+void CreateTankBullet(float tileSize_, bool spec, String desc, int dmg, Vector3 speed_, Vector3 pos_)
 {
     auto& reg = Engine::Registry();
     auto entity = reg.create();
     auto& sprite = reg.emplace<Sprite>(entity);
-    AssignSprite(sprite, "bullet");
+    if (spec)
+    	AssignSprite(sprite, "special_bullet");
+    else
+    	AssignSprite(sprite, "bullet");
     sprite.size = Vector2(1, 1) * tileSize_;
-
-    sprite.color = color_;
 
     auto& transform = reg.emplace<Transform>(entity);
     transform.position = pos_;
@@ -41,36 +43,17 @@ void CreateTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3
     auto& ball = reg.emplace<TankBullet>(entity);
     ball.speed = speed_ * tileSize_;
     ball.tank = desc;
-    ball.special_bullet = false;
+    ball.damage = dmg;
+    ball.special_bullet = spec;
 
     auto& col = reg.emplace<SimpleCollision>(entity);
     col.size.x = tileSize_;
     col.size.y = tileSize_;
+    
+    common_res::ParticleSpawnerSettings settings;
+    settings.Setup(0.02f, {1.5f, 1.5f}, {-0.3f, -0.3f}, {0.3f, 0.3f});
+    common_res::ParticleSystem::SetupParticleSystem(entity, settings);
 }
-
-void CreateSpecialTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, Vector3 pos_, String desc)
-{
-    auto& reg = Engine::Registry();
-    auto entity = reg.create();
-    auto& sprite = reg.emplace<Sprite>(entity);
-    AssignSprite(sprite, "special_bullet");
-    sprite.size = Vector2(1, 1) * tileSize_;
-
-    sprite.color = color_;
-
-    auto& transform = reg.emplace<Transform>(entity);
-    transform.position = pos_;
-    transform.position.z = pos_.z;
-    auto& ball = reg.emplace<TankBullet>(entity);
-    ball.speed = speed_ * tileSize_;
-    ball.tank = desc;
-    ball.special_bullet = true;
-
-    auto& col = reg.emplace<SimpleCollision>(entity);
-    col.size.x = tileSize_;
-    col.size.y = tileSize_;
-}
-
 
 void TankMovement::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
@@ -166,8 +149,11 @@ void TankMovement::Run()
             bool tankDestroyed = false;
 
             for (auto entityBullet : viewBullet){
+            
+            	auto& ball = viewBullet.get<TankBullet>(entityBullet);
+            	
                 if (col.colidedWith == entityBullet){
-                    tank.health -= 25;   
+                    tank.health -= ball.damage;   
                 }
                 if(tank.health <= 0){
                     Engine::Registry().destroy(entity);
@@ -207,81 +193,30 @@ void TankMovement::Run()
         	}
         }
         
-        if (ctrl.fire) {
-            ctrl.fire = 0;
-            if(tank.description == "tank1" && tank1_num_bullets < 5){
+        if (ctrl.fire || ctrl.special_fire) {
+        
+        	bool spec = true;
+        	int dmg = 15;
+        	if (ctrl.fire){
+            	ctrl.fire = 0;
+            	spec = false;
+            	dmg = 25;
+            }
+            else
+            	ctrl.special_fire = 0;
+            
+            if(tank.description == "tank1" && tank1_num_bullets < 1){
                 tank1_num_bullets += 1;
-                CreateSpecialTankBullet(
-                    20, 
-                    ColorRGBA(1, 1, 1, 1), 
-                    { sin(-s.rotation * PI / 180.0f) * 10 ,
-                      cos(-s.rotation * PI / 180.0f) * 10 ,
-                      0 
-                    },
-
-                    {   tank.pos.x + 42 * cos(rad),
-                        tank.pos.y + 42 * sin(rad),
-                      0 
-                    },
-                    tank.description
-                );
-            }
-            if(tank.description == "tank2" && tank2_num_bullets < 5){
+                CreateTankBullet(20, spec, tank.description, dmg,
+		            {sin(-s.rotation * PI / 180.0f) * 30, cos(-s.rotation * PI / 180.0f) * 30, 0},
+					{tank.pos.x + 42 * cos(rad), tank.pos.y + 42 * sin(rad), 0 });
+			}
+            if(tank.description == "tank2" && tank2_num_bullets < 1){
                 tank2_num_bullets += 1;
-                CreateSpecialTankBullet(
-                    20, 
-                    ColorRGBA(1, 1, 1, 1), 
-                    { sin(-s.rotation * PI / 180.0f) * 10 ,
-                      cos(-s.rotation * PI / 180.0f) * 10 ,
-                      0 
-                    },
-
-                    {   tank.pos.x + 42 * cos(rad),
-                        tank.pos.y + 42 * sin(rad),
-                      0 
-                    },
-                    tank.description
-                );
-            }
-        }
-
-        if(ctrl.special_fire){
-            ctrl.special_fire = 0;
-
-            if(tank.description == "tank1" && tank1_num_bullets < 5){
-                tank1_num_bullets += 1;
-                CreateTankBullet(
-                    20, 
-                    ColorRGBA(1, 1, 1, 1), 
-                    { sin(-s.rotation * PI / 180.0f) * 10 ,
-                      cos(-s.rotation * PI / 180.0f) * 10 ,
-                      0 
-                    },
-
-                    {   tank.pos.x + 42 * cos(rad),
-                        tank.pos.y + 42 * sin(rad),
-                      0 
-                    },
-                    tank.description
-                );
-            }
-            if(tank.description == "tank2" && tank2_num_bullets < 5){
-                tank2_num_bullets += 1;
-                CreateTankBullet(
-                    20, 
-                    ColorRGBA(1, 1, 1, 1), 
-                    { sin(-s.rotation * PI / 180.0f) * 10 ,
-                      cos(-s.rotation * PI / 180.0f) * 10 ,
-                      0 
-                    },
-
-                    {   tank.pos.x + 42 * cos(rad),
-                        tank.pos.y + 42 * sin(rad),
-                      0 
-                    },
-                    tank.description
-                );
-            }
+                CreateTankBullet(20, spec, tank.description, dmg,
+		            {sin(-s.rotation * PI / 180.0f) * 30, cos(-s.rotation * PI / 180.0f) * 30, 0},
+					{tank.pos.x + 42 * cos(rad), tank.pos.y + 42 * sin(rad), 0 });
+			}
         }
     }
 }
