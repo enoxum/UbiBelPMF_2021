@@ -1,0 +1,9 @@
+{
+	"animation-name": "robot:SPACESHIP:IDLE",
+	"animation-length-ms": 600,
+	"animation-frames": [
+		{ "texture-name": "robot:SPACESHIP:IDLE:vehicle1" },
+		{ "texture-name": "robot:SPACESHIP:IDLE:vehicle2" },
+		{ "texture-name": "robot:SPACESHIP:IDLE:vehicle3" }
+	]
+}

@@ -3,6 +3,11 @@
 #include "gameplay/roboship/roboship_camera_focus.h"
 #include "gameplay/roboship/roboship_createbackdrop.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctime>
+#include <string>
+
 #include "core/core.h"
 #include "core/engine.h"
 #include "core/audio.h"
@@ -22,7 +27,8 @@
 #include "tools/diagnostics.h"
 
 const int TERRAIN_HEIGHT = 30;
-static int brojac = 0;
+static int enemy_number = 0;
+static int n_enemies = 0;
 
 using namespace dagger;
 using namespace roboship;
@@ -50,6 +56,7 @@ REnemy* REnemy::Create(
     ColorRGB color_ = { 1, 1, 1 },
     Vector2 position_ = { 0, 0 })
 {
+
     auto& reg = Engine::Registry();
     auto entity = reg.create();
 
@@ -64,9 +71,57 @@ REnemy* REnemy::Create(
     return chr;
 }
 
+int REnemy::getNumberOfTurns() {
+    return this->numberOfTurns;
+}
+
+std::vector<int> REnemy::getSequence() {
+    return this->sequence;
+}
+
+void REnemy::fillSequence() {
+    int lenOfSeq = rand() % 3 + 2;
+
+    for (int i = 0; i < lenOfSeq; i++) {
+        this->sequence.push_back(rand()%5 + 1);
+    }
+}
+
+void REnemy::setNumberOFTurns() {
+    this->numberOfTurns = rand() % 4 + 3;
+}
+
 void REnemy::change_direction(RChangeDirection& ev)
 {
     this->sprite.scale.x *= -1.0f;
+}
+
+RSpaceship* RSpaceship::Get(Entity entity)
+{
+    auto& reg = Engine::Registry();
+    auto& sprite = reg.get_or_emplace<Sprite>(entity);
+    auto& anim = reg.get_or_emplace<Animator>(entity);
+
+    return new RSpaceship{ entity, sprite, anim};
+}
+
+RSpaceship* RSpaceship::Create(
+    ColorRGB color_ = { 1, 1, 1 },
+    Vector2 position_ = { 0, 0 })
+{
+
+    auto& reg = Engine::Registry();
+    auto entity = reg.create();
+
+    RSpaceship* chr = RSpaceship::Get(entity);
+    chr->sprite.scale = { 1.6f, 1.6f };
+    chr->sprite.position = { position_, 0.0f };
+    //chr.sprite.color = { color_, 1.0f };
+
+    AssignSprite(chr->sprite, "robot:SPACESHIP:IDLE:vehicle1");
+    AnimatorPlay(chr->animator, "robot:SPACESHIP:IDLE");
+
+    return chr;
 }
 
 void RoboshipSetCamera()
@@ -110,23 +165,48 @@ void Roboship::WorldSetup()
     }
 
     Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::ShowTextPrepareFightMode>(this);
-    Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
+    //Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
 
 
-    int n_enemies = 5;
-    for (int i = 0; i < n_enemies; i++)
+    n_enemies = 5;
+    int i;
+    for (i = 0; i < n_enemies; i++)
     {
         REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 800, -200 });
         enemyChar->sprite.scale = { -0.15f, 0.15f };
+         
+        enemyChar->setNumberOFTurns();
+        enemyChar->fillSequence();
+
+        Engine::Dispatcher().sink<RFightModeOn>().connect<&Roboship::RobotDie>(this);
 
         Engine::Dispatcher().sink<RChangeDirection>().connect<&Roboship::TurnRobots>(this);
+        
+        std::vector<int> sequence = enemyChar->getSequence();
+        
+
+        auto entity = reg.create();
+        auto& text = reg.emplace<Text>(entity);
+        text.spacing = 0.6f;
+
+        std::string str = "Turns:" + std::to_string(enemyChar->getNumberOfTurns()) + "; ";
+        std::string str2 = "Sequence: ";
+        for (auto x : enemyChar->sequence) {
+            str2 += std::to_string(x);
+        }
+
+        text.Set("pixel-font", str+str2, { (i + 1) * 800, -50 , 0 }, false);
     }
+
+    RSpaceship* spaceship = RSpaceship::Create({ 0, 1, 0 }, { (i + 1) * 800, -210 });
 }
 
 void Roboship::ShowTextPrepareFightMode(){
-    Engine& engine = Engine::Instance();
+
+    enemy_number++;
+
+    /*Engine& engine = Engine::Instance();
     auto& reg = engine.Registry();
-    
 
     if (brojac % 2 == 0) {
         auto ui = reg.create();
@@ -134,11 +214,25 @@ void Roboship::ShowTextPrepareFightMode(){
         auto& text = reg.emplace<Text>(ui);
         text.spacing = 0.6f;
         text.Set("pixel-font", "Fight(F) / Go on(G)");
-    }
+    }*/
 }
 
 void Roboship::ClearTextPrepareFightMode(){
 
+}
+
+void Roboship::RobotDie()
+{
+    Engine::Registry().view<Sprite, Animator, EnemyMarker>().each([](Sprite& sprite_, Animator& animator_, const EnemyMarker&)
+        {
+            if (abs(sprite_.position.x - enemy_number * 800) <= 2) {
+                AnimatorPlay(animator_, "robot:ENEMIES:Robot1:02_Death");
+
+                sprite_.position.y -= 0.6;
+                if (sprite_.position.y <= -270)
+                    sprite_.position.x = 1000000;
+            }
+        });
 }
 
 void Roboship::TurnRobots()
@@ -147,4 +241,8 @@ void Roboship::TurnRobots()
         {
             sprite_.scale.x *= -1.0f;
         });
+}
+
+void Roboship::TurnOnSpaceship() {
+    
 }

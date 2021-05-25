@@ -18,6 +18,8 @@
 #include "core/graphics/gui.h"
 #include "core/graphics/text.h"
 
+#include <vector>
+
 using namespace dagger;
 
 namespace roboship
@@ -35,20 +37,22 @@ namespace roboship
         void WorldSetup() override;
 
         void TurnRobots();
+        void RobotDie();
         void ShowTextPrepareFightMode();
         void ClearTextPrepareFightMode();
+        void TurnOnSpaceship();
     };
 }
 
 struct RPrepareFightModeOff
 {
-    char _fightmode;
+    char _preparefightmodeoff;
 };
 
 
 struct RPrepareFightModeOn
 {
-    char _fightmode;
+    char _preparefightmodeon;
 };
 
 struct RChangeDirection
@@ -56,14 +60,39 @@ struct RChangeDirection
     char _placeholder;
 };
 
+struct RFightModeOn
+{
+    char _fightmodeon;
+};
+
+struct RFightModeOff
+{
+    char _fightmodeon;
+};
+
 struct REnemy {
     Entity entity;
     Sprite& sprite;
     Animator& animator;
+    int numberOfTurns;
+    std::vector<int> sequence;
 
     static REnemy* Get(Entity entity);
     static REnemy* Create(ColorRGB color_, Vector2);
     void change_direction(RChangeDirection& ev);
+    std::vector<int> getSequence();
+    int getNumberOfTurns();
+    void fillSequence();
+    void setNumberOFTurns();
+};
+
+struct RSpaceship {
+    Entity entity;
+    Sprite& sprite;
+    Animator& animator;
+
+    static RSpaceship* Get(Entity entity);
+    static RSpaceship* Create(ColorRGB color_, Vector2);
 };
 
 extern struct REnemy;

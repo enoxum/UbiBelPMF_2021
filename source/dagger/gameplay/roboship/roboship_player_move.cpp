@@ -56,6 +56,10 @@ void RoboshipPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
             {
                 ctrl_.input.x = 2;
             }
+            else if (kEvent_.key == ctrl_.fightKey && (kEvent_.action == EDaggerInputState::Released))
+            {
+                ctrl_.input.x = 3;
+            }
             else if (kEvent_.key == ctrl_.jumpKey && kEvent_.action == EDaggerInputState::Released && ctrl_.input.x > 0)
             {
                 ctrl_.input.x = 0;
@@ -111,6 +115,35 @@ void RoboshipPlayerInputSystem::Run()
                 Engine::Dispatcher().trigger<RPrepareFightModeOff>();
             }
         }
+        else if ((ctrl.input.x == 3 && jumpAllowed) || atomicJump) {
+            Engine::Dispatcher().trigger<RFightModeOn>();
+            AnimatorPlay(animator, "robot:JUMP");
+
+            atomicJump = true;
+
+            if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
+                jumpActive = true;
+            else if (sprite.position.y < -30 && jumpActive) {
+                sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
+                sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+            }
+            else if (sprite.position.y + 30 <= 2 && jumpActive) {
+                jumpActive = false;
+                jumpAllow = false;
+            }
+            else if (sprite.position.y > -223 && !jumpActive) {
+                sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
+                sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+            }
+            else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
+                ctrl.input.x = 0;
+                prepareFightMode = false;
+                jumpAllowed = false;
+                atomicJump = false;
+                Engine::Dispatcher().trigger<RFightModeOff>();
+            }
+        }
+
         else if (((ctrl.input.x == 1 || ctrl.input.x == -1) && !prepareFightMode)) {
             if (!prepareFightMode) {
                 AnimatorPlay(animator, "robot:RUN");

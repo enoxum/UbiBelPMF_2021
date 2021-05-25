@@ -12,6 +12,7 @@ namespace roboship
         EDaggerKeyboard leftKey = EDaggerKeyboard::KeyLeft;
         EDaggerKeyboard rightKey = EDaggerKeyboard::KeyRight;
         EDaggerKeyboard jumpKey = EDaggerKeyboard::KeyG;
+        EDaggerKeyboard fightKey = EDaggerKeyboard::KeyF;
 
         Vector2 input{ 0, 0 };
     };
