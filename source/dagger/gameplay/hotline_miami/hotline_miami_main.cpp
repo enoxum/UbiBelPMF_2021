@@ -106,6 +106,8 @@ void hotline_miami::SetupWorld()
 
     loadTiles(zPos);
 
+    loadWorldEdges(zPos);
+
     zPos -= 1.f;
     // world end
     {
