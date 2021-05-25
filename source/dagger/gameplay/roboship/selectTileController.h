@@ -38,6 +38,7 @@ namespace robo_game
         int width = 4;
         float tileSize = 40.f;
         float Space = 0.3f;
+        bool fightModeOn = false;
 
         void SpinUp() override;
         void WindDown() override;

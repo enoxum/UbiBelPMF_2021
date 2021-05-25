@@ -23,122 +23,132 @@ void SelectedTileInputSystem::WindDown()
 
 void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
+    auto entity = Engine::Registry().view<NumberOfMoves>()[0];
+    auto& numberOfMoves = Engine::Registry().get<NumberOfMoves>(entity);
+
+    fightModeOn = true;
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
+    {
+        if (!fightModeOn)
+            return;
+
+        if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.x > 0)
         {
-            if (kEvent_.key == ctrl_.leftKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.x > 0)
+            ctrl_.input.x -= 1;
+        }
+        else if (kEvent_.key == ctrl_.rightKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.x < 3)
+        {
+            ctrl_.input.x += 1;
+        }
+        else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 3)
+        {
+            ctrl_.input.y += 1;
+        }
+        else if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
+        {
+            ctrl_.input.y -= 1;
+        }
+        else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed)
+        {
+            if (numberOfMoves.left == 0)
+                return;
+            /*
+            if (moveFirst)
             {
-                ctrl_.input.x -= 1;
+                moveFirst = false;
+                moveSecond = true;
+                x = ctrl_.input.x;
+                y = ctrl_.input.y;
+                printf("%d %d", x, y);
             }
-            else if (kEvent_.key == ctrl_.rightKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.x < 3)
+            else
             {
-                ctrl_.input.x += 1;
+                moveFirst = true;
+                moveSecond = false;
+                swapX = ctrl_.input.x;
+                swapY = ctrl_.input.y;
+                printf("%d %d", swapX, swapY);
+
+                Inventory* inv = new Inventory();
+                inv->SwapMatrix(x, y, swapX, swapY);
+                printf("nisam");
             }
-            else if (kEvent_.key == ctrl_.upKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y < 3)
+
+            */
+
+            if (!swap)
             {
-                ctrl_.input.y += 1;
-            }
-            else if (kEvent_.key == ctrl_.downKey && kEvent_.action == EDaggerInputState::Pressed && ctrl_.input.y > 0)
-            {
-                ctrl_.input.y -= 1;
-            }
-            else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed)
-            {
-                /*
-                if (moveFirst)
+                auto entity = Engine::Registry().view<ControllerMapping>()[0];
+                auto& s = Engine::Registry().get<Sprite>(entity);
+
+                AssignSprite(s, "robot:INVENTORY:SpecialTile2");
+                s.size.x = 40;
+                s.size.y = 40;
+
+                x = ctrl_.input.x;
+                y = ctrl_.input.y;
+
+                auto view = Engine::Registry().view<Tile>();
+
+                for (auto entity2 : view)
                 {
-                    moveFirst = false;
-                    moveSecond = true;
-                    x = ctrl_.input.x;
-                    y = ctrl_.input.y;
-                    printf("%d %d", x, y);
+                    if (Engine::Registry().has<ControllerMapping>(entity2))
+                        continue;
+
+                    auto& s2 = Engine::Registry().get<Sprite>(entity2);
+                    s2.size.x = 40;
+                    s2.size.y = 40;
+
+                    auto& t = Engine::Registry().get<Transform>(entity2);
+                    t.position.z = 1.f;
+
+                    auto& controller = Engine::Registry().emplace<ControllerMapping>(entity2);
+
                 }
-                else
+
+                Engine::Registry().remove<ControllerMapping>(entity);
+                swap = true;
+                MarkNeighbors(x, y);
+            }
+            else
+            {
+                if ((ctrl_.input.x == (x) && ctrl_.input.y == (y - 1)) || (ctrl_.input.x == (x) && ctrl_.input.y == (y + 1)) || (ctrl_.input.x == (x - 1) && ctrl_.input.y == (y)) || (ctrl_.input.x == (x + 1) && ctrl_.input.y == (y)))
                 {
-                    moveFirst = true;
-                    moveSecond = false;
+
                     swapX = ctrl_.input.x;
                     swapY = ctrl_.input.y;
-                    printf("%d %d", swapX, swapY);
 
                     Inventory* inv = new Inventory();
                     inv->SwapMatrix(x, y, swapX, swapY);
-                    printf("nisam");
-                }
-
-                */
-
-                if (!swap)
-                {
-                    auto entity = Engine::Registry().view<ControllerMapping>()[0];
-                    auto& s = Engine::Registry().get<Sprite>(entity);
-
-                    AssignSprite(s, "robot:INVENTORY:SpecialTile2");
-                    s.size.x = 40;
-                    s.size.y = 40;
-
-                    x = ctrl_.input.x;
-                    y = ctrl_.input.y;
 
                     auto view = Engine::Registry().view<Tile>();
 
-                    for (auto entity2 : view)
+                    for (auto entity : view)
                     {
-                        if (Engine::Registry().has<ControllerMapping>(entity2))
+                        if (Engine::Registry().has<ControllerMapping>(entity))
                             continue;
 
-                        auto& s2 = Engine::Registry().get<Sprite>(entity2);
-                        s2.size.x = 40;
-                        s2.size.y = 40;
+                        auto& s = Engine::Registry().get<Sprite>(entity);
 
-                        auto& t = Engine::Registry().get<Transform>(entity2);
-                        t.position.z = 1.f;
+                        AssignSprite(s, "robot:INVENTORY:SelectedTile");
+                        s.size.x = 30;
+                        s.size.y = 30;
 
-                        auto& controller = Engine::Registry().emplace<ControllerMapping>(entity2);
-
+                        auto& t = Engine::Registry().get<Transform>(entity);
+                        t.position.z = 4.f;
                     }
 
-                    Engine::Registry().remove<ControllerMapping>(entity);
-                    swap = true;
-                    MarkNeighbors(x, y);
-                }
-                else
-                {
-                    if ((ctrl_.input.x == (x) && ctrl_.input.y == (y - 1)) || (ctrl_.input.x == (x) && ctrl_.input.y == (y + 1)) || (ctrl_.input.x == (x - 1) && ctrl_.input.y == (y)) || (ctrl_.input.x == (x + 1) && ctrl_.input.y == (y)))
-                    {
+                    swap = false;
 
-                        swapX = ctrl_.input.x;
-                        swapY = ctrl_.input.y;
-
-                        Inventory* inv = new Inventory();
-                        inv->SwapMatrix(x, y, swapX, swapY);
-
-                        auto view = Engine::Registry().view<Tile>();
-
-                        for (auto entity : view)
-                        {
-                            if (Engine::Registry().has<ControllerMapping>(entity))
-                                continue;
-
-                            auto& s = Engine::Registry().get<Sprite>(entity);
-
-                            AssignSprite(s, "robot:INVENTORY:SelectedTile");
-                            s.size.x = 30;
-                            s.size.y = 30;
-
-                            auto& t = Engine::Registry().get<Transform>(entity);
-                            t.position.z = 4.f;
-                        }
-
-                        swap = false;
-
-                        bool found;
-                        UnmarkNeighbors();
-                        found = findCombination({ 1, 1 });
-                    }
+                    bool found;
+                    UnmarkNeighbors();
+                    found = findCombination({ 1, 1 });
+                    numberOfMoves.left--;
                 }
             }
-            else return;
-        });
+        }
+        else return;
+    });
 }
 
 void SelectedTileInputSystem::MarkNeighbors(int x, int y)
