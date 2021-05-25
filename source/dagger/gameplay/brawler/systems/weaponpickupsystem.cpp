@@ -72,9 +72,7 @@ void WeaponPickupSystem::Run()
             {
                 existingWeaponIt->transferAmmo(pickedUpWeapon);
             }
-
-            Engine::Registry().destroy(wpColEntity);
-            
+            Engine::Registry().destroy(wpColEntity);            
         }
     }
 

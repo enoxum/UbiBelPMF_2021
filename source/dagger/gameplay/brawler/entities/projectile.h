@@ -5,11 +5,11 @@
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 
-#include "gameplay/common/simple_collisions.h"
 #include "gameplay/brawler/components/bullet.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/weapon.h"
 #include "gameplay/brawler/components/movable.h"
+#include "gameplay/common/simple_collisions.h"
 
 using namespace dagger;
 
@@ -22,7 +22,7 @@ namespace brawler
         Bullet& bullet;
         Movable& mov;
         Transform& transform;
-        SimpleCollision& col;
+        SimpleCollision& simCol;
         Sprite& sprite;
         Animator& animator;
 
@@ -32,32 +32,42 @@ namespace brawler
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
             auto& mov = reg.get_or_emplace<Movable>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
-            auto& col = reg.get_or_emplace<SimpleCollision>(entity);
+            auto& simCol = reg.get_or_emplace<SimpleCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
             auto& animator = reg.get_or_emplace<Animator>(entity);
 
-            return ProjectileEntity{ entity, bullet, mov, transform, col, sprite, animator };
+            return ProjectileEntity{ entity, bullet, mov, transform, simCol, sprite, animator };
         }
 
         static ProjectileEntity Create(
+            Entity owner,
             WeaponType weaponType,
             int size   = 3,
             int damage = 10,
             Vector2 position_ = { 0, 0 },
-            int direction_ = 0
+            int direction_ = 0,
+            Float32 duration = 0.0,
+            bool timer = false
         ) {
             auto& reg = Engine::Registry();
             auto entity = reg.create();
 
             auto projectile = ProjectileEntity::Get(entity);
 
+            projectile.bullet.owner = owner;
+            projectile.bullet.type = weaponType;
+
+            projectile.bullet.duration = duration;
+            projectile.bullet.timer = timer;
+
+            projectile.mov.isOnGround = false;
             projectile.mov.speed = {150*direction_, 250};
 
             projectile.transform.position = { position_, 0.0f };
 
             projectile.sprite.position = { position_, 0.0f };
             projectile.sprite.size = { 1, 1 };
-            projectile.bullet.type = 1;
+            projectile.bullet.projectile = true;
 
             switch(weaponType){
                 case WeaponType::BAZOOKA:
@@ -83,7 +93,7 @@ namespace brawler
             projectile.bullet.direction = (direction_ >= 0 ? 1 : -1);
             projectile.bullet.damage = damage;
 
-            projectile.col.size = {projectile.sprite.size.x-5, projectile.sprite.size.y-2};
+            projectile.simCol.size = {projectile.sprite.size.x-5, projectile.sprite.size.y-2};
 
             BulletSystem::s_ActiveBullets++;
 

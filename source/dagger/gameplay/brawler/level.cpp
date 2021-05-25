@@ -7,6 +7,8 @@
 #include "gameplay/brawler/systems/level_system.h"
 #include "gameplay/brawler/systems/hud_system.h"
 
+#include "gameplay/brawler/components/tile.h"
+
 using namespace dagger;
 using namespace brawler;
 
@@ -47,6 +49,10 @@ void Level::Load(String map)
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
 				sprite.scale = { texture.scaleX, texture.scaleY };
 				sprite.position = { TileToWorld(x, y), 1 };
+				auto& col = reg.get_or_emplace<SimpleCollision>(tile);
+				col.size = {TILE_WIDTH, TILE_HEIGHT};
+				auto& t = reg.get_or_emplace<Tile>(tile);
+
 			} else if (getTile(x, y) == PlatformType::SPAWNER){
 				auto tile = reg.create();
 				auto& spawner = reg.get_or_emplace<WeaponSpawner>(tile);

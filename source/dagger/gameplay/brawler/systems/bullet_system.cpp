@@ -39,7 +39,7 @@ void BulletSystem::Run()
 		auto& t = bullets.get<Transform>(obj);
 		auto& b = bullets.get<Bullet>(obj);
 
-		if(b.type == 0){
+		if(!b.projectile){
 			Vector3 dp = { b.direction*BulletSystem::s_BulletSpeed, 0, 0 };
 			t.position += dp * Engine::DeltaTime();
 			t.position.z = 1.0f;

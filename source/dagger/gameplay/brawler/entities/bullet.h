@@ -6,11 +6,11 @@
 #include "core/graphics/sprite.h"
 #include "core/graphics/animation.h"
 
-#include "gameplay/common/simple_collisions.h"
 #include "gameplay/brawler/components/bullet.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/weapon.h"
 #include "gameplay/brawler/components/movable.h"
+#include "gameplay/common/simple_collisions.h"
 
 using namespace dagger;
 
@@ -22,7 +22,7 @@ namespace brawler
         Entity entity;
         Bullet& bullet;
         Transform& transform;
-        SimpleCollision& col;
+        SimpleCollision& simCol;
         Sprite& sprite;
 
         static BulletEntity Get(Entity entity)
@@ -30,13 +30,14 @@ namespace brawler
             auto& reg = Engine::Registry();
             auto& bullet = reg.get_or_emplace<Bullet>(entity);
             auto& transform = reg.get_or_emplace<Transform>(entity);
-            auto& col = reg.get_or_emplace<SimpleCollision>(entity);
+            auto& simCol = reg.get_or_emplace<SimpleCollision>(entity);
             auto& sprite = reg.get_or_emplace<Sprite>(entity);
 
-            return BulletEntity{ entity, bullet, transform, col, sprite };
+            return BulletEntity{ entity, bullet, transform, simCol, sprite };
         }
 
         static BulletEntity Create(
+            Entity owner,
             WeaponType weaponType = WeaponType::BANANA,
             int size   = 3,
             int damage = 10,
@@ -48,11 +49,14 @@ namespace brawler
 
             auto bullet = BulletEntity::Get(entity);
 
+            bullet.bullet.owner = owner;
+            bullet.bullet.type = weaponType;
+
             bullet.transform.position = { position_, 0.0f };
 
             bullet.sprite.position = { position_, 0.0f };
             bullet.sprite.size = { 1, 1 };
-            bullet.bullet.type = 0;
+            bullet.bullet.projectile = false;
 
             switch(weaponType){
                 case WeaponType::BAZOOKA:
@@ -84,6 +88,8 @@ namespace brawler
             bullet.bullet.direction = dir;
             bullet.bullet.damage = damage;
             bullet.sprite.scale.x *= dir;
+
+            bullet.simCol.size = {bullet.sprite.size.x*bullet.sprite.scale.x, bullet.sprite.size.y*bullet.sprite.scale.y};
 
             BulletSystem::s_ActiveBullets++;
 
