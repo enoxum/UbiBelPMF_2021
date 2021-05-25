@@ -7,8 +7,8 @@
 using namespace dagger;
 using namespace brawler;
 
-Menu::Menu(Bool isShown_)
-    : buttons(), isShown(isShown_), selected(0)
+Menu::Menu(Bool isShown_, Bool shouldPause_)
+    : buttons(), isShown(isShown_), shouldPause(shouldPause_), selected(0)
 {
     
 }
@@ -16,10 +16,11 @@ Menu::Menu(Bool isShown_)
 void Menu::SpinUp()
 {
     Engine::Dispatcher().sink<KeyboardEvent>().connect<&Menu::OnKeyboardEvent>(this);
-    if (isShown && !Engine::s_IsPaused)
+    if (isShown)
     {
         CreateMenu();
-        Engine::ToggleSystemsPause(true);
+        if(shouldPause)
+            Engine::ToggleSystemsPause(true);
     }
 }
 
@@ -92,11 +93,6 @@ Button& Menu::AddButton(Float32 x, Float32 y, String text, String textureDefault
     return buttons.back();
 }
 
-void Menu::Run()
-{
-
-}
-
 void Menu::Toggle()
 {
     auto& reg = Engine::Registry();
@@ -117,7 +113,8 @@ void Menu::Toggle()
     {
         isShown = true;
         selected = 0;
-        Engine::ToggleSystemsPause(true);
+        if(shouldPause)
+            Engine::ToggleSystemsPause(true);
         CreateMenu();
     }
 }

@@ -20,6 +20,7 @@ namespace brawler {
 	using Tilemap = std::vector<std::vector<PlatformType>>;
 	using TileCoords = std::pair<int, int>;
 
+	// This should have been a default resource instead of a static class
 	class Level
 	{
 	public:

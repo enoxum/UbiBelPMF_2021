@@ -80,6 +80,7 @@ sources = [
 	'source/dagger/gameplay/brawler/systems/esc_system.cpp',
 	'source/dagger/gameplay/brawler/systems/menu_main.cpp',
 	'source/dagger/gameplay/brawler/systems/menu_pause.cpp',
+	'source/dagger/gameplay/brawler/systems/menu_end.cpp',
 	'source/dagger/gameplay/brawler/menu.cpp',
 	'source/dagger/gameplay/brawler/level.cpp',
 	'source/dagger/gameplay/brawler/brawler_main.cpp',

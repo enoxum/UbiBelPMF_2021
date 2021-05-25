@@ -35,6 +35,7 @@
 #include "gameplay/brawler/systems/hud_system.h"
 #include "gameplay/brawler/systems/menu_main.h"
 #include "gameplay/brawler/systems/menu_pause.h"
+#include "gameplay/brawler/systems/menu_end.h"
 #include "gameplay/brawler/systems/esc_system.h"
 #include "gameplay/brawler/level.h"
 
@@ -63,6 +64,7 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<EscSystem>();
     engine.AddSystem<MenuMain>();
     engine.AddSystem<MenuPause>();
+    engine.AddPausableSystem<MenuEnd>();
     
     // Debug Systems
     engine.AddSystem<CameraControlSystem>();
