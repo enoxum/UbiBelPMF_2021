@@ -197,7 +197,7 @@ void fightEnemy::addShipPart()
     auto entityNew = Engine::Registry().create();
     auto& sprite = Engine::Registry().emplace<Sprite>(entityNew);
 
-    AssignSprite(sprite, "robot:INVENTORY:part_3");
+    AssignSprite(sprite, "robot:INVENTORY:spaceshipPart_5");
 
     sprite.size.x = 15;
     sprite.size.y = 15;
