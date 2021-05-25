@@ -124,10 +124,14 @@ void ProjectileCollisionSystem::Run()
                     collision.colided = true;
                     AnimatorPlay(animator, "EXPLOSION");
 
-                    auto vec = transform.position - tr.position;
+                    if (!b.done) {
+                        auto vec = transform.position - tr.position;
 
-                    mov.speed -= Vector2{vec.x*50, vec.y*50};
-                    bool dead = p.dealDamage(b.damage);
+                        mov.speed -= Vector2{ vec.x * 50, vec.y * 50 };
+                        bool dead = p.dealDamage(b.damage);
+                        b.done = true;
+                    }
+                    
                     break;
                 }
             }   
