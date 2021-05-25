@@ -112,7 +112,8 @@ void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
     RoboshipCreateBackdrop();
-    RoboshipCreateInventory();
+    bool found = findCombination({ 1, 1});
+
     //Engine::Registry().emplace<CameraFollowFocus>(sndChar.entity);
 }
 

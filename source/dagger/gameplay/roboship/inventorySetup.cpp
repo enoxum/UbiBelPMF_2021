@@ -174,7 +174,7 @@ void inventory::Inventory::makeMatrix()
 
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            matrix.matrix[i][j] = 1 + rand() % 5;
+            matrix.matrix[i][j] = 1 + rand() % 6;
 
 }
 

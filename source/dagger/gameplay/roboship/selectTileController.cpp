@@ -103,6 +103,9 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 }
                 else
                 {
+                    if (ctrl_.input.x != (x + 1) && ctrl_.input.x != (x - 1) && ctrl_.input.y != (y - 1) && ctrl_.input.y != (y + 1))
+                        return;
+
                     swapX = ctrl_.input.x;
                     swapY = ctrl_.input.y;
                     
@@ -130,7 +133,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 
                     bool found;
                     UnmarkNeighbors();
-                    found = findCombination({ 1, 1, 1});
+                    found = findCombination({ 1, 1});
                 }
             }
 
