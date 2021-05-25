@@ -53,7 +53,7 @@ void CreateSpecialTankBullet(float tileSize_, ColorRGBA color_, Vector3 speed_, 
     auto& reg = Engine::Registry();
     auto entity = reg.create();
     auto& sprite = reg.emplace<Sprite>(entity);
-    AssignSprite(sprite, "bullet");
+    AssignSprite(sprite, "special_bullet");
     sprite.size = Vector2(1, 1) * tileSize_;
 
     sprite.color = color_;
