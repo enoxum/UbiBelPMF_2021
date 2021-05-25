@@ -223,13 +223,14 @@ void Roboship::ClearTextPrepareFightMode(){
 
 void Roboship::RobotDie()
 {
+    printf("en num %d\n", enemy_number);
     Engine::Registry().view<Sprite, Animator, EnemyMarker>().each([](Sprite& sprite_, Animator& animator_, const EnemyMarker&)
         {
             if (abs(sprite_.position.x - enemy_number * 800) <= 2) {
                 AnimatorPlay(animator_, "robot:ENEMIES:Robot1:02_Death");
 
                 sprite_.position.y -= 0.6;
-                if (sprite_.position.y <= -270)
+                if (sprite_.position.y <= -250)
                     sprite_.position.x = 1000000;
             }
         });

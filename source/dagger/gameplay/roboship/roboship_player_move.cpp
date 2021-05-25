@@ -21,6 +21,7 @@ static bool prepareFightMode = false;
 static bool jumpAllow = false;
 static bool jumpAllowed = false;
 static bool atomicJump = false;
+static bool atomicFight = false;
 
 void RoboshipPlayerInputSystem::SpinUp()
 {
@@ -81,7 +82,7 @@ void RoboshipPlayerInputSystem::Run()
         auto& ctrl = view.get<ControllerMapping>(entity);
         auto& roboshipPlayer = view.get<RoboshipPlayer>(entity);
 
-        if (EPSILON_ZERO(ctrl.input.x) && !atomicJump)
+        if (EPSILON_ZERO(ctrl.input.x) && !atomicJump && !atomicFight)
         {
             if(!prepareFightMode)
                 AnimatorPlay(animator, "robot:IDLE");
@@ -115,11 +116,12 @@ void RoboshipPlayerInputSystem::Run()
                 Engine::Dispatcher().trigger<RPrepareFightModeOff>();
             }
         }
-        else if ((ctrl.input.x == 3 && jumpAllowed) || atomicJump) {
+        else if ((ctrl.input.x == 3 && jumpAllowed) || atomicFight) {
             Engine::Dispatcher().trigger<RFightModeOn>();
+            printf("proba\n");
             AnimatorPlay(animator, "robot:JUMP");
 
-            atomicJump = true;
+            atomicFight = true;
 
             if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
                 jumpActive = true;
@@ -139,7 +141,7 @@ void RoboshipPlayerInputSystem::Run()
                 ctrl.input.x = 0;
                 prepareFightMode = false;
                 jumpAllowed = false;
-                atomicJump = false;
+                atomicFight = false;
                 Engine::Dispatcher().trigger<RFightModeOff>();
             }
         }
