@@ -73,9 +73,6 @@ namespace brawler
                 case WeaponType::BAZOOKA:
                     AssignSprite(projectile.sprite, "brawler:bazookaAmmo");
                     break;
-                case WeaponType::FLASH:
-                    AssignSprite(projectile.sprite, "brawler:flash");
-                    break;
                 case WeaponType::GRANADE:
                     AssignSprite(projectile.sprite, "brawler:granade");
                     break;

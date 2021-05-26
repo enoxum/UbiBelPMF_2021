@@ -30,6 +30,12 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
 
+	if(player.health == 0)
+	{
+		GoTo(ECharacterStates::Death, state_);
+		return;
+	}
+
 	if (!movable.isOnGround)
 	{
 		GoTo(ECharacterStates::Jumping, state_);
@@ -68,6 +74,12 @@ DEFAULT_EXIT(BrawlerCharacterFSM, Running);
 void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable>(state_.entity);
+
+	if(player.health == 0)
+	{
+		GoTo(ECharacterStates::Death, state_);
+		return;
+	}
 
 	Float32 run = input.Get("run");
 
@@ -130,6 +142,12 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 {
 	auto&& [sprite, input, player, transform, movable] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable>(state_.entity);
 
+	if(player.health == 0)
+	{
+		GoTo(ECharacterStates::Death, state_);
+		return;
+	}
+
 	Float32 run = input.Get("run");
 	
 	if (movable.isOnGround)
@@ -159,4 +177,19 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 		transform.position.x += run * PhysicsSystem::s_AirMobility * PhysicsSystem::s_RunSpeed * Engine::DeltaTime();
 	}
 
+}
+
+// Death
+
+void BrawlerCharacterFSM::Death::Enter(BrawlerCharacterFSM::StateComponent& state_)
+{
+	auto&& [player, animator] = Engine::Registry().get<Player, Animator>(state_.entity);
+	AnimatorPlayOnce(animator, "gunner:" + player.color + ":DEATH");
+}
+
+DEFAULT_EXIT(BrawlerCharacterFSM, Death);
+
+void BrawlerCharacterFSM::Death::Run(BrawlerCharacterFSM::StateComponent& state_)
+{
+	// There is nothing to do
 }

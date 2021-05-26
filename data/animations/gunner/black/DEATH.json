@@ -5,6 +5,9 @@
 	[
 		{ "texture-name": "spritesheets:gunner:black:death:1" },
 		{ "texture-name": "spritesheets:gunner:black:death:2" },
-		{ "texture-name": "spritesheets:gunner:black:death:3" }
+		{ "texture-name": "spritesheets:gunner:black:death:3" },
+		{ "texture-name": "spritesheets:gunner:black:death:4" },
+		{ "texture-name": "spritesheets:gunner:black:death:5" },
+		{ "texture-name": "spritesheets:gunner:black:death:6" }
 	]
 }

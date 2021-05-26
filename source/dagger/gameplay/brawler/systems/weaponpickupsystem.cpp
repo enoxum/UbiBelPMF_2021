@@ -18,7 +18,6 @@ using namespace dagger;
 
 void WeaponPickupSystem::Run()
 {
-
     auto wpSpriteView = Engine::Registry().view<WeaponPickup, Transform, Sprite>();
     for (auto wpEntity: wpSpriteView)
     {
@@ -34,10 +33,6 @@ void WeaponPickupSystem::Run()
         auto wpData = WeaponPickupEntity::Get(wpColEntity);
         auto wpTransform = wpColView.get<Transform>(wpColEntity);
         auto& wpCol = wpData.col;
-
-        
-        
-        
 
         for (auto playerColEntity : playerColView)
         {
@@ -71,17 +66,11 @@ void WeaponPickupSystem::Run()
                         weaponSprite.position.y += pickedUpWeapon.translate().y;
                         ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
                     }
-                }
-                else
-                {
+                } else {
                     existingWeaponIt->transferAmmo(pickedUpWeapon);
                 }
                 Engine::Registry().destroy(wpColEntity);
-
-
             }
-           
         }
     }
-
 }

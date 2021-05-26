@@ -8,16 +8,12 @@
 #include "gameplay/brawler/components/movable.h"
 #include "gameplay/brawler/components/tile.h"
 
-#include "iostream"
-
 using namespace brawler;
 using namespace dagger;
 
 void BulletCollisionSystem::Run()
 {
     auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision>();
-    auto players = Engine::Registry().view<SimpleCollision, Transform, Movable, Player>();
-    auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 
     for(auto bullet : bullets){
 
@@ -29,6 +25,8 @@ void BulletCollisionSystem::Run()
         auto& collision = bullets.get<SimpleCollision>(bullet);
         auto& transform = bullets.get<Transform>(bullet);
 
+        auto players = Engine::Registry().view<SimpleCollision, Transform, Movable, Player>();
+
         for(auto player : players){
 
             if(b.owner == player)
@@ -38,12 +36,8 @@ void BulletCollisionSystem::Run()
             auto &tr = players.get<Transform>(player);
             auto &mov = players.get<Movable>(player);
             
-
-            //processing one collision per frame for each colider
             if (collision.IsCollided(transform.position, col, tr.position))
             {
-                // Logic
-                // TODO Reduce health
                 auto& p = players.get<Player>(player);
                 bool dead = p.dealDamage(b.damage);
                 mov.speed.x += b.direction*b.damage;
@@ -51,6 +45,8 @@ void BulletCollisionSystem::Run()
                 break;
             }
         }
+
+        auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 
         for(auto tile : tiles){
 
