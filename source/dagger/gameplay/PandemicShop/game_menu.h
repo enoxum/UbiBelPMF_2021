@@ -17,11 +17,12 @@ class GameMenuSystem : public System {
   bool m_LoadGame = false;
   static bool s_GameOver;
   static String s_Winner;
-  static inline int collected_items = 0;
+  static inline bool restarted = false;
+  
 
 public:
   inline String SystemName() { return "Game Menu System"; }
-
+  static inline int collected_items = 0;
   void SpinUp() override;
   void WindDown() override;
   void Run() override;

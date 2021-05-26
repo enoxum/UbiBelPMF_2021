@@ -50,6 +50,7 @@ void GameMenuSystem::Run() {
 }
 
 void GameMenuSystem::SpinUp() {
+  
   Engine::Dispatcher().sink<NextFrame>().connect<&GameMenuSystem::OnEndOfFrame>(
       this);
 }
@@ -60,26 +61,42 @@ void GameMenuSystem::WindDown() {
 
 void GameMenuSystem::OnEndOfFrame() {
   if (m_LoadGame) {
-      m_LoadGame = false;
-      Engine::Registry().clear();
-      pandemic_shop::SetupWorld(Engine::Instance());
-    }
-    if (s_GameOver) {
+    m_LoadGame = false;
+    Engine::Registry().clear();
+    pandemic_shop::SetupWorld(Engine::Instance());
+  }
+  else if (s_GameOver) {
       s_GameOver = false;
       //ovde ne treba da pise 7  i 11 vec broj pokupljenih itema i koliko je bilo itema
       //Mora da bude string!
-      // int collected_items = chr.inventory.size();
+      
+      
+      if(!restarted){
+        auto hero_view = Engine::Registry().view<PandemicCharacter>();
+        auto entity = hero_view.begin();
 
-      Engine::Registry().clear();
-      printf("GMS %d\n", collected_items);
-      pandemic_shop::SetupRestartScreen(Engine::Instance(), collected_items, 36);
+        auto chr = Character::Get(*entity);  
+        
+        collected_items = Pickable::picked;
+        
+        Logger::info("collected items {}", collected_items);
+        if(collected_items < 18){
+          pandemic_shop::SetupRestartScreen(Engine::Instance(), collected_items, 36, false);
+        }
+        else{
+          pandemic_shop::SetupRestartScreen(Engine::Instance(), collected_items, 36, true);
+        }
+        restarted = true;
+      }
+      else{
+        restarted = false;
+      }
+      Pickable::picked = 0;
+      collected_items = 0;
+      
     }  
     if (Engine::s_IsPaused) {
         Engine::s_IsPaused = false;
-        /*auto hero_view = Engine::Registry().view<PandemicCharacter>();
-        auto entity = hero_view.begin();
-        auto chr = Character::Get(*entity);
-        collected_items = chr.inventory.size();*/
         s_GameOver = true;
         return;
      }

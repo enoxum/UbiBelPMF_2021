@@ -106,7 +106,6 @@ void KarenControllerFSM::Running::Run(
     else if (EPSILON_ZERO(left_right) && EPSILON_ZERO(up_down)) 
     {
         
-        Logger::info("fsm epsilon");
         command.curr_action == Action::IDLE;
         
         GoTo(EKarenStates::Idle, state_);

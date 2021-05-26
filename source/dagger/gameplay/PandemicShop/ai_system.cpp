@@ -35,14 +35,14 @@ void AISystem::Run(){
             auto curr_distance = glm::length(distanceVec);
             auto prev_distance = glm::length(distancePrev);
 
-            Logger::info("\nNext position: {} {}", karen.command.next.x, karen.command.next.y);
-            Logger::info("\nCurrent position: {} {}", karen.command.current.x, karen.command.current.y);
+            // Logger::info("\nNext position: {} {}", karen.command.next.x, karen.command.next.y);
+            // Logger::info("\nCurrent position: {} {}", karen.command.current.x, karen.command.current.y);
 
 
-            Logger::info("\nDISTANCE {}\n", curr_distance);
+            // Logger::info("\nDISTANCE {}\n", curr_distance);
             if(abs(curr_distance) < 1){
                 // prev = curr;
-                Logger::info("curr_distance < 1");
+                // Logger::info("curr_distance < 1");
                 karen.command.previous = karen.command.next;
                 // curr = next;
                 karen.command.current = karen.command.next;
@@ -53,9 +53,9 @@ void AISystem::Run(){
             }
 
             if(abs(curr_distance) <= abs(prev_distance)){
-                Logger::info("\nCURR DIST IS LESS THEN PREV DIST {}\n", karen.command.finishedX);
+                // Logger::info("\nCURR DIST IS LESS THEN PREV DIST {}\n", karen.command.finishedX);
                 if (!karen.command.finishedX) {
-                    Logger::info("\nMOVING HORIZONTALLY\n");
+                    // Logger::info("\nMOVING HORIZONTALLY\n");
                     if (distanceVec.x < 0) 
                         karen.command.curr_action = Action::LEFT;
                     else 
@@ -63,7 +63,7 @@ void AISystem::Run(){
 
                 }
                 else if(!karen.command.finishedY && karen.command.finishedX){
-                    Logger::info("\nMOVING VERTICALY\n");
+                    // Logger::info("\nMOVING VERTICALY\n");
                     if (distanceVec.y < 0) 
                         karen.command.curr_action = Action::UP;
                     else 
@@ -72,7 +72,7 @@ void AISystem::Run(){
                 }
             }
             else{
-                Logger::info("\nCURR DIST IS BIGGER THEN PREV DIST\n");
+                // Logger::info("\nCURR DIST IS BIGGER THEN PREV DIST\n");
                 if ( !karen.command.finishedX) {
                     if (distanceVec.x < 0) 
                         karen.command.curr_action = Action::RIGHT;

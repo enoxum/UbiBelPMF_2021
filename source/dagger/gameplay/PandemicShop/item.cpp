@@ -17,20 +17,22 @@ void Pickable::Run(){
     items.each([&] (Entity ent, SimpleCollision &col_, Transform &transf_, Sprite &sprite_, Item &item_){
                     if(col_.colided){
                         item_.pickable = true;
-                        Logger::info("\nCollided {}\n", col_.colided);
+                        // Logger::info("\nCollided {}\n", col_.colided);
                         auto possibly_hero = col_.colidedWith;
                         if(reg.has<PandemicCharacter, CollisionType::Char>(possibly_hero)){
-                            Logger::info("\nFound hero\n");
                             auto hero = Character::Get(possibly_hero);
-                            auto &inventory = hero.inventory;
-                            auto &input = hero.input;
                             
+                            auto &input = hero.input;
+                            // Logger::info("Item pickup");
                             if (EPSILON_NOT_ZERO(input.Get("pickup")))
                             {
                                 item_.hidden = true;
                                 reg.remove<SimpleCollision>(ent);
                                 sprite_.scale = {0, 0};
-                                inventory.emplace_back(ent);
+                                
+                                ++picked;
+                                Logger::info("PICAKBLE {}", picked);
+                                
                             }
                         }
                     }

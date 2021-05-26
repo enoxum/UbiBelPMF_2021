@@ -29,6 +29,17 @@ void SimpleCollisionsSystem::Run()
         all_it++;
     }
 
+    int destroyed_items = 0;
+    for(auto it:item_view){
+        auto item = reg.get<Item>(it);
+        if(item.hidden){
+            destroyed_items ++;
+        }
+    }
+    if(destroyed_items == 36){
+        Engine::s_IsPaused = true;
+    }
+
     auto it = bot_view.begin();
     while(it != bot_view.end())
     {

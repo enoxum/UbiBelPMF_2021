@@ -21,7 +21,6 @@ struct Character {
   PandemicCharacter &character;
   Transform &transform;
   SimpleCollision &collision;
-  std::vector<Entity> inventory;
   //Maro ovo treba da se pormeni kada je kraj igrice
   bool isGameOver;
 

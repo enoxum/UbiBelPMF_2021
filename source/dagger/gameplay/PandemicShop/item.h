@@ -20,8 +20,9 @@ struct Item {
 
 class Pickable : public System
 {
+    
 public:
     inline String SystemName() { return "Pickable System"; }
-
+    static unsigned inline  picked = 0;
     void Run() override;
 };
