@@ -22,7 +22,7 @@ void MenuEnd::CreateMenu()
 	/* Background */ {
 		background = reg.create();
 		auto& backgroundTransform = reg.emplace<Transform>(background);
-		backgroundTransform.position = { 0.0f, 0.0f, 0.0f };
+		backgroundTransform.position = { 0.0f, 0.0f, 50.0f };
 		auto& backgroundSprite = reg.emplace<Sprite>(background);
 		AssignSprite(backgroundSprite, "EmptyWhitePixel");
 		backgroundSprite.UseAsUI();
@@ -34,7 +34,7 @@ void MenuEnd::CreateMenu()
 		auto& winnerText = reg.emplace<Text>(winner_text);
 		winnerText.letterSize = { 37.0f, 47.0f };
 		winnerText.spacing = 0.7;
-		winnerText.Set("pixel-font", winner_name + " wins!", { 0.0f, 150.0f, 0.0f });
+		winnerText.Set("pixel-font", winner_name + " wins!", { 0.0f, 150.0f, 40.0f });
 	}
 	Button& bPlayAgain = AddButton(0, 0, "Play Again", "ui:button_blue", "ui:button_blue_selected");
 	bPlayAgain.onSelected.connect<&MenuEnd::OnReplay>(this);

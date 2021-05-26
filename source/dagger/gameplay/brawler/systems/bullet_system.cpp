@@ -42,7 +42,6 @@ void BulletSystem::Run()
 		if(!b.projectile){
 			Vector3 dp = { b.direction*BulletSystem::s_BulletSpeed, 0, 0 };
 			t.position += dp * Engine::DeltaTime();
-			t.position.z = 1.0f;
 		
 			if (t.position.x < BulletSystem::s_CameraBoundLeft || t.position.x > BulletSystem::s_CameraBoundRight) {
 				reg.destroy(obj);

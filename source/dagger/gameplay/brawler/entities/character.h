@@ -58,13 +58,13 @@ namespace brawler
             auto chr = BrawlerCharacter::Get(entity);
 
             chr.sprite.scale = { isLeft_? -1 : 1, 1 };
-            chr.sprite.position = { 0.0f, 0.0f, 0.0f };
+            chr.sprite.position = { 0.0f, 0.0f, 90.0f };
             chr.sprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
             AssignSprite(chr.sprite, "spritesheets:gunner:" + color_ + ":idle:1");
             AnimatorPlay(chr.animator, "gunner:" + color_ + ":IDLE");
 
-            chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 1.0f };
+            chr.transform.position = { position_.x, position_.y + chr.sprite.size.y/2, 90.0f };
 
             if (input_ != "")
                 chr.input.contexts.push_back(input_);
@@ -81,7 +81,7 @@ namespace brawler
             reg.get_or_emplace<Transform>(chr.character.currentWeapon);
             auto& x = reg.get_or_emplace<Sprite>(chr.character.currentWeapon);
             x.scale = { 1, 1 };
-            x.position = { 0.0f, 0.0f, 0.0f };
+            x.position = { 0.0f, 0.0f, 80.0f };
             x.color = { 0.0f, 0.0f, 0.0f, 0.0f };
             AssignSprite(x, "EmptyWhitePixel");
 

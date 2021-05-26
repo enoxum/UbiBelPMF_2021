@@ -72,14 +72,14 @@ Button& Menu::AddButton(Float32 x, Float32 y, String text, String textureDefault
 
     auto background = reg.create();
     auto& backgroundTransform = reg.emplace<Transform>(background);
-    backgroundTransform.position = { x, y, 0.0f };
+    backgroundTransform.position = { x, y, 40.0f };
     auto& backgroundSprite = reg.emplace<Sprite>(background);
     if (buttons.empty())
         AssignSprite(backgroundSprite, textureSelected);
     else
         AssignSprite(backgroundSprite, textureDefault);
     backgroundSprite.UseAsUI();
-    backgroundSprite.position = { x, y, 1.0f };
+    backgroundSprite.position = { x, y, 40.0f };
     backgroundSprite.scale = { 5, 5 };
 
     auto foreground = reg.create();

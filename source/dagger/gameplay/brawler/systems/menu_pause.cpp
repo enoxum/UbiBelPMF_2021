@@ -22,7 +22,7 @@ void MenuPause::CreateMenu()
 	/* Background */ {
 		background = reg.create();
 		auto& backgroundTransform = reg.emplace<Transform>(background);
-		backgroundTransform.position = { 0.0f, 0.0f, 0.0f };
+		backgroundTransform.position = { 0.0f, 0.0f, 50.0f };
 		auto& backgroundSprite = reg.emplace<Sprite>(background);
 		AssignSprite(backgroundSprite, "EmptyWhitePixel");
 		backgroundSprite.UseAsUI();

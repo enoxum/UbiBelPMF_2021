@@ -19,7 +19,7 @@ void IntroSystem::SpinUp()
         background = reg.create();
         auto& s = reg.emplace<Sprite>(background);
         AssignSprite(s, "EmptyWhitePixel");
-        s.position = { 0.0f, 0.0f, 10.0f };
+        s.position = { 0.0f, 0.0f, 50.0f };
         s.color = {0.0f, 0.0f, 0.0f, 1.0f};
         s.scale = { 1280, 720 };
         s.UseAsUI();
@@ -28,10 +28,10 @@ void IntroSystem::SpinUp()
     {
         dagger = reg.create();
         auto& dagger_transform = reg.emplace<Transform>(dagger);
-        dagger_transform.position = { 0, 500, 5.0f };
+        dagger_transform.position = { 0, 500, 40.0f };
         auto& dagger_sprite = reg.emplace<Sprite>(dagger);
         AssignSprite(dagger_sprite, "logos:dagger");
-        dagger_sprite.position = { 0.0f, 500.0f, 5.0f };
+        dagger_sprite.position = { 0.0f, 500.0f, 40.0f };
         dagger_sprite.scale = {0.035f, 0.035f};
         dagger_sprite.UseAsUI();
     }
@@ -40,7 +40,7 @@ void IntroSystem::SpinUp()
         curtain = reg.create();
         auto& s = reg.emplace<Sprite>(curtain);
         AssignSprite(s, "EmptyWhitePixel");
-        s.position = { 0.0f, 0.0f, 3.0f };
+        s.position = { 0.0f, 0.0f, 30.0f };
         s.color = { 0.0f, 0.0f, 0.0f, 0.0f };
         s.scale = { 1280, 720 };
         s.UseAsUI();
@@ -70,7 +70,7 @@ void IntroSystem::Run()
                 auto& text = reg.emplace<Text>(ui_text);
                 text.spacing = 0.6f;
                 text.letterSize = { 37.0f, 47.0f };
-                text.Set("pixel-font", "Powered By Dagger", { 0, 200, 5.0f }, true);
+                text.Set("pixel-font", "Powered By Dagger", { 0, 200, 40.0f }, true);
             }
             animationDone = true;
         }
@@ -89,8 +89,9 @@ void IntroSystem::Run()
             {
                 auto& backgroundSprite = reg.get<Sprite>(background);
                 backgroundSprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
                 auto& daggerTransform = reg.get<Transform>(dagger);
-                daggerTransform.position = { 0.0f, 0.0f, 5.0f };
+                daggerTransform.position = { 0.0f, 0.0f, 40.0f };
                 auto& daggerSprite = reg.get<Sprite>(dagger);
                 AssignSprite(daggerSprite, "logos:ubisoft_belgrade");
                 daggerSprite.scale = { 1.0f, 1.0f };
