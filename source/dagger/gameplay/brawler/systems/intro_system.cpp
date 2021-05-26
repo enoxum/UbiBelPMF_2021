@@ -124,7 +124,7 @@ void IntroSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
     if (ubisoftDone)
         return;
 
-    if (kEvent_.action == EDaggerInputState::Released)
+    if ((kEvent_.key == EDaggerKeyboard::KeyEscape || kEvent_.key == EDaggerKeyboard::KeySpace) && kEvent_.action == EDaggerInputState::Released)
     {
         auto& reg = Engine::Registry();
         reg.destroy(background);
