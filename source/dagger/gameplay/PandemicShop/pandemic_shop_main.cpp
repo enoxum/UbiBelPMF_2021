@@ -88,8 +88,8 @@ void pandemic_shop::SetupWorld(Engine& engine_)
     constexpr int screenWidth = 800;
     constexpr int screenHeight = 600;
 
-    constexpr int height = 19;
-    constexpr int width = 26;
+    constexpr int height = 18;
+    constexpr int width = 27;
     constexpr float tileSize = 20.f;// / static_cast<float>(Width);
 
     float zPos = 1.f;
@@ -101,27 +101,32 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         
         for (int j = 0; j < width; j++)
         {
-            auto entity = reg.create();
-            auto& sprite = reg.emplace<Sprite>(entity);
-            AssignSprite(sprite, "EmptyWhitePixel");
-            sprite.size = scale * tileSize;
+            // auto entity = reg.create();
+            // auto& sprite = reg.emplace<Sprite>(entity);
+            // AssignSprite(sprite, "EmptyWhitePixel");
+            // sprite.size = scale * tileSize;
 
-            if (i % 2 != j % 2)
-            {
-                sprite.color.r = 0.4f;
-                sprite.color.g = 0.4f;
-                sprite.color.b = 0.4f;
-            }
-            else
-            {
-                sprite.color.r = 0.6f;
-                sprite.color.g = 0.6f;
-                sprite.color.b = 0.6f;
+            // if (i % 2 != j % 2)
+            // {
+            //     sprite.color.r = 0.4f;
+            //     sprite.color.g = 0.4f;
+            //     sprite.color.b = 0.4f;
+            // }
+            // else
+            // {
+            //     sprite.color.r = 0.6f;
+            //     sprite.color.g = 0.6f;
+            //     sprite.color.b = 0.6f;
                 
-            }
+            // }
 
             if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
             {
+                auto entity = reg.create();
+                auto& sprite = reg.emplace<Sprite>(entity);
+                AssignSprite(sprite, "EmptyWhitePixel");
+                sprite.size = scale * tileSize;
+
                 sprite.color.r = 0.0f;
                 sprite.color.g = 0.0f;
                 sprite.color.b = 0.0f;
@@ -130,13 +135,18 @@ void pandemic_shop::SetupWorld(Engine& engine_)
                 reg.emplace<CollisionType::Wall>(entity);
                 col.size.x = tileSize;
                 col.size.y = tileSize;
+
+                auto& transform = reg.emplace<Transform>(entity);
+                transform.position.x = (0.5f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+                transform.position.y = (0.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+                transform.position.z = -1.f;//zPos
                 
             }
 
-            auto& transform = reg.emplace<Transform>(entity);
-            transform.position.x = (0.5f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-            transform.position.y = (0.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
-            transform.position.z = zPos;
+            // auto& transform = reg.emplace<Transform>(entity);
+            // transform.position.x = (0.5f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+            // transform.position.y = (0.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+            // transform.position.z = zPos;
         }
     }
 
@@ -233,6 +243,8 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         // auto& collider = reg.get<SimpleCollision>(entTS);
         // collider.size = {32, 32};
 
+
+
 //******************************SHELVES****************************************
         auto entTS = reg.create();
         auto& spriteTS = reg.emplace<Sprite>(entTS);
@@ -319,12 +331,12 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         colliderTR1.size.y = 32;
         auto& transformTR1 = reg.emplace<Transform>(entTR1);
         transformTR1.position.x = -250;
-        transformTR1.position.y =  200;
+        transformTR1.position.y =  180;
         transformTR1.position.z = 0.f;
 
         auto entTR2 = reg.create();
         auto& spriteTR2 = reg.emplace<Sprite>(entTR2);
-        AssignSprite(spriteTR2, "PandemicShop:tree1");
+        AssignSprite(spriteTR2, "PandemicShop:plant");
         auto &colliderTR2 = reg.emplace<SimpleCollision>(entTR2);
         reg.emplace<CollisionType::Wall>(entTR2);
         colliderTR2.size.x = 32;
@@ -336,7 +348,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
         auto entTR3 = reg.create();
         auto& spriteTR3 = reg.emplace<Sprite>(entTR3);
-        AssignSprite(spriteTR3, "PandemicShop:tree1");
+        AssignSprite(spriteTR3, "PandemicShop:plant");
         auto &colliderTR3 = reg.emplace<SimpleCollision>(entTR3);
         reg.emplace<CollisionType::Wall>(entTR3);
         colliderTR3.size.x = 32;
@@ -356,7 +368,7 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         colliderTR4.size.y = 32;
         auto& transformTR4 = reg.emplace<Transform>(entTR4);
         transformTR4.position.x = 250;
-        transformTR4.position.y = 200;
+        transformTR4.position.y = 180;
         transformTR4.position.z = 0.f;
 
 //*****************************OTHER SHELVES*******************************************
@@ -385,7 +397,91 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         transformS2.position.y = -60;
         transformS2.position.z = 0.f;
 
-//****************************************************************************************
+//************************TILES***************************************************************
+
+        int y_s = 144;
+        for (int j = 0; j < 6; j++)
+        {
+            for(int i = -245; i <= 253; i+=61){
+
+                auto tileEnt = reg.create();
+                auto& tileSprite = reg.emplace<Sprite>(tileEnt);
+                AssignSprite(tileSprite, "PandemicShop:tile");
+                auto& tileTransform = reg.emplace<Transform>(tileEnt);
+                tileTransform.position.x =  i;
+                tileTransform.position.y =  y_s - (j*60);
+                tileTransform.position.z = 1.f;
+
+           }
+        }
+//*********************************************BORDERS*********************************************
+
+        //left border
+        for (int i = 115; i >=-173; i-=120)
+        {
+            auto borderEnt = reg.create();
+            auto& borderSprite = reg.emplace<Sprite>(borderEnt);
+            AssignSprite(borderSprite, "PandemicShop:border");
+            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            reg.emplace<CollisionType::Wall>(borderEnt);
+            borderCollider.size.x = 32;
+            borderCollider.size.y = 32;
+            auto& borderTransform = reg.emplace<Transform>(borderEnt);
+            borderTransform.position.x = -275;
+            borderTransform.position.y =  i;
+            borderTransform.position.z = 0.f;
+        }
+
+        //right border
+        for (int i = 115; i >=-173; i-=120)
+        {
+            auto borderEnt = reg.create();
+            auto& borderSprite = reg.emplace<Sprite>(borderEnt);
+            AssignSprite(borderSprite, "PandemicShop:border");
+            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            reg.emplace<CollisionType::Wall>(borderEnt);
+            borderCollider.size.x = 32;
+            borderCollider.size.y = 32;
+            auto& borderTransform = reg.emplace<Transform>(borderEnt);
+            borderTransform.position.x = 270;//275
+            borderTransform.position.y =  i;
+            borderTransform.position.z = 0.f;
+        }
+
+        //top border
+        for (int i = -230; i <= 220; i+=90)
+        {
+            auto borderEnt = reg.create();
+            auto& borderSprite = reg.emplace<Sprite>(borderEnt);
+            AssignSprite(borderSprite, "PandemicShop:borderH");
+            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            reg.emplace<CollisionType::Wall>(borderEnt);
+            borderCollider.size.x = 32;
+            borderCollider.size.y = 32;
+            auto& borderTransform = reg.emplace<Transform>(borderEnt);
+            borderTransform.position.x = i;
+            borderTransform.position.y = 180;
+            borderTransform.position.z = 0.f;
+        }
+
+        //bottom border
+        for (int i = -230; i <= 220; i+=90)
+        {
+            auto borderEnt = reg.create();
+            auto& borderSprite = reg.emplace<Sprite>(borderEnt);
+            AssignSprite(borderSprite, "PandemicShop:borderH");
+            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            reg.emplace<CollisionType::Wall>(borderEnt);
+            borderCollider.size.x = 32;
+            borderCollider.size.y = 32;
+            auto& borderTransform = reg.emplace<Transform>(borderEnt);
+            borderTransform.position.x = i;
+            borderTransform.position.y = -189;
+            borderTransform.position.z = 0.f;
+        }
+        
+
+//********************************************************************************************
        
         auto ent4 = reg.create();
         auto item4 = reg.emplace<Item>(ent4);
