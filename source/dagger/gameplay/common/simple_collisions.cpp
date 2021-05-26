@@ -167,6 +167,8 @@ void SimpleCollisionsSystem::Run()
                     collision.colided = true;
                     col.colided = true;
                     Logger::info("Player hit a bot");
+                    Engine::s_IsPaused = true;
+
 
                 }
             }

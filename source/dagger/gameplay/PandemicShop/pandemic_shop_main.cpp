@@ -59,7 +59,6 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<CollisionDetectionSystem>();
     engine_.AddPausableSystem<Pickable>();
     engine_.AddPausableSystem<AISystem>();
-
     engine_.AddSystem<LevelSystem>();
 
 #if defined(DAGGER_DEBUG)
@@ -131,10 +130,15 @@ void pandemic_shop::SetupStartScreen(Engine &engine_) {
 }
 
 void pandemic_shop::SetupRestartScreen(Engine &engine_,
-                                       String number_of_collected_items_,
-                                       String number_of_items_
+                                       int number_of_collected_items_,
+                                       int number_of_items_
     ) {
     auto &reg = engine_.Registry();
+
+    auto hero_view = reg.view<PandemicCharacter>();
+    auto entityt2 = hero_view.begin();
+    auto chr = Character::Get(*entityt2);
+    printf("PMS: %d\n", chr.inventory.size());
 
     auto entity = reg.create();
     auto &sprite = reg.emplace<Sprite>(entity);
@@ -168,7 +172,7 @@ void pandemic_shop::SetupRestartScreen(Engine &engine_,
     //Collected 7/11 (na primer)
     text1.spacing = 0.6f;
     text1.letterSize = {37.0f, 47.0f};
-    text1.Set("pixel-font", "Collected "+number_of_collected_items_+"/"+number_of_items_ + " items", {10, 100, 98});
+    text1.Set("pixel-font", "Collected "+std::to_string((int)number_of_collected_items_)+" "+std::to_string((int)number_of_items_)+ " items", {10, 100, 98});
 
     //ovo ako nam bude zatrebalo da pisemo sa ovim formatom
     /*text.Set("pixel-font",

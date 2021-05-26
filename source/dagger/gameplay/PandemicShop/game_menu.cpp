@@ -66,20 +66,23 @@ void GameMenuSystem::OnEndOfFrame() {
     }
     if (s_GameOver) {
       s_GameOver = false;
-      Engine::Registry().clear();
       //ovde ne treba da pise 7  i 11 vec broj pokupljenih itema i koliko je bilo itema
       //Mora da bude string!
-      pandemic_shop::SetupRestartScreen(Engine::Instance(), "7", "11");
+      // int collected_items = chr.inventory.size();
+
+      Engine::Registry().clear();
+      printf("GMS %d\n", collected_items);
+      pandemic_shop::SetupRestartScreen(Engine::Instance(), collected_items, 36);
     }  
-    auto hero_view = Engine::Registry().view<PandemicCharacter>();
-    for (auto &entity : hero_view) {
-      auto chr = Character::Get(entity);
-      if (Engine::s_IsPaused) {
+    if (Engine::s_IsPaused) {
         Engine::s_IsPaused = false;
+        /*auto hero_view = Engine::Registry().view<PandemicCharacter>();
+        auto entity = hero_view.begin();
+        auto chr = Character::Get(*entity);
+        collected_items = chr.inventory.size();*/
         s_GameOver = true;
         return;
-      }
-    }  
+     }
   }
 
 bool GameMenuSystem::IsMouseOver(GameMenuButton gmb_) {

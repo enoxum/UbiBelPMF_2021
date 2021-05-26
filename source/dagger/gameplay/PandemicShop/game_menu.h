@@ -17,6 +17,7 @@ class GameMenuSystem : public System {
   bool m_LoadGame = false;
   static bool s_GameOver;
   static String s_Winner;
+  static inline int collected_items = 0;
 
 public:
   inline String SystemName() { return "Game Menu System"; }
