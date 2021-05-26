@@ -145,8 +145,6 @@ void SimpleCollisionsSystem::Run()
                     collision.colided = true;
                     col.colided = true;
 
-                    resolveDirection( collision, transform, col, tr);
-
                 }
             }
             i_it2++;
@@ -167,7 +165,7 @@ void SimpleCollisionsSystem::Run()
                     collision.colided = true;
                     col.colided = true;
                     Logger::info("Player hit a bot");
-                    // resolveDirection( collision, transform, col, tr);
+
 
                 }
             }
@@ -210,17 +208,13 @@ void SimpleCollisionsSystem::resolveItem(SimpleCollision &collision, Transform &
         other.colided = false;
     }
     else{
-        resolveDirection(collision, col_transform, other, other_transform); 
         other.colided = false;
         collision.colided = false;
         command.previous = command.next;
         command.current = command.next;
-        command.next = {(rand() % (2*AISystem::border_width)) - AISystem::border_width, 
-                    (rand() % (2*AISystem::border_height)) - AISystem::border_height};
-    
-        command.finishedX = false;
-        command.finishedY = false;
-        command.finished = false;
+        command.finishedX = true;
+        command.finishedY = true;
+        command.finished =  true;
         
            
     }

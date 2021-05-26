@@ -18,9 +18,8 @@ void AISystem::Run(){
             
             Vector2 karen_pos = {karen.transform.position.x, karen.transform.position.y};
 
-            if(karen.command.finished && karen.command.picked){
+            if(karen.command.finished || karen.command.picked){
                 Vector2 next_position = {(rand() % (2*border_width)) - border_width, rand() % (2*border_height) - border_height};
-                // Vector2 next_position = {-128, -128};
                 karen.command.finished = false;
                 karen.command.finishedY = false;
                 karen.command.finishedX = false;
@@ -43,10 +42,10 @@ void AISystem::Run(){
             Logger::info("\nDISTANCE {}\n", curr_distance);
             if(abs(curr_distance) < 1){
                 // prev = curr;
+                Logger::info("curr_distance < 1");
                 karen.command.previous = karen.command.next;
                 // curr = next;
                 karen.command.current = karen.command.next;
-                karen.command.curr_action = Action::IDLE;
                 karen.command.finished=true;
                 karen.command.finishedX=true;
                 karen.command.finishedY=true;
