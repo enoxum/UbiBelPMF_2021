@@ -18,7 +18,6 @@ namespace brawler
 		bool					isLeft{ false };
 
 		int						health{ 100 };
-		bool 					died{false};
 
 		// Weapons
 		int 					maxWeapons = 5;

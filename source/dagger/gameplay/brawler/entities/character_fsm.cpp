@@ -30,9 +30,8 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
 
-	if(player.health == 0 && !player.died)
+	if(player.health == 0)
 	{
-		player.died = true;
 		GoTo(ECharacterStates::Death, state_);
 		return;
 	}
@@ -76,9 +75,8 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 {
 	auto&& [sprite, input, player, transform, movable] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable>(state_.entity);
 
-	if(player.health == 0 && !player.died)
+	if(player.health == 0)
 	{
-		player.died = true;
 		GoTo(ECharacterStates::Death, state_);
 		return;
 	}
@@ -144,9 +142,8 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 {
 	auto&& [sprite, input, player, transform, movable] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable>(state_.entity);
 
-	if(player.health == 0 && !player.died)
+	if(player.health == 0)
 	{
-		player.died = true;
 		GoTo(ECharacterStates::Death, state_);
 		return;
 	}
@@ -195,5 +192,9 @@ DEFAULT_EXIT(BrawlerCharacterFSM, Death);
 
 void BrawlerCharacterFSM::Death::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
+	auto&& [player, animator, sprite] = Engine::Registry().get<Player, Animator, Sprite>(state_.entity);
 
+	if(animator.currentFrame == 5){
+		
+	}
 }
