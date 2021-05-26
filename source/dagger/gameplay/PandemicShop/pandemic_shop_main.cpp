@@ -81,7 +81,7 @@ void PandemicShopGame::WorldSetup(Engine& engine_)
     // camera->Update();
     camera->size = { 1280, 720 };
     camera->zoom = 1.5;
-    camera->position = { 320, 180, 0 };
+    camera->position = { 0, 0, 0 };
     camera->Update();
 
     SetupWorld(engine_);

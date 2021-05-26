@@ -10,7 +10,7 @@
 
 using namespace dagger;
 
-enum struct Action {PICK, IDLE, UP, DOWN, RIGHT, LEFT};
+enum struct Action {IDLE, UP, DOWN, RIGHT, LEFT};
 
 struct AICommand
 {
@@ -30,8 +30,8 @@ private:
     float delay;
     float counter;
 public:
-    static const int border_height = 200;
-    static const int border_width = 200;
+    static const int border_height = 160;
+    static const int border_width = 250;
 
     AISystem() { delay = 1.0f; counter = 0.0f;};
     inline String SystemName() { return "AI System"; }

@@ -226,10 +226,10 @@ Vector2 Level::TileToWorld(int x, int y)
 
 float Level::TileToWorldX(int x)
 {
-	return x * TILE_WIDTH + TILE_WIDTH/2;
+	return x * TILE_WIDTH + TILE_WIDTH/2 - 350;
 }
 
 float Level::TileToWorldY(int y)
 {
-	return y * TILE_HEIGHT + TILE_HEIGHT/2;
+	return y * TILE_HEIGHT + TILE_HEIGHT/2 - 190;
 }

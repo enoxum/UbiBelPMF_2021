@@ -23,7 +23,8 @@ void KarenControllerFSM::Idle::Enter(
 void KarenControllerFSM::Idle::Run(KarenControllerFSM::StateComponent &state_) {
 	
     auto &command = Engine::Registry().get<AICommand>(state_.entity); 
-    if (command.curr_action != Action::IDLE && command.curr_action != Action::PICK) {
+    auto& character = Engine::Registry().get<pandemic::PandemicKarenCharacter>(state_.entity);
+    if (command.curr_action != Action::IDLE) {
         GoTo(EKarenStates::Running, state_);
     }
 }
@@ -104,6 +105,10 @@ void KarenControllerFSM::Running::Run(
     }
     else if (EPSILON_ZERO(left_right) && EPSILON_ZERO(up_down)) 
     {
+        
+        Logger::info("fsm epsilon");
+        command.curr_action == Action::IDLE;
+        
         GoTo(EKarenStates::Idle, state_);
     }
      else {
