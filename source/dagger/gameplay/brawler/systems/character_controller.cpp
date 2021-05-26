@@ -13,8 +13,8 @@ using namespace brawler;
 
 void CharacterControllerSystem::Run()
 {
-	if (Engine::GetDefaultResource<MenuEnd>()->isVisible())
-		return;
+	// if (Engine::GetDefaultResource<MenuEnd>()->isVisible())
+	// 	return;
 
 	Engine::Registry().view<BrawlerCharacterFSM::StateComponent>()
 		.each([&](BrawlerCharacterFSM::StateComponent& state_)

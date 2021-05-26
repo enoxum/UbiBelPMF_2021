@@ -30,6 +30,7 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
 
+
 	if(player.health == 0)
 	{
 		GoTo(ECharacterStates::Death, state_);
