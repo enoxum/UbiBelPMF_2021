@@ -11,6 +11,7 @@
 #include "gameplay/brawler/components/player.h"
 #include "gameplay/brawler/systems/bullet_system.h"
 #include "gameplay/brawler/systems/physics.h"
+#include "gameplay/brawler/systems/menu_end.h"
 #include "gameplay/brawler/level.h"
 
 using namespace dagger;
@@ -30,7 +31,6 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [sprite, input, player, transform, movable, col] = Engine::Registry().get<Sprite, InputReceiver, Player, Transform, Movable, SimpleCollision>(state_.entity);
 
-
 	if(player.health == 0)
 	{
 		GoTo(ECharacterStates::Death, state_);
@@ -40,6 +40,11 @@ void BrawlerCharacterFSM::Idle::Run(BrawlerCharacterFSM::StateComponent& state_)
 	if (!movable.isOnGround)
 	{
 		GoTo(ECharacterStates::Jumping, state_);
+		return;
+	}
+
+	if (Engine::GetDefaultResource<MenuEnd>()->isVisible())
+	{
 		return;
 	}
 
@@ -87,6 +92,11 @@ void BrawlerCharacterFSM::Running::Run(BrawlerCharacterFSM::StateComponent& stat
 	if (!movable.isOnGround)
 	{
 		GoTo(ECharacterStates::Jumping, state_);
+		return;
+	}
+
+	if (Engine::GetDefaultResource<MenuEnd>()->isVisible())
+	{
 		return;
 	}
 
@@ -161,6 +171,11 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 		{
 			GoTo(ECharacterStates::Running, state_);
 		}
+		return;
+	}
+
+	if (Engine::GetDefaultResource<MenuEnd>()->isVisible())
+	{
 		return;
 	}
 

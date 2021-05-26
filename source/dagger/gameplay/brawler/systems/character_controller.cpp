@@ -7,15 +7,11 @@
 #include "core/graphics/animation.h"
 #include "core/graphics/shaders.h"
 #include "core/graphics/window.h"
-#include "gameplay/brawler/systems/menu_end.h"
 
 using namespace brawler;
 
 void CharacterControllerSystem::Run()
 {
-	// if (Engine::GetDefaultResource<MenuEnd>()->isVisible())
-	// 	return;
-
 	Engine::Registry().view<BrawlerCharacterFSM::StateComponent>()
 		.each([&](BrawlerCharacterFSM::StateComponent& state_)
 			{
