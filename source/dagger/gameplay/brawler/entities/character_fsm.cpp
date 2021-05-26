@@ -184,17 +184,12 @@ void BrawlerCharacterFSM::Jumping::Run(BrawlerCharacterFSM::StateComponent& stat
 void BrawlerCharacterFSM::Death::Enter(BrawlerCharacterFSM::StateComponent& state_)
 {
 	auto&& [player, animator] = Engine::Registry().get<Player, Animator>(state_.entity);
-	AnimatorPlay(animator, "gunner:" + player.color + ":DEATH");
+	AnimatorPlayOnce(animator, "gunner:" + player.color + ":DEATH");
 }
 
-// TODO Player do not stop to repeat this animation
 DEFAULT_EXIT(BrawlerCharacterFSM, Death);
 
 void BrawlerCharacterFSM::Death::Run(BrawlerCharacterFSM::StateComponent& state_)
 {
-	auto&& [player, animator, sprite] = Engine::Registry().get<Player, Animator, Sprite>(state_.entity);
-
-	if(animator.currentFrame == 5){
-		
-	}
+	// There is nothing to do
 }
