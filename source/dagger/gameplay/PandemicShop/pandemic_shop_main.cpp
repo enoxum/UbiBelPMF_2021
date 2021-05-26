@@ -229,21 +229,6 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         KarenCharacter::Create("Pandemic", {0.5, 0.5, 0.5}, {128, 0});
         KarenCharacter::Create("Pandemic", {0.7, 0.7, 0.7}, {-128, 0});
 
-        // auto ent1 = reg.create();
-        // auto item1 = reg.emplace<Item>(ent1);
-        
-        // item1.Create(ent1, "spritesheets:pixel_mart:green_apple", {1, 1, 1}, {164, 164});
-        // auto& collider = reg.get<SimpleCollision>(ent1);
-        // collider.size = {32, 32};
-
-        // auto entTS = reg.create();
-        // auto itemTS = reg.emplace<Item>(entTS);
-        
-        // itemTS.Create(entTS, "spritesheets:shelf1:three_shelfs", {1, 1, 1}, {100, 100});
-        // auto& collider = reg.get<SimpleCollision>(entTS);
-        // collider.size = {32, 32};
-
-
 
 //******************************SHELVES****************************************
         auto entTS = reg.create();
@@ -422,10 +407,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             auto borderEnt = reg.create();
             auto& borderSprite = reg.emplace<Sprite>(borderEnt);
             AssignSprite(borderSprite, "PandemicShop:border");
-            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
-            reg.emplace<CollisionType::Wall>(borderEnt);
-            borderCollider.size.x = 32;
-            borderCollider.size.y = 32;
+            // auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            // reg.emplace<CollisionType::Wall>(borderEnt);
+            // borderCollider.size.x = 32;
+            // borderCollider.size.y = 32;
             auto& borderTransform = reg.emplace<Transform>(borderEnt);
             borderTransform.position.x = -275;
             borderTransform.position.y =  i;
@@ -438,10 +423,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             auto borderEnt = reg.create();
             auto& borderSprite = reg.emplace<Sprite>(borderEnt);
             AssignSprite(borderSprite, "PandemicShop:border");
-            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
-            reg.emplace<CollisionType::Wall>(borderEnt);
-            borderCollider.size.x = 32;
-            borderCollider.size.y = 32;
+            // auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            // reg.emplace<CollisionType::Wall>(borderEnt);
+            // borderCollider.size.x = 32;
+            // borderCollider.size.y = 32;
             auto& borderTransform = reg.emplace<Transform>(borderEnt);
             borderTransform.position.x = 270;//275
             borderTransform.position.y =  i;
@@ -454,10 +439,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             auto borderEnt = reg.create();
             auto& borderSprite = reg.emplace<Sprite>(borderEnt);
             AssignSprite(borderSprite, "PandemicShop:borderH");
-            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
-            reg.emplace<CollisionType::Wall>(borderEnt);
-            borderCollider.size.x = 32;
-            borderCollider.size.y = 32;
+            // auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            // reg.emplace<CollisionType::Wall>(borderEnt);
+            // borderCollider.size.x = 32;
+            // borderCollider.size.y = 32;
             auto& borderTransform = reg.emplace<Transform>(borderEnt);
             borderTransform.position.x = i;
             borderTransform.position.y = 180;
@@ -470,10 +455,10 @@ void pandemic_shop::SetupWorld(Engine& engine_)
             auto borderEnt = reg.create();
             auto& borderSprite = reg.emplace<Sprite>(borderEnt);
             AssignSprite(borderSprite, "PandemicShop:borderH");
-            auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
-            reg.emplace<CollisionType::Wall>(borderEnt);
-            borderCollider.size.x = 32;
-            borderCollider.size.y = 32;
+            // auto &borderCollider = reg.emplace<SimpleCollision>(borderEnt);
+            // reg.emplace<CollisionType::Wall>(borderEnt);
+            // borderCollider.size.x = 32;
+            // borderCollider.size.y = 32;
             auto& borderTransform = reg.emplace<Transform>(borderEnt);
             borderTransform.position.x = i;
             borderTransform.position.y = -189;
@@ -481,29 +466,44 @@ void pandemic_shop::SetupWorld(Engine& engine_)
         }
         
 
-//********************************************************************************************
+//******************************************ITEMS**************************************************
+
+        std::vector<std::string> item {"spritesheets:pixel_mart:tuna_can", "spritesheets:pixel_mart:hand_sanitiser", 
+                                        "spritesheets:pixel_mart:sliced_bread_p", "spritesheets:pixel_mart:soap_box",
+                                        "spritesheets:pixel_mart:water", "spritesheets:pixel_mart:cereal1",
+                                        "spritesheets:pixel_mart:flour", "spritesheets:pixel_mart:cooking_oil"};
        
-        auto ent4 = reg.create();
-        auto item4 = reg.emplace<Item>(ent4);
-        item4.Create(ent4, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-200, -200});
 
-        // auto ent2 = reg.create();
-        // auto item2 = reg.emplace<Item>(ent2);
-        // item2.Create(ent2, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {128, -128});
+        int y = -160;
+        int c = 0;
 
-        // auto ent3 = reg.create();
-        // auto item3 = reg.emplace<Item>(ent3);
-        // item3.Create(ent3, "spritesheets:pixel_mart:tuna_can", {1, 1, 1}, {-128, 128});
+        for (int i = 0; i < item.size(); i++)
+        {
+            if(i%2 == 1){
+                c = 20;
+            }else{
+                c = 0;
+            }
+
+            if(i < 4){
+                auto ent4 = reg.create();
+                auto item4 = reg.emplace<Item>(ent4);
+                item4.Create(ent4, item[i], {1, 1, 1}, {-150, y+(100*i)+c});
+                Logger::info(item[i]);
+            }else{
+                auto ent4 = reg.create();
+                auto item4 = reg.emplace<Item>(ent4);
+                item4.Create(ent4, item[i], {1, 1, 1}, {150, y+(100*(i-4))+c});
+                Logger::info(item[i]);
+            }
 
 
 
-        // if(item.hidden){
-        //     printf("\nhidden\n");
-        // }
-        // else{
+        }
+        
 
-        //     printf("\n not hidden \n");
-        // }
+
+
     }
     
     
