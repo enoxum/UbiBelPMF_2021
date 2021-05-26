@@ -1,4 +1,7 @@
 #include "gameplay/roboship/roboship_createbackdrop.h"
+#include "gameplay/roboship/fightEnemy.h"
+
+using namespace fightEnemy;
 
 const int TERRAIN_HEIGHT = 30;
 
@@ -35,12 +38,33 @@ void RBackdrop::RoboshipCreateBackdrop(Float32 background_pos_x, Float32 terrain
         sprite.position.z = 10;
     }
 
-    /*
+    // Inventory matrix - has data - positions of the parts
     {
-        auto ui = reg.create();
-        auto& text = reg.emplace<Text>(ui);
-        text.spacing = 0.6f;
-        text.Set("pixel-font", "Roboship game");
+        auto entity = reg.create();
+        auto& matInv = reg.emplace<InventoryMatrix>(entity);
     }
-    */
+
+    // Number of moves
+    {
+        auto moves = reg.create();
+        auto& sprite = reg.get_or_emplace<Sprite>(moves);
+
+        AssignSprite(sprite, "robot:INVENTORY:Tile");
+        sprite.size = { 30, 30 };
+
+        auto& numberOfMoves = reg.get_or_emplace<NumberOfMoves>(moves);
+        numberOfMoves.left = 3;
+
+        auto& transform = reg.get_or_emplace<Transform>(moves);
+        transform.position.x = 50;
+        transform.position.y = 50;
+
+    }
+
+    Inventory* inv = new Inventory();
+    inv->InventoryPositionsSetup();
+    inv->SelectedTileSetup();
+    inv->makeMatrix();
+    inv->FillInventory();
+
 }

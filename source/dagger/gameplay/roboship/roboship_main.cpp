@@ -137,8 +137,8 @@ void RoboshipSetCamera()
     camera->mode = ECameraMode::FixedResolution;
     camera->size = { 800, 600 };
 
-//    camera->zoom = 2;
     camera->zoom = 1;
+//    camera->zoom = 1;
     camera->position = { 0, 0, 0 };
     camera->Update();
 }
