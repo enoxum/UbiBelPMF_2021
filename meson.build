@@ -78,6 +78,7 @@ sources = [
 	'source/dagger/gameplay/brawler/systems/weaponpickupsystem.cpp',
 	'source/dagger/gameplay/brawler/systems/hud_system.cpp',
 	'source/dagger/gameplay/brawler/systems/esc_system.cpp',
+	'source/dagger/gameplay/brawler/systems/intro_system.cpp',
 	'source/dagger/gameplay/brawler/systems/menu_main.cpp',
 	'source/dagger/gameplay/brawler/systems/menu_pause.cpp',
 	'source/dagger/gameplay/brawler/systems/menu_end.cpp',

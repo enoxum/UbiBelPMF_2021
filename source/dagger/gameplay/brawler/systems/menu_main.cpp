@@ -9,7 +9,7 @@ using namespace dagger;
 using namespace brawler;
 
 MenuMain::MenuMain()
-	: Menu(true)
+	: Menu(false)
 {
 
 }

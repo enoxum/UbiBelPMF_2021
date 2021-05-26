@@ -33,6 +33,7 @@
 #include "gameplay/brawler/systems/projectile_collision_system.h"
 #include "gameplay/brawler/systems/drop_system.h"
 #include "gameplay/brawler/systems/hud_system.h"
+#include "gameplay/brawler/systems/intro_system.h"
 #include "gameplay/brawler/systems/menu_main.h"
 #include "gameplay/brawler/systems/menu_pause.h"
 #include "gameplay/brawler/systems/menu_end.h"
@@ -61,6 +62,7 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<ProjectileCollisionSystem>();
 
     // Menus
+    engine.AddSystem<IntroSystem>();
     engine.AddPausableSystem<EscSystem>();
     engine.AddSystem<MenuMain>();
     engine.AddSystem<MenuPause>();
