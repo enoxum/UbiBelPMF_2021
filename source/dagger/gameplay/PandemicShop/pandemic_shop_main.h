@@ -16,7 +16,7 @@ namespace pandemic_shop
     {
         inline String GetIniFile() override
         {
-            return "pingpong.ini";
+            return "pandemic.ini";
         };
 
         void CoreSystemsSetup(Engine& engine_) override;
