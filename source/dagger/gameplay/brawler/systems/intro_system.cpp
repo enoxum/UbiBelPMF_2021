@@ -92,7 +92,7 @@ void IntroSystem::Run()
                 auto& daggerTransform = reg.get<Transform>(dagger);
                 daggerTransform.position = { 0.0f, 0.0f, 5.0f };
                 auto& daggerSprite = reg.get<Sprite>(dagger);
-                AssignSprite(daggerSprite, "logos:ubisoft");
+                AssignSprite(daggerSprite, "logos:ubisoft_belgrade");
                 daggerSprite.scale = { 1.0f, 1.0f };
                 auto& text = reg.get<Text>(ui_text);
                 text.Set("pixel-font", "");
