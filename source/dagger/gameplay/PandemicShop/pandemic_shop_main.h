@@ -13,8 +13,12 @@ void SetupWorld(Engine &engine_);
 void SetupStartScreen(Engine &engine_);
 void SetupRestartScreen(Engine &engine_, String number_of_collected_items_, String number_of_items_);
 
-class PandemicShopGame : public Game {
-  inline String GetIniFile() override { return "pingpong.ini"; };
+    class PandemicShopGame : public Game
+    {
+        inline String GetIniFile() override
+        {
+            return "pandemic.ini";
+        };
 
   void CoreSystemsSetup(Engine &engine_) override;
   void GameplaySystemsSetup(Engine &engine_) override;
