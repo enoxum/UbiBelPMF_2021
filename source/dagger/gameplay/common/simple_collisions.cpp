@@ -6,6 +6,7 @@
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
 #include "gameplay/PandemicShop/item.h"
 #include "gameplay/PandemicShop/karen.h"
+#include <gameplay/PandemicShop/player.h>
 
 using namespace dagger;
 using namespace pandemic;
@@ -148,6 +149,7 @@ void SimpleCollisionsSystem::Run()
         }
 
         auto b_it2 = bot_view.begin();
+        //da li se udario sa karen
         while(b_it2 != bot_view.end())
         {
             if(reg.has<SimpleCollision>(*b_it2)){
@@ -162,6 +164,11 @@ void SimpleCollisionsSystem::Run()
                     collision.colided = true;
                     col.colided = true;
                     Logger::info("Player hit a bot");
+                    //kraj igre
+                    auto &chr_bob=Character::Get(*h_it);
+                    chr_bob.isGameOver = true;
+                    Engine::s_IsPaused = true;
+                    return;
                     // resolveDirection( collision, transform, col, tr);
 
                 }

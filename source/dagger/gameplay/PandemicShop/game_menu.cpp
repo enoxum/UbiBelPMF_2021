@@ -17,7 +17,6 @@ using namespace pandemic;
 using namespace pandemic_shop;
 using namespace dagger;
 
-//promeni
 bool GameMenuSystem::s_GameOver = false;
 String GameMenuSystem::s_Winner = "";
 
@@ -28,7 +27,6 @@ void GameMenuSystem::Run() {
     auto &gmb = view.get<GameMenuButton>(entity);
     auto &sprite = view.get<Sprite>(entity);
     auto &input = view.get<InputReceiver>(entity);
-
 
     if (IsMouseOver(gmb)) {
       /*if (gmb.type == EGameMenuType::StartScreen) {
@@ -65,14 +63,24 @@ void GameMenuSystem::OnEndOfFrame() {
     m_LoadGame = false;
     Engine::Registry().clear();
     pandemic_shop::SetupWorld(Engine::Instance());
-  }
-  if (s_GameOver) {
+    }
+    if (s_GameOver) {
     s_GameOver = false;
     Engine::Registry().clear();
     //ovde ne treba da pise 7  i 11 vec broj pokupljenih itema i koliko je bilo itema
+    //Mora da bude string!
     pandemic_shop::SetupRestartScreen(Engine::Instance(), "7", "11");
+    }  
+    auto &hero_view = Engine::Registry().view<PandemicCharacter>();
+    for (auto &entity : hero_view) {
+      auto &chr = Character::Get(entity);
+      if (Engine::s_IsPaused) {
+        Engine::s_IsPaused = false;
+        s_GameOver = true;
+        return;
+      }
+    }  
   }
-}
 
 bool GameMenuSystem::IsMouseOver(GameMenuButton gmb_) {
   auto cursor = dagger::Input::CursorPositionInWorld();

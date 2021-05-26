@@ -55,7 +55,6 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<Pickable>();
     engine_.AddPausableSystem<AISystem>();
 #if defined(DAGGER_DEBUG)
-  engine_.AddPausableSystem<ping_pong::PingPongTools>();
   engine_.AddPausableSystem<GameMenuSystem>();
 #endif // defined(DAGGER_DEBUG)
 }
@@ -67,7 +66,6 @@ void PandemicShopGame::WorldSetup(Engine &engine_) {
   camera->zoom = 1;
   camera->position = {0, 0, 0};
   camera->Update();
- // pandemic_shop::SetupRestartScreen(engine_, "Bob");
   pandemic_shop::SetupStartScreen(engine_);
 }
 //---------------------------------------------------------
@@ -113,6 +111,7 @@ void pandemic_shop::SetupWorld(Engine &engine_) {
         sprite.color.b = 0.0f;
 
         auto &col = reg.emplace<SimpleCollision>(entity);
+        reg.emplace<CollisionType::Wall>(entity);
         col.size.x = tileSize;
         col.size.y = tileSize;
       }
@@ -261,12 +260,26 @@ void pandemic_shop::SetupStartScreen(Engine &engine_) {
   auto entityt = reg.create();
   auto &text = reg.emplace<Text>(entityt);
   text.spacing = 0.6f;
+  text.letterSize = {37.0f, 47.0f};
   text.Set("pixel-font","Pandemic Shop Game", {10, 175, 98});
 
   auto entityt2 = reg.create();
   auto &text2 = reg.emplace<Text>(entityt2);
+  text2.letterSize = {37.0f, 47.0f};
   text2.spacing = 0.5f;
   text2.Set("pixel-font", "Start", {10, 100, 98});
+
+  auto entityt3 = reg.create();
+  auto &text3 = reg.emplace<Text>(entityt3);
+  text3.spacing = 0.4f;
+  text3.letterSize = {20.0f, 30.0f};
+  text3.Set("pixel-font", "Avoid Karens and try to pick up", {10, -100, 98});
+
+  auto entityt4 = reg.create();
+  auto &text4 = reg.emplace<Text>(entityt4);
+  text4.spacing = 0.4f;
+  text4.letterSize = {20.0f, 30.0f};
+  text4.Set("pixel-font", "as many groceries as possible !", {10, -150, 98});
 }
 
 void pandemic_shop::SetupRestartScreen(Engine &engine_,
@@ -291,19 +304,25 @@ void pandemic_shop::SetupRestartScreen(Engine &engine_,
     auto &text = reg.emplace<Text>(entityt);
     text.spacing = 0.6f;
     text.alignment = TextAlignment::CENTER;
+    text.letterSize = {37.0f, 47.0f};
 
-    //if(pobeda){
-    //text.Set("pixel-font", "Game Over!", {10, 175, 98});
+    //Game over
+    //e sad ovo su stringovi, tako da vrv treba drugacije da se porede
+    //if(number_of_collected_items_!=number_if_items){               <-----------------------
+    //text.Set("pixel-font", "Game Over!", {10, 175, 98});           <-----------------------
 
-    //else{
+    //pobeda
+    //else{                                                          <-----------------------
     text.Set("pixel-font", "Victory!", {10, 175, 98});
 
     auto entityt1 = reg.create();
     auto &text1 = reg.emplace<Text>(entityt1);
     //Collected 7/11 (na primer)
     text1.spacing = 0.6f;
+    text1.letterSize = {37.0f, 47.0f};
     text1.Set("pixel-font", "Collected "+number_of_collected_items_+"/"+number_of_items_ + " items", {10, 100, 98});
 
+    //ovo ako nam bude zatrebalo da pisemo sa ovim formatom
     /*text.Set("pixel-font",
              fmt::format("Raid: {}s left!", (UInt32)player.timeLeft),
              {10, 260, 98});*/
