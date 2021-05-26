@@ -3,6 +3,7 @@
 #include "gameplay/roboship/selectTileController.h"
 
 using namespace robo_game;
+using namespace inventory;
 
 bool fightEnemy::findCombination(std::vector<int> comb)
 {
@@ -206,6 +207,9 @@ void fightEnemy::addShipPart()
     transform.position.x = t.position.x;
     transform.position.y = t.position.y;
     transform.position.z = 0.f;
+
+    Engine::Registry().emplace<MoveWithRobot>(entityNew);
+
 
     Engine::Registry().remove<EmptySprite>(entity);
 }

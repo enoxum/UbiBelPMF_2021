@@ -171,7 +171,7 @@ void Roboship::WorldSetup()
         auto& roboshipPlayer = reg.emplace<RoboshipPlayer>(entity);
         roboshipPlayer.speed = 200;
 
-        reg.emplace<ControllerMapping>(entity);
+        reg.emplace<ControllerMappingPlayer>(entity);
         Engine::Registry().emplace<RCameraFollowFocus>(entity);
     }
 

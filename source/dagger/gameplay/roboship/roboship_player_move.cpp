@@ -35,7 +35,7 @@ void RoboshipPlayerInputSystem::WindDown()
 
 void RoboshipPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-    Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
+    Engine::Registry().view<ControllerMappingPlayer>().each([&](ControllerMappingPlayer& ctrl_)
         {
             if (kEvent_.key == ctrl_.leftKey && (kEvent_.action == EDaggerInputState::Pressed || kEvent_.action == EDaggerInputState::Held))
             {
@@ -72,14 +72,16 @@ void RoboshipPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 void RoboshipPlayerInputSystem::Run()
 {
     
-    auto view = Engine::Registry().view<Sprite, ControllerMapping, Animator, RoboshipPlayer>();
+    auto view = Engine::Registry().view<Sprite, ControllerMappingPlayer, Animator, RoboshipPlayer>();
+    auto view2 = Engine::Registry().view<MoveWithRobot,Sprite>();
 
     for (auto entity : view)
     {
+
         auto& animator = view.get<Animator>(entity);
 
         auto& sprite = view.get<Sprite>(entity);
-        auto& ctrl = view.get<ControllerMapping>(entity);
+        auto& ctrl = view.get<ControllerMappingPlayer>(entity);
         auto& roboshipPlayer = view.get<RoboshipPlayer>(entity);
 
         if (EPSILON_ZERO(ctrl.input.x) && !atomicJump && !atomicFight)
@@ -146,7 +148,12 @@ void RoboshipPlayerInputSystem::Run()
         }
 
         else if (((ctrl.input.x == 1 || ctrl.input.x == -1) && !prepareFightMode)) {
+
             if (!prepareFightMode) {
+                for (auto e : view2) {
+                    auto& t = Engine::Registry().get<Transform>(e);
+                    t.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
+                }
                 AnimatorPlay(animator, "robot:RUN");
                 sprite.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
                 jumpAllow = true;
@@ -179,5 +186,7 @@ void RoboshipPlayerInputSystem::Run()
             count += 1600;
             RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
         }
+
+    
     }
 }

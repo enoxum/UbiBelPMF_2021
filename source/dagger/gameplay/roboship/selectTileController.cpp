@@ -5,6 +5,7 @@
 #include "core/game/transforms.h"
 #include "gameplay/roboship/fightEnemy.h"
 #include "gameplay/roboship/roboship_main.h"
+#include <gameplay/roboship/roboship_player_move.h>
 
 using namespace dagger;
 using namespace robo_game;
@@ -154,6 +155,15 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 {
     auto view = Engine::Registry().view<Transform, Sprite>();
+    auto view2 = Engine::Registry().view<Sprite, RoboshipPlayer>();
+    Sprite pos;
+
+    for (auto e : view2)
+    {
+        pos = Engine::Registry().get<Sprite>(e);
+    }
+
+
 
     for (auto entity : view)
     {
@@ -162,14 +172,15 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 
         if (x - 1 >= 0)
         {
-            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
             float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+
+            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
                 s.size.x = 30.f;
@@ -179,14 +190,14 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
         }
         if (x + 1 < 4)
         {
-            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
             float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
                 s.size.x = 30.f;
@@ -197,14 +208,14 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 
         if (y - 1 >= 0)
         {
-            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
             float posY = (2.5f + y - 1 + (y - 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 6 == posX && t.position.y == posY && s.size.x == 30.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
                 s.size.x = 30.f;
@@ -215,14 +226,14 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 
         if (y + 1 < 4)
         {
-            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
             float posY = (2.5f + y + 1 + (y + 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (t.position.x == posX && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
                 s.size.x = 30.f;
@@ -251,14 +262,25 @@ void SelectedTileInputSystem::Run()
 {
 
     auto view = Engine::Registry().view<Transform, ControllerMapping>();
-    for (auto entity : view)
+    auto view2 = Engine::Registry().view<Sprite, RoboshipPlayer>();
+    Sprite s;
+
+    for (auto e : view2)
     {
-
-        auto& t = view.get<Transform>(entity);
-
-        auto& ctrl = view.get<ControllerMapping>(entity);
-
-        t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
-        t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+        s = Engine::Registry().get<Sprite>(e);
     }
+    
+
+        for (auto entity : view)
+        {
+
+            auto& t = view.get<Transform>(entity);
+
+            auto& ctrl = view.get<ControllerMapping>(entity);
+            
+
+            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f + s.position.x;
+            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+        }
+    
 }

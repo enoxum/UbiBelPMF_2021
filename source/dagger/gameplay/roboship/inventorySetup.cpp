@@ -15,6 +15,7 @@
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
 #include "core/graphics/text.h"
+#include <gameplay/roboship/roboship_player_move.h>
 
 using namespace dagger;
 using namespace roboship;
@@ -40,6 +41,8 @@ void inventory::Inventory::InventoryPositionsSetup()
             transform.position.x = (-1.0f + j + j * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
             transform.position.y = (2.5f + i + i * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
             transform.position.z = 3.f;
+
+            reg.emplace<MoveWithRobot>(entity);
         }
     }
 
@@ -67,6 +70,9 @@ void inventory::Inventory::InventoryPositionsSetup()
         transform.position.z = zPos;
 
         reg.emplace<EmptySprite>(entity);
+        reg.emplace<MoveWithRobot>(entity);
+      
+
     }
 }
 
@@ -93,6 +99,9 @@ void inventory::Inventory::SelectedTileSetup()
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
         reg.emplace<Tile>(entity);
+        reg.emplace<MoveWithRobot>(entity);
+      
+
     }
 
     tileSize = 30.f;
@@ -113,6 +122,10 @@ void inventory::Inventory::SelectedTileSetup()
         transform.position.y = (2.5f + 0 + 0 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
         transform.position.z = 4.f;
         reg.emplace<Tile>(entity);
+        reg.emplace<MoveWithRobot>(entity);
+
+
+
     }
 }
 
@@ -143,6 +156,7 @@ void inventory::Inventory::FillInventory()
             transform.position.y = (2.5f + j + j * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
             transform.position.z = 0.f;
 
+            reg.emplace<MoveWithRobot>(entity);
 
         }
     }
@@ -184,13 +198,21 @@ void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
     auto entityM = Engine::Registry().view<InventoryMatrix>()[0];
     auto& matrix = Engine::Registry().get<InventoryMatrix>(entityM);
 
+    auto view2 = Engine::Registry().view<Sprite, RoboshipPlayer>();
+    Sprite s;
+
+    for (auto e : view2)
+    {
+        s = Engine::Registry().get<Sprite>(e);
+    }
+
     tileSize = 30;
 
 
-    float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + s.position.x;
     float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
-    float posA = (-1.0f + a + a * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+    float posA = (-1.0f + a + a * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + s.position.x;
     float posB = (2.5f + b + b * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
     for (auto entity : view)
@@ -201,14 +223,14 @@ void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
         auto& t = view.get<Transform>(entity);
         auto& s = view.get<Sprite>(entity);
 
-        if (t.position.x == posX && t.position.y == posY && s.size.x == 15.f)
+        if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 15.f)
         {
             AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[x][y]));
             s.size.x = 15.f;
             s.size.y = 15.f;
         }
 
-        if (t.position.x == posA && t.position.y == posB && s.size.x == 15.f)
+        if (abs(t.position.x - posA) <= 6 && t.position.y == posB && s.size.x == 15.f)
         {
             AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[a][b]));
             s.size.x = 15.f;

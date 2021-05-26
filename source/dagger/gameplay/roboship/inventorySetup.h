@@ -34,6 +34,8 @@ namespace inventory
         MatrixInv matrix;
     };
 
+    struct MoveWithRobot {};
+
     struct EmptySprite {};
 
     struct MarkedTile {};

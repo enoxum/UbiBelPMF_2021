@@ -7,7 +7,7 @@ using namespace dagger;
 
 namespace roboship
 {
-    struct ControllerMapping
+    struct ControllerMappingPlayer
     {
         EDaggerKeyboard leftKey = EDaggerKeyboard::KeyLeft;
         EDaggerKeyboard rightKey = EDaggerKeyboard::KeyRight;
