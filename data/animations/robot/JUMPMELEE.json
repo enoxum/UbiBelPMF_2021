@@ -1,0 +1,14 @@
+{
+	"animation-name": "robot:JUMPMELEE",
+	"animation-length-ms": 600,
+	"animation-frames": [
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (1)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (2)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (3)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (4)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (5)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (6)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (7)" },
+		{ "texture-name": "robot:JUMPMELEE:JumpMelee (8)" }
+	]
+}
