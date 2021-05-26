@@ -66,7 +66,7 @@ void Level::Load(String map)
                 col.size.y = TILE_WIDTH;
 
                 auto& transform = reg.emplace<Transform>(entity);
-                transform.position = { TileToWorld(x, y), 0};
+                transform.position = { TileToWorld(x, y), 1};
 
             }else if(level->tilemap[y][x] == 1){
                 Character::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
