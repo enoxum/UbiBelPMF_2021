@@ -10,11 +10,10 @@
 #include "core/graphics/window.h"
 #include "core/game/transforms.h"
 #include "core/graphics/sprite_render.h"
+#include "core/graphics/tool_render.h"
 #include "core/graphics/textures.h"
 #include "core/graphics/animations.h"
 #include "core/graphics/gui.h"
-#include "core/graphics/text.h"
-
 #include "tools/diagnostics.h"
 
 #include "gameplay/common/simple_collisions.h"
@@ -27,16 +26,40 @@
 #include "gameplay/brawler/systems/shooting_system.h"
 #include "gameplay/brawler/systems/level_system.h"
 #include "gameplay/brawler/systems/map_collision_system.h"
-#include "gameplay/brawler/level.h"
 #include "gameplay/brawler/systems/weapon_spawn_system.h"
 #include "gameplay/brawler/systems/weaponpickupsystem.h"
-#include "gameplay/brawler/systems/drop_system.h"
-#include "gameplay/brawler/systems/hud_system.h"
 #include "gameplay/brawler/systems/bullet_collision_system.h"
 #include "gameplay/brawler/systems/projectile_collision_system.h"
+#include "gameplay/brawler/systems/drop_system.h"
+#include "gameplay/brawler/systems/hud_system.h"
+#include "gameplay/brawler/systems/intro_system.h"
+#include "gameplay/brawler/systems/menu_main.h"
+#include "gameplay/brawler/systems/menu_pause.h"
+#include "gameplay/brawler/systems/menu_end.h"
+#include "gameplay/brawler/systems/esc_system.h"
+#include "gameplay/brawler/level.h"
 
 using namespace dagger;
 using namespace brawler;
+
+void Brawler::CoreSystemsSetup()
+{
+    auto& engine = Engine::Instance();
+    engine.AddSystem<AudioSystem>();
+    engine.AddSystem<WindowSystem>();
+    engine.AddSystem<InputSystem>();
+    engine.AddSystem<ShaderSystem>();
+    engine.AddSystem<TextureSystem>();
+    engine.AddSystem<TransformSystem>();
+    engine.AddSystem<SpriteRenderSystem>();
+    engine.AddPausableSystem<AnimationSystem>();
+#if !defined(NDEBUG)
+    engine.AddSystem<DiagnosticSystem>();
+    engine.AddSystem<GUISystem>();
+    engine.AddSystem<ToolMenuSystem>();
+    engine.AddSystem<ToolRenderSystem>();
+#endif //!defined(NDEBUG)
+}
 
 void Brawler::GameplaySystemsSetup()
 {
@@ -55,6 +78,13 @@ void Brawler::GameplaySystemsSetup()
     engine.AddPausableSystem<HUDSystem>();
     engine.AddPausableSystem<BulletCollisionSystem>();
     engine.AddPausableSystem<ProjectileCollisionSystem>();
+
+    // Menus
+    engine.AddSystem<IntroSystem>();
+    engine.AddPausableSystem<EscSystem>();
+    engine.AddSystem<MenuMain>();
+    engine.AddSystem<MenuPause>();
+    engine.AddPausableSystem<MenuEnd>();
     
     // Debug Systems
     engine.AddSystem<CameraControlSystem>();
@@ -74,5 +104,4 @@ void Brawler::SetCamera()
 void Brawler::WorldSetup()
 {
     SetCamera();
-    Level::Load("default");
 }

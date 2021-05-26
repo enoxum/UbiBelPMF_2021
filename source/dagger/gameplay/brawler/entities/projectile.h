@@ -63,9 +63,9 @@ namespace brawler
             projectile.mov.isOnGround = false;
             projectile.mov.speed = {150*direction_, 250};
 
-            projectile.transform.position = { position_, 0.0f };
+            projectile.transform.position = { position_, 70.0f };
 
-            projectile.sprite.position = { position_, 0.0f };
+            projectile.sprite.position = { position_, 70.0f };
             projectile.sprite.size = { 1, 1 };
             projectile.bullet.projectile = true;
 

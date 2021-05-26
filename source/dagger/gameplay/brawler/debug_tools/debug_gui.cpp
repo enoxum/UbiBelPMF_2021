@@ -131,8 +131,6 @@ void DebugGui::RenderDebugWindow()
         ImGui::SliderFloat("Padding side: ", &HUDSystem::s_paddingSide, 0.0f, 50.0f);
         ImGui::SliderFloat("Mid padding up: ", &HUDSystem::s_midPaddingUp, 0.0f, 50.0f);
         ImGui::SliderFloat("Mid padding side: ", &HUDSystem::s_midPaddingSide, 0.0f, 50.0f);
-        ImGui::SliderInt("Left player health: ", &HUDSystem::s_leftPlayerHealth, 0, 100);
-        ImGui::SliderInt("Right player health: ", &HUDSystem::s_rightPlayerHealth, 0, 100);
     }
 	 
 	ImGui::End();

@@ -15,6 +15,7 @@ using namespace brawler;
 unsigned Level::LEVEL_WIDTH = 0;
 unsigned Level::LEVEL_HEIGHT = 0;
 
+String Level::name{};
 Tilemap Level::tiles{};
 Entity Level::player1 {entt::null};
 Entity Level::player2 {entt::null};
@@ -25,6 +26,7 @@ void Level::Load(String map)
 	reg.clear();
 
 	const auto* level = Engine::Res<LevelData>()[map];
+	name = level->name;
 
 	LEVEL_WIDTH = level->mapWidth;
 	LEVEL_HEIGHT = level->mapHeight;
@@ -41,14 +43,14 @@ void Level::Load(String map)
 			if(getTile(x, y) == PlatformType::BLOCK || getTile(x, y) == PlatformType::ONEWAY) {
 				auto tile = reg.create();
 				auto& transform = reg.emplace<Transform>(tile);
-				transform.position = { TileToWorld(x, y), 1 };
+				transform.position = { TileToWorld(x, y), 100.0f };
 				auto& sprite = reg.emplace<Sprite>(tile);
 				auto texture = level->tileset[level->tilemap[y][x]].texture;
 				AssignSprite(sprite, texture.name);
 				sprite.color = { 1, 1, 1, 1 };
 				sprite.size = { TILE_WIDTH, TILE_HEIGHT };
 				sprite.scale = { texture.scaleX, texture.scaleY };
-				sprite.position = { TileToWorld(x, y), 1 };
+				sprite.position = { TileToWorld(x, y), 100.0f };
 				auto& col = reg.get_or_emplace<SimpleCollision>(tile);
 				col.size = {TILE_WIDTH, TILE_HEIGHT};
 				auto& t = reg.get_or_emplace<Tile>(tile);
@@ -62,7 +64,7 @@ void Level::Load(String map)
 		}
 	}
 
-	float backgroundZ = 100.0f;
+	float backgroundZ = 200.0f;
 	for (auto& background : level->backgrounds) {
 		auto bg = reg.create();
 		auto& transform = reg.get_or_emplace<Transform>(bg);
@@ -91,6 +93,16 @@ void Level::Load(String map)
 	player2 = player2char.entity;
 
 	HUDSystem::Init();
+}
+
+void Level::Reload()
+{
+	if (name.empty())
+	{
+		Logger::error("No map is loaded. Can't reload");
+		return;
+	}
+	Load(name);
 }
 
 Entity Level::Player1()

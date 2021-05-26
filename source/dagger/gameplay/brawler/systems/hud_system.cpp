@@ -28,9 +28,6 @@ float HUDSystem::s_paddingSide		= 12;
 float HUDSystem::s_midPaddingUp		= 7.5f;
 float HUDSystem::s_midPaddingSide	= 7.5f;
 
-int HUDSystem::s_leftPlayerHealth = 100;
-int HUDSystem::s_rightPlayerHealth = 100;
-
 Entity HUDSystem::leftMarker{ entt::null };
 Entity HUDSystem::rightMarker{ entt::null };
 Entity HUDSystem::leftText{ entt::null };
@@ -119,7 +116,7 @@ void HUDSystem::CreateWeapons(bool side)
 
 		weaponBlip.idx = i;
 		weaponBlip.side = side;
-		transform.position.z = 0;
+		transform.position.z = 60.0f;
 
 		AssignSprite(sprite, "EmptyWhitePixel");
 		sprite.color = {1.0f, 1.0f, 1.0f, 0.0f};
@@ -155,9 +152,6 @@ void HUDSystem::Run()
 	auto playerLeft = Engine::Registry().get<Player>(Level::Player1());
 	auto playerRight = Engine::Registry().get<Player>(Level::Player2());
 
-//	playerLeft.health = HUDSystem::s_leftPlayerHealth;
-//	playerRight.health = HUDSystem::s_rightPlayerHealth;
-
 	auto& leftText	= Engine::Registry().get<Text>(HUDSystem::leftText);
 	auto& rightText = Engine::Registry().get<Text>(HUDSystem::rightText);
 
@@ -179,7 +173,7 @@ void HUDSystem::Run()
 	float offsetY = BulletSystem::s_CameraBoundUp - HUDSystem::s_paddingUp - HUDSystem::s_blipHeight / 2;
 	Engine::Registry().view<HealthBar, Transform, Sprite>().each([&](HealthBar& hb, Transform& hbTransform, Sprite& hbSprite) {
 		
-		float whitePartWidth = 100 * HUDSystem::s_blipWidth;;
+		float whitePartWidth = 100 * HUDSystem::s_blipWidth;
 		float whiteX = 0;
 
 		float redPartWidth = 0;
@@ -200,18 +194,18 @@ void HUDSystem::Run()
 		if (hb.color)
 		{
 			// Red
-			hbTransform.position = { redX, offsetY, 0.0f };
-			hbSprite.scale = { redPartWidth / hbSprite.size.x, HUDSystem::s_blipHeight / hbSprite.size.y};
+			hbTransform.position = { redX, offsetY, 60.0f };
+			hbSprite.scale = { redPartWidth, HUDSystem::s_blipHeight };
 			hbSprite.color = { 1.0f, 0.0f, 0.0f, 1.0f };
-			hbSprite.position = { redX, offsetY, 0.0f };
+			hbSprite.position = { redX, offsetY, 60.0f };
 		}
 		else
 		{
 			// White
-			hbTransform.position = { whiteX, offsetY, 1.0f };
-			hbSprite.scale = { whitePartWidth / hbSprite.size.x , HUDSystem::s_blipHeight  / hbSprite.size.y};
+			hbTransform.position = { whiteX, offsetY, 61.0f };
+			hbSprite.scale = { whitePartWidth , HUDSystem::s_blipHeight };
 			hbSprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-			hbSprite.position = { whiteX, offsetY, 1.0f };
+			hbSprite.position = { whiteX, offsetY, 61.0f };
 		}
 
 	});
@@ -258,7 +252,7 @@ void HUDSystem::Run()
 				leftText.spacing = 0.25f;
 				leftText.alignment = TextAlignment::LEFT;
 				leftText.letterSize = { static_cast<float>(HUDSystem::s_weaponDim) / 2, static_cast<float>(HUDSystem::s_weaponDim) / 2 };
-				leftText.Set("pixel-font", playerLeft.weapons[playerLeft.active_weapon_idx].ammoRepr(), { t.position.x + HUDSystem::s_weaponDim + HUDSystem::s_midPaddingSide, y, 0 }, false);
+				leftText.Set("pixel-font", playerLeft.weapons[playerLeft.active_weapon_idx].ammoRepr(), { t.position.x + HUDSystem::s_weaponDim + HUDSystem::s_midPaddingSide, y, 60.0f }, false);
 
 			}
 			else {
@@ -269,7 +263,7 @@ void HUDSystem::Run()
 				rightText.spacing = 0.25f;
 				rightText.alignment = TextAlignment::RIGHT;
 				rightText.letterSize = { static_cast<float>(HUDSystem::s_weaponDim) / 2, static_cast<float>(HUDSystem::s_weaponDim) / 2 };
-				rightText.Set("pixel-font", playerRight.weapons[playerRight.active_weapon_idx].ammoRepr(), { t.position.x - HUDSystem::s_weaponDim - HUDSystem::s_midPaddingSide, y, 0 }, false);
+				rightText.Set("pixel-font", playerRight.weapons[playerRight.active_weapon_idx].ammoRepr(), { t.position.x - HUDSystem::s_weaponDim - HUDSystem::s_midPaddingSide, y, 60.0f }, false);
 			}
 			
 		}

@@ -71,7 +71,6 @@ void ShootingSystem::Run()
 
         t.position.x = transform.position.x + trans_x * dir;
         t.position.y = transform.position.y + trans_y;
-        t.position.z = 0.0f;
         
         if (EPSILON_NOT_ZERO(input.Get("attack")))
         {

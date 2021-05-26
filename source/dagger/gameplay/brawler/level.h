@@ -9,7 +9,7 @@ using namespace dagger;
 
 namespace brawler {
 
-	enum PlatformType 
+	enum class PlatformType 
 	{
 		EMPTY,
 		BLOCK,
@@ -20,6 +20,7 @@ namespace brawler {
 	using Tilemap = std::vector<std::vector<PlatformType>>;
 	using TileCoords = std::pair<int, int>;
 
+	// This should have been a default resource instead of a static class
 	class Level
 	{
 	public:
@@ -32,6 +33,7 @@ namespace brawler {
 		static constexpr float DROPDOWN_OFFSET = 5.0f;
 
 		static void Load(String name);
+		static void Reload();
 
 		static Entity Player1();
 		static Entity Player2();
@@ -49,6 +51,7 @@ namespace brawler {
 		static std::optional<float> getLeftWall(Transform& t, Movable& m, SimpleCollision& c);
 		static std::optional<float> getRightWall(Transform& t, Movable& m, SimpleCollision& c);
 	private:
+		static String name;
 		static Tilemap tiles;
 
 		static Entity player1;

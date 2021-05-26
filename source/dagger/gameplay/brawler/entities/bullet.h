@@ -52,9 +52,9 @@ namespace brawler
             bullet.bullet.owner = owner;
             bullet.bullet.type = weaponType;
 
-            bullet.transform.position = { position_, 0.0f };
+            bullet.transform.position = { position_, 70.0f };
 
-            bullet.sprite.position = { position_, 0.0f };
+            bullet.sprite.position = { position_, 70.0f };
             bullet.sprite.size = { 1, 1 };
             bullet.bullet.projectile = false;
 

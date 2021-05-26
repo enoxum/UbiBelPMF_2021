@@ -14,6 +14,7 @@ namespace brawler
             return "brawler.ini";
         }
 
+        void CoreSystemsSetup() override;
         void GameplaySystemsSetup() override;
         void WorldSetup() override;
 
