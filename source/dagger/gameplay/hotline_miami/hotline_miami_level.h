@@ -7,7 +7,7 @@ using namespace dagger;
 
 void loadTiles(float zPos);
 
-void loadWorldEdges(float zPos);
+//void loadWorldEdges(float zPos);
 
 void loadObstacles(float zPos);
 
