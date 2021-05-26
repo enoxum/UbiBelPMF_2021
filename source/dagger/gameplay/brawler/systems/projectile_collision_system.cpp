@@ -40,7 +40,7 @@ bool ProjectileCollisionSystem::explodePlayer(Player& player,
         return false;
     }
 
-    damage_coeff *= 100;
+    damage_coeff *= 80;
 
     auto vec = bulletPosition - playerPosition;
 
