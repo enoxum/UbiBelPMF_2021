@@ -15,34 +15,33 @@
 using namespace dagger;
 using namespace tanks;
 
-void TankBulletSystem::Run()
-{
+void TankBulletSystem::Run() {
+
     auto viewCollisions = Engine::Registry().view<Transform, SimpleCollision>();
     auto view = Engine::Registry().view<TankBullet, Transform, SimpleCollision, Sprite>();
-    for (auto entity : view)
-    {
+    for (auto entity : view) {
+    
         auto& t = view.get<Transform>(entity);
         auto& ball = view.get<TankBullet>(entity);
         auto& col = view.get<SimpleCollision>(entity);
 		auto& s = view.get<Sprite>(entity);
 
         if (col.colided){
-
             if(!ball.special_bullet){
-                if(ball.tank == "tank1")
-                    tank1_num_bullets -= 1;
-                else if (ball.tank == "tank2")
-                    tank2_num_bullets -= 1;
-     
                 if (ball.time == 0){
                 	ball.time = Engine::FrameCount();
                 	s.size = {0, 0};
                 	ball.damage = 0;
                 }	
-                else if (Engine::FrameCount() - ball.time > 30)
+                else if (Engine::FrameCount() - ball.time > 30 && Engine::Registry().valid(entity)){
+		            if(ball.tank == "tank1")
+		                tank1_num_bullets -= 1;
+		            else if (ball.tank == "tank2")
+		                tank2_num_bullets -= 1;
                 	Engine::Registry().destroy(entity);
+                }
             }
-            else{
+            else if (Engine::Registry().valid(col.colidedWith)){
             
                 SimpleCollision& collision = viewCollisions.get<SimpleCollision>(col.colidedWith);
                 Transform& transform = viewCollisions.get<Transform>(col.colidedWith);
@@ -69,7 +68,8 @@ void TankBulletSystem::Run()
                         tank1_num_bullets -= 1;
                     else if (ball.tank == "tank2")
                         tank2_num_bullets -= 1;
-                    Engine::Registry().destroy(entity);
+                    if (Engine::Registry().valid(entity))
+                        Engine::Registry().destroy(entity);
                 }
 
                 auto viewTank = Engine::Registry().view<Tank, Transform, SimpleCollision>();
@@ -80,7 +80,8 @@ void TankBulletSystem::Run()
                             tank1_num_bullets -= 1;
                         else if (ball.tank == "tank2")
                             tank2_num_bullets -= 1;
-                        Engine::Registry().destroy(entity);
+                        if (Engine::Registry().valid(entity) && Engine::Registry().valid(entityTank))
+                            Engine::Registry().destroy(entity);
                     }
                 }
             }
