@@ -38,10 +38,22 @@ void Level::Load(String map)
 		for(unsigned x = 0; x < LEVEL_WIDTH; x++) {
 
             Logger::info(level->tilemap[y][x]);
+            if(level->tilemap[y][x] != 0){
+
+                auto entity = reg.create();
+                auto& sprite = reg.emplace<Sprite>(entity);
+                AssignSprite(sprite, "PandemicShop:tile");
+                sprite.size = scale * TILE_WIDTH;
+
+
+                auto& transform = reg.emplace<Transform>(entity);
+                transform.position = { TileToWorld(x, y), 1};
+            }
+
             if(level->tilemap[y][x] == 0){
                 auto entity = reg.create();
                 auto& sprite = reg.emplace<Sprite>(entity);
-                AssignSprite(sprite, "EmptyWhitePixel");
+                AssignSprite(sprite, "PandemicShop:borderH");
                 sprite.size = scale * TILE_WIDTH;
 
                 sprite.color.r = 1.0f;
@@ -61,6 +73,29 @@ void Level::Load(String map)
 
             }else if(level->tilemap[y][x] == 2){
                 KarenCharacter::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
+
+            }else if(level->tilemap[y][x] == 3){
+                auto entTR1 = reg.create();
+                auto& spriteTR1 = reg.emplace<Sprite>(entTR1);
+                AssignSprite(spriteTR1, "PandemicShop:tree1");
+                auto &colliderTR1 = reg.emplace<SimpleCollision>(entTR1);
+                reg.emplace<CollisionType::Wall>(entTR1);
+                colliderTR1.size.x = 32;
+                colliderTR1.size.y = 32;
+                auto& transformTR1 = reg.emplace<Transform>(entTR1);
+                transformTR1.position = { TileToWorld(x, y), 0};   
+
+
+            }else if(level->tilemap[y][x] == 4){
+                auto entTR2 = reg.create();
+                auto& spriteTR2 = reg.emplace<Sprite>(entTR2);
+                AssignSprite(spriteTR2, "PandemicShop:plant");
+                auto &colliderTR2 = reg.emplace<SimpleCollision>(entTR2);
+                reg.emplace<CollisionType::Wall>(entTR2);
+                colliderTR2.size.x = 32;
+                colliderTR2.size.y = 32;
+                auto& transformTR2 = reg.emplace<Transform>(entTR2);
+                transformTR2.position = { TileToWorld(x, y), 0}; 
 
             }else if(level->tilemap[y][x] == 10) {
 
