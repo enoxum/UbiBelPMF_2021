@@ -58,7 +58,7 @@ bool ProjectileCollisionSystem::explodePlayer(Player& player,
 
 void ProjectileCollisionSystem::Run()
 {
-    auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision, Animator, Movable>();
+    auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision, Animator, Movable, Sprite>();
     auto players = Engine::Registry().view<SimpleCollision, Transform, Movable, Player>();
     auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 
@@ -70,6 +70,7 @@ void ProjectileCollisionSystem::Run()
             continue;
 
         auto& collision = bullets.get<SimpleCollision>(bullet);
+        auto& sprite = bullets.get<Sprite>(bullet);
         auto& transform = bullets.get<Transform>(bullet);
         auto& movable = bullets.get<Movable>(bullet);
         auto& animator = bullets.get<Animator>(bullet);
@@ -88,6 +89,7 @@ void ProjectileCollisionSystem::Run()
                 b.duration -= Engine::DeltaTime();
                 if(b.duration < 0){
                     b.timer = false;
+                    sprite.scale = {5, 5};
                     AnimatorPlay(animator, "EXPLOSION");
                     if (b.done)
                         break;
@@ -117,6 +119,7 @@ void ProjectileCollisionSystem::Run()
                 if (collision.IsCollided(transform.position, col, tr.position))
                 {
                     collision.colided = true;
+                    sprite.scale = {2, 2};
                     AnimatorPlay(animator, "EXPLOSION");
 
                     if (!b.done) {
@@ -133,6 +136,7 @@ void ProjectileCollisionSystem::Run()
             break;
         case WeaponType::GRANADE:
             if(movable.isOnGround){
+                sprite.scale = {2, 2};
                 AnimatorPlay(animator, "EXPLOSION");
                 if (b.done)
                     break;
