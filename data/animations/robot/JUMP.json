@@ -1,0 +1,16 @@
+{
+	"animation-name": "robot:JUMP",
+	"animation-length-ms": 500,
+	"animation-frames": [
+		{ "texture-name": "robot:JUMP:Jump (1)" },
+		{ "texture-name": "robot:JUMP:Jump (2)" },
+		{ "texture-name": "robot:JUMP:Jump (3)" },
+		{ "texture-name": "robot:JUMP:Jump (4)" },
+		{ "texture-name": "robot:JUMP:Jump (5)" },
+		{ "texture-name": "robot:JUMP:Jump (6)" },
+		{ "texture-name": "robot:JUMP:Jump (7)" },
+		{ "texture-name": "robot:JUMP:Jump (8)" },
+		{ "texture-name": "robot:JUMP:Jump (9)" },
+		{ "texture-name": "robot:JUMP:Jump (10)"}
+	]
+}

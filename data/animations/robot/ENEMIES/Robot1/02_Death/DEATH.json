@@ -1,0 +1,20 @@
+{
+	"animation-name": "robot:ENEMIES:Robot1:02_Death",
+	"animation-length-ms": 600,
+	"animation-frames": [
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_000" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_002" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_003" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_004" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_005" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_006" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_007" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_008" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_009" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_010" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_011" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_012" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_013" },
+		{ "texture-name": "robot:ENEMIES:Robot1:02_Death:Death_014" }
+	]
+}

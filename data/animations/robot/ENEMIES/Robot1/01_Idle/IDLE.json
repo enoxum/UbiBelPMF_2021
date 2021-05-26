@@ -1,0 +1,15 @@
+{
+	"animation-name": "robot:ENEMIES:Robot1:01_Idle",
+	"animation-length-ms": 600,
+	"animation-frames": [
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_000" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_001" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_002" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_003" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_004" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_005" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_006" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_007" },
+		{ "texture-name": "robot:ENEMIES:Robot1:01_Idle:idle_008" }
+	]
+}

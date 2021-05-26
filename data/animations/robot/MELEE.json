@@ -1,0 +1,15 @@
+{
+	"animation-name": "robot:MELEE",
+	"animation-length-ms": 500,
+	"animation-frames": 
+	[
+		{ "texture-name": "robot:MELEE:Melee (1)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (2)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (3)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (4)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (5)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (6)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (7)", "relative-length": 1 },
+		{ "texture-name": "robot:MELEE:Melee (8)", "relative-length": 1 }
+	]
+}
