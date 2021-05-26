@@ -155,7 +155,7 @@ void TankMovement::Run()
                 if (col.colidedWith == entityBullet){
                     tank.health -= ball.damage;   
                 }
-                if(tank.health <= 0){
+                if(tank.health <= 0 && Engine::Registry().valid(entity)){
                     Engine::Registry().destroy(entity);
                     tankDestroyed = true; 
                 }
