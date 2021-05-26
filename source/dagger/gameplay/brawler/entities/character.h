@@ -58,7 +58,7 @@ namespace brawler
             auto chr = BrawlerCharacter::Get(entity);
 
             chr.sprite.scale = { isLeft_? -1 : 1, 1 };
-            chr.sprite.position = { 0.0f, 0.0f, 90.0f };
+            chr.sprite.position = { position_.x, position_.y + chr.sprite.size.y / 2, 90.0f };
             chr.sprite.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
             AssignSprite(chr.sprite, "spritesheets:gunner:" + color_ + ":idle:1");
@@ -78,12 +78,13 @@ namespace brawler
             chr.character.startDirection = isLeft_ ? -1 : 1;
 
             chr.character.currentWeapon = Engine::Registry().create();
-            reg.get_or_emplace<Transform>(chr.character.currentWeapon);
-            auto& x = reg.get_or_emplace<Sprite>(chr.character.currentWeapon);
-            x.scale = { 1, 1 };
-            x.position = { 0.0f, 0.0f, 80.0f };
-            x.color = { 0.0f, 0.0f, 0.0f, 0.0f };
-            AssignSprite(x, "EmptyWhitePixel");
+            auto& weaponTransform = reg.emplace<Transform>(chr.character.currentWeapon);
+            weaponTransform.position = { position_.x, position_.y + chr.sprite.size.y / 2, 85.0f };
+            auto& weaponSprite = reg.emplace<Sprite>(chr.character.currentWeapon);
+            weaponSprite.position = { position_.x, position_.y + chr.sprite.size.y / 2, 85.0f };
+            weaponSprite.scale = { 1, 1 };
+            weaponSprite.color = { 0.0f, 0.0f, 0.0f, 0.0f };
+            AssignSprite(weaponSprite, "EmptyWhitePixel");
 
             return chr;
         }
