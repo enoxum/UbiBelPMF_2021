@@ -191,6 +191,11 @@ void RoboshipPlayerInputSystem::Run()
             else if(abs(sprite.position.x - 800 * 6) <= 6) {
                 AnimatorPlay(animator, "robot:IDLE");
                 stop = true;
+                auto entity = Engine::Registry().create();
+                auto& text = Engine::Registry().emplace<Text>(entity);
+                text.spacing = 0.6f;
+
+                text.Set("pixel-font", "Congratulations!");
             }
 
         }
