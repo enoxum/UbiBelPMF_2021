@@ -7,12 +7,12 @@ void LevelSystem::SpinUp()
 {
 	Engine::Dispatcher().sink<AssetLoadRequest<LoadedData>>().connect<&LevelSystem::OnAssetLoadRequest>(this);
 
-	LoadDefaultAssets();
+	LoadAssets();
 };
 
-void LevelSystem::LoadDefaultAssets()
+void LevelSystem::LoadAssets()
 {
-	for (auto& entry : Files::recursive_directory_iterator("maps"))
+	for (auto& entry : Files::recursive_directory_iterator("levels"))
 	{
 		auto path = entry.path().string();
 		if (entry.is_regular_file() && entry.path().extension() == ".json")

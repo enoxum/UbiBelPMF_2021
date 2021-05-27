@@ -24,7 +24,7 @@ public:
 		return "Level Sys";
 	}
 
-	void LoadDefaultAssets();
+	void LoadAssets();
 	void OnAssetLoadRequest(AssetLoadRequest<LoadedData> request_);
 
 	void SpinUp() override;
