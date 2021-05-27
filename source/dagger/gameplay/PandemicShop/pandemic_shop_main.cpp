@@ -30,6 +30,8 @@
 
 #include "gameplay/PandemicShop/level.h"
 #include "gameplay/PandemicShop/level_system.h"
+#include "gameplay/PandemicShop/game_menu.h"
+#include "core/graphics/text.h"
 
 
 using namespace dagger;
@@ -50,8 +52,8 @@ void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
 #if !defined(NDEBUG)
     engine_.AddSystem<DiagnosticSystem>();
     // engine_.AddSystem<CollisionDetectionSystem>();
-    engine_.AddSystem<GUISystem>();
-    engine_.AddSystem<ToolMenuSystem>();
+    // engine_.AddSystem<GUISystem>();
+    // engine_.AddSystem<ToolMenuSystem>();
 #endif //!defined(NDEBUG)
 }
 
@@ -83,11 +85,11 @@ void PandemicShopGame::WorldSetup(Engine& engine_)
     pandemic_shop::SetupStartScreen(engine_);
 }
 
-void pandemic_shop::SetupWorld(Engine& engine_)
+void pandemic_shop::SetupWorld(Engine& engine_, std::string level)
 {
 
     auto& reg = engine_.Registry();
-    Level::Load("default");
+    Level::Load(level);
 
 }
 

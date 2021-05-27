@@ -18,6 +18,7 @@ class GameMenuSystem : public System {
   static bool s_GameOver;
   static String s_Winner;
   static inline bool restarted = false;
+  static inline unsigned level = 0;
   
 
 public:

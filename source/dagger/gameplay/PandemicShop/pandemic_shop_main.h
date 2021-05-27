@@ -9,7 +9,7 @@ using namespace dagger;
 
 namespace pandemic_shop {
 
-void SetupWorld(Engine &engine_);
+void SetupWorld(Engine &engine_, std::string level);
 void SetupStartScreen(Engine &engine_);
 void SetupRestartScreen(Engine &engine_, int number_of_collected_items_, int number_of_items_, bool victory);
 

@@ -76,10 +76,10 @@ void Level::Load(String map)
                 Character::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
 
             }
-            // else if(level->tilemap[y][x] == 2){
-            //     KarenCharacter::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
+            else if(level->tilemap[y][x] == 2){
+                KarenCharacter::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
 
-            // }
+            }
             else if(level->tilemap[y][x] == 3){
                 auto entTR1 = reg.create();
                 auto& spriteTR1 = reg.emplace<Sprite>(entTR1);

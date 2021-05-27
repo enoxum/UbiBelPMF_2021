@@ -29,23 +29,10 @@ void GameMenuSystem::Run() {
     auto &input = view.get<InputReceiver>(entity);
 
     if (IsMouseOver(gmb)) {
-      /*if (gmb.type == EGameMenuType::StartScreen) {
-        AssignSprite(sprite, "PandemicShop:start_button");
-      } else if (gmb.type == EGameMenuType::RestartScreen) {
-        AssignSprite(sprite, "PandemicShop:replay_button");
-      }
-      sprite.size = gmb.size;*/
       if (EPSILON_NOT_ZERO(input.Get("start"))) {
         m_LoadGame = true;
       } 
-    } else {
-      /*if (gmb.type == EGameMenuType::StartScreen) {
-        AssignSprite(sprite, "PandemicShop:start_button");
-      } else if (gmb.type == EGameMenuType::RestartScreen) {
-        AssignSprite(sprite, "PandemicShop:replay_button");
-      }
-      sprite.size = gmb.size;*/
-    }
+    } 
   }
 }
 
@@ -63,14 +50,16 @@ void GameMenuSystem::OnEndOfFrame() {
   if (m_LoadGame) {
     m_LoadGame = false;
     Engine::Registry().clear();
-    pandemic_shop::SetupWorld(Engine::Instance());
+    if(level == 1){
+      pandemic_shop::SetupWorld(Engine::Instance(), "next");
+    }
+    else{
+      pandemic_shop::SetupWorld(Engine::Instance(), "next");
+    }
+    
   }
   else if (s_GameOver) {
       s_GameOver = false;
-      //ovde ne treba da pise 7  i 11 vec broj pokupljenih itema i koliko je bilo itema
-      //Mora da bude string!
-      
-      
       if(!restarted){
         auto hero_view = Engine::Registry().view<PandemicCharacter>();
         auto entity = hero_view.begin();
@@ -85,6 +74,7 @@ void GameMenuSystem::OnEndOfFrame() {
         }
         else{
           pandemic_shop::SetupRestartScreen(Engine::Instance(), collected_items, 36, true);
+          level++;
         }
         restarted = true;
       }
