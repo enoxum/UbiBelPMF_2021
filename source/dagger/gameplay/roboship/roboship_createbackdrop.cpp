@@ -63,10 +63,6 @@ void RBackdrop::RoboshipCreateBackdrop(Float32 background_pos_x, Float32 terrain
 
     }
 
-    Inventory* inv = new Inventory();
-    inv->InventoryPositionsSetup();
-    inv->SelectedTileSetup();
-    inv->makeMatrix();
-    inv->FillInventory();
+
 
 }

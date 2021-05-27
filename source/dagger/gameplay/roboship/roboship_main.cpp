@@ -148,6 +148,12 @@ void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
     RBackdrop::RoboshipCreateBackdrop(0, 0);
+
+    Inventory* inv = new Inventory();
+    inv->InventoryPositionsSetup();
+    inv->SelectedTileSetup();
+    inv->makeMatrix();
+    inv->FillInventory();
     
 
     auto& engine = Engine::Instance();
@@ -180,8 +186,9 @@ void Roboship::WorldSetup()
         auto& data = reg.emplace<RFightModeOn>(entity);
     }
 
-    Engine::Dispatcher().sink<RFightModeOn>().connect<&Roboship::GameOn>(this);
+  
     Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::CurrentSequence>(this);
+    Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::GameOn>(this);
     //Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
 
 

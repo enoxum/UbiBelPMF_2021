@@ -138,8 +138,8 @@ void RoboshipPlayerInputSystem::Run()
             else if (sprite.position.y < -190 && jumpActive) {
                 sprite.position.y += roboshipPlayer.speed/2.5 * Engine::DeltaTime();
                 sprite.position.x += roboshipPlayer.speed*2 * Engine::DeltaTime();
-                for (auto e : view2) {
-                    auto& t = Engine::Registry().get<Transform>(e);
+                 for (auto e : view2) {
+                   auto& t = Engine::Registry().get<Transform>(e);
                     t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
                 }
             }
@@ -148,8 +148,8 @@ void RoboshipPlayerInputSystem::Run()
                 jumpAllow = false;
             }
             else if (sprite.position.y > -223 && !jumpActive) {
-                sprite.position.y -= roboshipPlayer.speed/3 * Engine::DeltaTime();
-                sprite.position.x += roboshipPlayer.speed*2 * Engine::DeltaTime();
+                sprite.position.y -= roboshipPlayer.speed / 3 * Engine::DeltaTime();
+                sprite.position.x += roboshipPlayer.speed * 2 * Engine::DeltaTime();
                 for (auto e : view2) {
                     auto& t = Engine::Registry().get<Transform>(e);
                     t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
@@ -195,17 +195,17 @@ void RoboshipPlayerInputSystem::Run()
 
         }
 
-        if (abs(sprite.position.x - 800) <= 2 && iteration == 1)
-        {
-            iteration++;
-            count += 1600;
-            RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
-        }
-        else if (abs((sprite.position.x - 800) - (iteration - 1) * 2000) - 400 * (iteration - 1) <= 2 && iteration > 1) {
-            iteration++;
-            count += 1600;
-            RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
-        }
+        //if (abs(sprite.position.x - 800) <= 2 && iteration == 1)
+        //{
+        //    iteration++;
+        //    count += 1600;
+        //    RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
+        //}
+        //else if (abs((sprite.position.x - 800) - (iteration - 1) * 2000) - 400 * (iteration - 1) <= 2 && iteration > 1) {
+        //    iteration++;
+        //    count += 1600;
+        //    RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
+        //}
 
     
     }

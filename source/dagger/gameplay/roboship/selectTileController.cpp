@@ -24,8 +24,8 @@ void SelectedTileInputSystem::WindDown()
 
 void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-    Engine::Dispatcher().sink<setfightmodeon>().connect<&SelectedTileInputSystem::setFightModeOn>(this);
-
+   Engine::Dispatcher().sink<setfightmodeon>().connect<&SelectedTileInputSystem::setFightModeOn>(this);
+    
 
     auto entity = Engine::Registry().view<NumberOfMoves>()[0];
     auto& numberOfMoves = Engine::Registry().get<NumberOfMoves>(entity);
@@ -141,6 +141,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         if (Engine::Registry().has<ControllerMapping>(entity))
                             continue;
 
+                        printf("Ovde se postavlja selected\n");
+
                         auto& s = Engine::Registry().get<Sprite>(entity);
 
                         AssignSprite(s, "robot:INVENTORY:SelectedTile");
@@ -156,7 +158,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     
                     UnmarkNeighbors();
                     findCombination(comb);
-                    numOfMoves--;
+                    fightMode.moves--;
                 }
             }
         }

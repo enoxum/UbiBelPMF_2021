@@ -71,6 +71,8 @@ void inventory::Inventory::InventoryPositionsSetup()
 
         reg.emplace<EmptySprite>(entity);
         reg.emplace<MoveWithRobot>(entity);
+
+        
       
 
     }
@@ -81,25 +83,34 @@ void inventory::Inventory::SelectedTileSetup()
 {
     auto& reg = Engine::Registry();
 
+    auto view2 = Engine::Registry().view<Sprite, RoboshipPlayer>();
+    Sprite pos;
+
+    for (auto e : view2)
+    {
+        pos = Engine::Registry().get<Sprite>(e);
+    }
+
     {
         auto entity = reg.create();
 
         auto& sprite = reg.emplace<Sprite>(entity);
 
         AssignSprite(sprite, "robot:INVENTORY:SelectedTile");
-
+        
         sprite.size.x = tileSize;
         sprite.size.y = tileSize;
 
         auto& transform = reg.emplace<Transform>(entity);
 
-        transform.position.x = (-1.0f + 0 + 0 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
-        transform.position.y = (2.5f + 3 + 3 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
+        transform.position.x = (-1.0f + 0 + 0 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + pos.position.x;
+        transform.position.y = (2.5f + 0 + 0 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
         transform.position.z = 1.f;
 
         auto& controller = reg.emplace<ControllerMapping>(entity);
         reg.emplace<Tile>(entity);
         reg.emplace<MoveWithRobot>(entity);
+     
       
 
     }
@@ -118,11 +129,11 @@ void inventory::Inventory::SelectedTileSetup()
 
         auto& transform = reg.emplace<Transform>(entity);
 
-        transform.position.x = (-1.0f + 0 + 0 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
+        transform.position.x = (-1.0f + 0 + 0 * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + pos.position.x;
         transform.position.y = (2.5f + 0 + 0 * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
         transform.position.z = 4.f;
         reg.emplace<Tile>(entity);
-        reg.emplace<MoveWithRobot>(entity);
+       reg.emplace<MoveWithRobot>(entity);
 
 
 
@@ -194,6 +205,7 @@ void inventory::Inventory::makeMatrix()
 
 void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
 {
+    printf("swap\n");
     auto view = Engine::Registry().view<Transform, Sprite>();
     auto entityM = Engine::Registry().view<InventoryMatrix>()[0];
     auto& matrix = Engine::Registry().get<InventoryMatrix>(entityM);

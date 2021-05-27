@@ -209,4 +209,6 @@ void fightEnemy::addShipPart()
 
 
     Engine::Registry().remove<EmptySprite>(entity);
+
+
 }
