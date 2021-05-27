@@ -5,9 +5,8 @@
 using namespace robo_game;
 using namespace inventory;
 
-bool fightEnemy::findCombination(std::vector<int> comb)
+void fightEnemy::findCombination(std::vector<int> comb)
 {
- 
     auto entity = Engine::Registry().view<InventoryMatrix>()[0];
     auto& matrix = Engine::Registry().get<InventoryMatrix>(entity);
 
@@ -31,7 +30,6 @@ bool fightEnemy::findCombination(std::vector<int> comb)
                 {
                     found = true;
                     changeTiles(start_i, start_j, end.first, end.second, 1);
-                    return true;
                 }     
             }
 
@@ -51,7 +49,6 @@ bool fightEnemy::findCombination(std::vector<int> comb)
                 {
                     found = true;
                     changeTiles(start_i, start_j, end.first, end.second, 2);
-                    return true;
                 }
 
             }

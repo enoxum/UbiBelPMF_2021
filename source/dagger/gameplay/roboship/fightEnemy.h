@@ -34,7 +34,7 @@ namespace fightEnemy
 		int left;
 	};
 
-	bool findCombination(std::vector<int> comb);
+	void findCombination(std::vector<int> comb);
 	std::pair<int, int> checkNeighborRow(int i, int j, int k, int len, std::vector<int> comb);
 	std::pair<int, int> checkNeighborCol(int i, int j, int k, int len, std::vector<int> comb);
 	void destroyTile();

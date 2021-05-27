@@ -31,6 +31,10 @@ namespace roboship
     class Roboship : public Game
     {
 
+        std::vector<int> numbersOfTurns;
+        std::vector<std::vector<int>> sequences;
+
+
         String GetIniFile() override
         {
             return "roboship.ini";
@@ -38,12 +42,14 @@ namespace roboship
 
         void GameplaySystemsSetup() override;
         void WorldSetup() override;
-
+        void startFight();
         void TurnRobots();
         void RobotDie();
         void ShowTextPrepareFightMode();
         void ClearTextPrepareFightMode();
+        void CurrentSequence();
         void TurnOnSpaceship();
+        void GameOn();
     };
 }
 
@@ -65,7 +71,8 @@ struct RChangeDirection
 
 struct RFightModeOn
 {
-    char _fightmodeon;
+    std::vector<int> combination;
+    int moves;
 };
 
 struct RFightModeOff
@@ -87,6 +94,7 @@ struct REnemy {
     int getNumberOfTurns();
     void fillSequence();
     void setNumberOFTurns();
+
 };
 
 struct RSpaceship {

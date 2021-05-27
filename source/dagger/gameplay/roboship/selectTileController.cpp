@@ -24,12 +24,24 @@ void SelectedTileInputSystem::WindDown()
 
 void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
+    Engine::Dispatcher().sink<setfightmodeon>().connect<&SelectedTileInputSystem::setFightModeOn>(this);
+
+
     auto entity = Engine::Registry().view<NumberOfMoves>()[0];
     auto& numberOfMoves = Engine::Registry().get<NumberOfMoves>(entity);
 
-    fightModeOn = true;
+    auto entity2 = Engine::Registry().create();
+
+    auto info = Engine::Registry().view<RFightModeOn>()[0];
+
+    auto& fightMode = Engine::Registry().get<RFightModeOn>(info);
+
+    auto comb = fightMode.combination;
+    int numOfMoves = fightMode.moves;
+
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
     {
+
         if (!fightModeOn)
             return;
 
@@ -51,7 +63,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
         }
         else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed)
         {
-            if (numberOfMoves.left == 0)
+            if (numOfMoves == 0)
                 return;
             /*
             if (moveFirst)
@@ -106,7 +118,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     auto& controller = Engine::Registry().emplace<ControllerMapping>(entity2);
 
                 }
-
+                
                 Engine::Registry().remove<ControllerMapping>(entity);
                 swap = true;
                 MarkNeighbors(x, y);
@@ -141,10 +153,10 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 
                     swap = false;
 
-                    bool found;
+                    
                     UnmarkNeighbors();
-                    found = findCombination({ 1, 1 });
-                    numberOfMoves.left--;
+                    findCombination(comb);
+                    numOfMoves--;
                 }
             }
         }
@@ -215,7 +227,7 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 6 == posX && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
                 s.size.x = 30.f;
@@ -256,6 +268,13 @@ void SelectedTileInputSystem::UnmarkNeighbors()
         s.size.y = 30.f;
         Engine::Registry().remove<MarkedTile>(entity);
     }
+}
+
+
+
+void SelectedTileInputSystem::setFightModeOn()
+{
+    fightModeOn = true;
 }
 
 void SelectedTileInputSystem::Run()

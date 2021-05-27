@@ -148,7 +148,7 @@ void Roboship::WorldSetup()
 {
     RoboshipSetCamera();
     RBackdrop::RoboshipCreateBackdrop(0, 0);
-    bool found = findCombination({ 1, 1 });
+    
 
     auto& engine = Engine::Instance();
     auto& reg = engine.Registry();
@@ -175,7 +175,13 @@ void Roboship::WorldSetup()
         Engine::Registry().emplace<RCameraFollowFocus>(entity);
     }
 
-    Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::ShowTextPrepareFightMode>(this);
+    {
+        auto entity = reg.create();
+        auto& data = reg.emplace<RFightModeOn>(entity);
+    }
+
+    Engine::Dispatcher().sink<RFightModeOn>().connect<&Roboship::GameOn>(this);
+    Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::CurrentSequence>(this);
     //Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
 
 
@@ -188,13 +194,18 @@ void Roboship::WorldSetup()
          
         enemyChar->setNumberOFTurns();
         enemyChar->fillSequence();
+        
+        
 
         Engine::Dispatcher().sink<RFightModeOn>().connect<&Roboship::RobotDie>(this);
 
         Engine::Dispatcher().sink<RChangeDirection>().connect<&Roboship::TurnRobots>(this);
         
         std::vector<int> sequence = enemyChar->getSequence();
-        
+
+
+        this->numbersOfTurns.push_back(enemyChar->getNumberOfTurns());
+        this->sequences.push_back(sequence);
 
         auto entity = reg.create();
         auto& text = reg.emplace<Text>(entity);
@@ -214,7 +225,7 @@ void Roboship::WorldSetup()
 
 void Roboship::ShowTextPrepareFightMode(){
 
-    enemy_number++;
+    //enemy_number++;
 
     /*Engine& engine = Engine::Instance();
     auto& reg = engine.Registry();
@@ -230,6 +241,27 @@ void Roboship::ShowTextPrepareFightMode(){
 
 void Roboship::ClearTextPrepareFightMode(){
 
+}
+
+void Roboship::CurrentSequence()
+{
+    enemy_number++;
+
+    auto view = Engine::Registry().view<Sprite, EnemyMarker>();
+
+    for (auto entity : view)
+    {
+        auto& sprite = Engine::Registry().get<Sprite>(entity);
+        {
+            if (abs(sprite.position.x - enemy_number * 800) <= 2) {
+                auto info = Engine::Registry().view<RFightModeOn>()[0];
+                auto& fightMode = Engine::Registry().get<RFightModeOn>(info);
+                fightMode.combination = this->sequences[enemy_number - 1];
+                fightMode.moves = this->numbersOfTurns[enemy_number - 1];
+
+            }
+        }
+    }
 }
 
 void Roboship::RobotDie()
@@ -257,3 +289,22 @@ void Roboship::TurnRobots()
 void Roboship::TurnOnSpaceship() {
     
 }
+
+void Roboship::GameOn()
+{
+    Engine::Dispatcher().trigger<setfightmodeon>();
+
+    auto entity = Engine::Registry().create();
+
+    auto view = Engine::Registry().view<RFightModeOn>();
+
+    for (auto entity : view)
+    {
+        auto& fightMode = view.get<RFightModeOn>(entity);
+        auto comb = fightMode.combination;
+        findCombination(comb);
+    }
+
+}
+
+

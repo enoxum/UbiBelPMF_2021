@@ -215,6 +215,7 @@ void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
     float posA = (-1.0f + a + a * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + s.position.x;
     float posB = (2.5f + b + b * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
+
     for (auto entity : view)
     {
         if (Engine::Registry().has<ControllerMapping>(entity))

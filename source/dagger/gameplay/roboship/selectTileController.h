@@ -22,6 +22,10 @@ namespace robo_game
     {
     };
 
+    struct setfightmodeon {
+        char _sfmo;
+    };
+
     class SelectedTileInputSystem
         : public System
     {
@@ -43,7 +47,8 @@ namespace robo_game
         void SpinUp() override;
         void WindDown() override;
         void Run() override;
-
+        void setFightModeOn();
+        
     private:
 
         void OnKeyboardEvent(KeyboardEvent kEvent_);

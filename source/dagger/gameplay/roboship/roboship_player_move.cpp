@@ -74,7 +74,7 @@ void RoboshipPlayerInputSystem::Run()
 {
     
     auto view = Engine::Registry().view<Sprite, ControllerMappingPlayer, Animator, RoboshipPlayer>();
-    auto view2 = Engine::Registry().view<MoveWithRobot,Sprite>();
+    auto view2 = Engine::Registry().view<MoveWithRobot,Transform>();
 
     for (auto entity : view)
     {
@@ -102,6 +102,10 @@ void RoboshipPlayerInputSystem::Run()
             else if (sprite.position.y < -30 && jumpActive) {
                 sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
                 sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+                for (auto e : view2) {
+                    auto& t = Engine::Registry().get<Transform>(e);
+                    t.position.x +=  roboshipPlayer.speed/1.15 * Engine::DeltaTime();
+                }
             }
             else if (sprite.position.y + 30 <= 2 && jumpActive) {
                 jumpActive = false;
@@ -110,6 +114,10 @@ void RoboshipPlayerInputSystem::Run()
             else if (sprite.position.y > -223 && !jumpActive) {
                 sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
                 sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+                for (auto e : view2) {
+                    auto& t = Engine::Registry().get<Transform>(e);
+                    t.position.x += roboshipPlayer.speed/1.15 * Engine::DeltaTime();
+                }
             }
             else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
                 ctrl.input.x = 0;
@@ -130,6 +138,10 @@ void RoboshipPlayerInputSystem::Run()
             else if (sprite.position.y < -190 && jumpActive) {
                 sprite.position.y += roboshipPlayer.speed/2.5 * Engine::DeltaTime();
                 sprite.position.x += roboshipPlayer.speed*2 * Engine::DeltaTime();
+                for (auto e : view2) {
+                    auto& t = Engine::Registry().get<Transform>(e);
+                    t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
+                }
             }
             else if (sprite.position.y + 190 <= 2 && jumpActive) {
                 jumpActive = false;
@@ -138,6 +150,10 @@ void RoboshipPlayerInputSystem::Run()
             else if (sprite.position.y > -223 && !jumpActive) {
                 sprite.position.y -= roboshipPlayer.speed/3 * Engine::DeltaTime();
                 sprite.position.x += roboshipPlayer.speed*2 * Engine::DeltaTime();
+                for (auto e : view2) {
+                    auto& t = Engine::Registry().get<Transform>(e);
+                    t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
+                }
             }
             else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
                 ctrl.input.x = 0;
