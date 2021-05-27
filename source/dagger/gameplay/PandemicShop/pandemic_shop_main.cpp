@@ -1,20 +1,24 @@
 #include "pandemic_shop_main.h"
-#include "core/game/transforms.h"
-#include "core/graphics/animation.h"
-#include "core/graphics/animations.h"
-#include "core/graphics/gui.h"
-#include "core/graphics/shaders.h"
+
+#include "core/input/inputs.h"
+
 #include "core/graphics/sprite.h"
+#include "core/graphics/animation.h"
+#include "core/graphics/shaders.h"
+#include "core/graphics/window.h"
+
+#include "core/game/transforms.h"
 #include "core/graphics/sprite_render.h"
 #include "core/graphics/textures.h"
-#include "core/graphics/window.h"
-#include "core/input/inputs.h"
-#include "core/graphics/window.h"
+#include "core/graphics/animations.h"
+#include "core/graphics/gui.h"
+
 #include "tools/diagnostics.h"
 
-#include "gameplay/PandemicShop/game_menu.h"
-#include "gameplay/PandemicShop/item.h"
-#include "gameplay/PandemicShop/pandemic_character_controller.h"
+#include "gameplay/common/simple_collisions.h"
+#include "gameplay/ping_pong/pingpong_ball.h"
+#include "gameplay/ping_pong/player_scores.h"
+#include "gameplay/ping_pong/pingpong_tools.h"
 #include "gameplay/PandemicShop/pandemic_player_input.h"
 #include "gameplay/PandemicShop/pandemic_tools.h"
 #include "gameplay/PandemicShop/pandemic_character_controller.h"
@@ -23,8 +27,6 @@
 #include "gameplay/PandemicShop/player.h"
 #include "gameplay/PandemicShop/karen.h"
 #include "gameplay/PandemicShop/ai_system.h"
-#include "gameplay/common/simple_collisions.h"
-#include <core/graphics/text.h>
 
 #include "gameplay/PandemicShop/level.h"
 #include "gameplay/PandemicShop/level_system.h"
@@ -35,20 +37,22 @@ using namespace pandemic_shop;
 //---------------------------
 using namespace pandemic;
 
-void PandemicShopGame::CoreSystemsSetup(Engine &engine_) {
-  engine_.AddSystem<WindowSystem>();
-  engine_.AddSystem<InputSystem>();
-  engine_.AddSystem<ShaderSystem>();
-  engine_.AddSystem<TextureSystem>();
-  engine_.AddSystem<SpriteRenderSystem>();
-  engine_.AddPausableSystem<TransformSystem>();
-  engine_.AddPausableSystem<AnimationSystem>();
+
+void PandemicShopGame::CoreSystemsSetup(Engine& engine_)
+{
+    engine_.AddSystem<WindowSystem>();
+    engine_.AddSystem<InputSystem>();
+    engine_.AddSystem<ShaderSystem>();
+    engine_.AddSystem<TextureSystem>();
+    engine_.AddSystem<SpriteRenderSystem>();
+    engine_.AddPausableSystem<TransformSystem>();
+    engine_.AddPausableSystem<AnimationSystem>();
 #if !defined(NDEBUG)
-  engine_.AddSystem<DiagnosticSystem>();
-  // engine_.AddSystem<CollisionDetectionSystem>();
-  engine_.AddSystem<GUISystem>();
-  engine_.AddSystem<ToolMenuSystem>();
-#endif //! defined(NDEBUG)
+    engine_.AddSystem<DiagnosticSystem>();
+    // engine_.AddSystem<CollisionDetectionSystem>();
+    engine_.AddSystem<GUISystem>();
+    engine_.AddSystem<ToolMenuSystem>();
+#endif //!defined(NDEBUG)
 }
 
 void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
@@ -59,13 +63,13 @@ void PandemicShopGame::GameplaySystemsSetup(Engine& engine_)
     engine_.AddPausableSystem<CollisionDetectionSystem>();
     engine_.AddPausableSystem<Pickable>();
     engine_.AddPausableSystem<AISystem>();
+
     engine_.AddSystem<LevelSystem>();
     engine_.AddPausableSystem<GameMenuSystem>();
 #if defined(DAGGER_DEBUG)
   
 #endif // defined(DAGGER_DEBUG)
 }
-
 
 void PandemicShopGame::WorldSetup(Engine& engine_)
 {
