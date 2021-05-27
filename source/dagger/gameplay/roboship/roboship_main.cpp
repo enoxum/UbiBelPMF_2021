@@ -90,7 +90,7 @@ void REnemy::fillSequence() {
     int lenOfSeq = rand() % 3 + 2;
 
     for (int i = 0; i < lenOfSeq; i++) {
-        this->sequence.push_back(rand()%5 + 1);
+        this->sequence.push_back(rand()%6 + 1);
     }
 }
 
@@ -218,13 +218,35 @@ void Roboship::WorldSetup()
         auto& text = reg.emplace<Text>(entity);
         text.spacing = 0.6f;
 
-        std::string str = "Turns:" + std::to_string(enemyChar->getNumberOfTurns()) + "; ";
-        std::string str2 = "Sequence: ";
-        for (auto x : enemyChar->sequence) {
-            str2 += std::to_string(x);
-        }
+        std::string str = "Turns:" + std::to_string(enemyChar->getNumberOfTurns());
 
-        text.Set("pixel-font", str+str2, { (i + 1) * 800, -50 , 0 }, false);
+        text.Set("pixel-font", str, { (i + 1) * 800, 0 , 0 }, false);
+
+        for (int j = 0; j < enemyChar->sequence.size(); j++) {
+            auto entity = reg.create();
+            auto& sprite = reg.emplace<Sprite>(entity);
+
+            if (enemyChar->sequence[j] == 1) {
+                AssignSprite(sprite, "robot:INVENTORY:part_1");
+            }
+            else if (enemyChar->sequence[j] == 2) {
+                AssignSprite(sprite, "robot:INVENTORY:part_2");
+            }
+            else if (enemyChar->sequence[j] == 3) {
+                AssignSprite(sprite, "robot:INVENTORY:part_3");
+            }
+            else if (enemyChar->sequence[j] == 4) {
+                AssignSprite(sprite, "robot:INVENTORY:part_4");
+            }
+            else if (enemyChar->sequence[j] == 5) {
+                AssignSprite(sprite, "robot:INVENTORY:part_5");
+            }
+            else if (enemyChar->sequence[j] == 6) {
+                AssignSprite(sprite, "robot:INVENTORY:part_6");
+            }
+            sprite.scale = { 1.8f, 1.8f };
+            sprite.position = { j*50 + (i + 1) * 800 - 50, -50.0f, 0.0f };
+        }
     }
 
     RSpaceship* spaceship = RSpaceship::Create({ 0, 1, 0 }, { (i + 1) * 800, -210 });
