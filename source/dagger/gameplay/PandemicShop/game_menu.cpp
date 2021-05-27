@@ -54,7 +54,7 @@ void GameMenuSystem::OnEndOfFrame() {
       pandemic_shop::SetupWorld(Engine::Instance(), "next");
     }
     else{
-      pandemic_shop::SetupWorld(Engine::Instance(), "next");
+      pandemic_shop::SetupWorld(Engine::Instance(), "default");
     }
     
   }
