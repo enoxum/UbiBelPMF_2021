@@ -11,6 +11,6 @@
 		{ "command-name": "attack", "trigger": "KeyL" , "event": "Released"},
 		{ "command-name": "reload", "trigger": "KeyK" , "event": "Reload"},
 		{ "command-name": "cycle_weapons", "trigger": "KeyJ" , "event": "Cycle weapons"},
-		{ "command-name": "drop_weapon", "trigger": "KeyO" , "event": "Released"}
+		{ "command-name": "drop_weapon", "trigger": "KeyI" , "event": "Released"}
 	]
 }
