@@ -23,7 +23,7 @@ void Level::Load(String map)
 	auto& reg = Engine::Registry();
 	reg.clear();
 
-	const auto* level = Engine::Res<LevelData>()[map];
+	const auto* level = Engine::Res<LoadedData>()[map];
 
 	LEVEL_WIDTH = level->mapWidth;
 	LEVEL_HEIGHT = level->mapHeight;
@@ -51,7 +51,7 @@ void Level::Load(String map)
 
 
                 auto& transform = reg.emplace<Transform>(entity);
-                transform.position = { TileToWorld(x, y), 1};
+                transform.position = { getPosition(x, y), 1};
             }
 
             if(level->tilemap[y][x] == 0){
@@ -70,14 +70,14 @@ void Level::Load(String map)
                 col.size.y = TILE_WIDTH;
 
                 auto& transform = reg.emplace<Transform>(entity);
-                transform.position = { TileToWorld(x, y), 1};
+                transform.position = { getPosition(x, y), 1};
 
             }else if(level->tilemap[y][x] == 1){
-                Character::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
+                Character::Create("Pandemic", {1, 1, 1}, getPosition(x, y));
 
             }
             else if(level->tilemap[y][x] == 2){
-                KarenCharacter::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
+                KarenCharacter::Create("Pandemic", {1, 1, 1}, getPosition(x, y));
 
             }
             else if(level->tilemap[y][x] == 3){
@@ -89,7 +89,7 @@ void Level::Load(String map)
                 colliderTR1.size.x = 32;
                 colliderTR1.size.y = 32;
                 auto& transformTR1 = reg.emplace<Transform>(entTR1);
-                transformTR1.position = { TileToWorld(x, y), 0};   
+                transformTR1.position = { getPosition(x, y), 0};   
 
 
             }else if(level->tilemap[y][x] == 4){
@@ -101,7 +101,7 @@ void Level::Load(String map)
                 colliderTR2.size.x = 32;
                 colliderTR2.size.y = 32;
                 auto& transformTR2 = reg.emplace<Transform>(entTR2);
-                transformTR2.position = { TileToWorld(x, y), 0}; 
+                transformTR2.position = { getPosition(x, y), 0}; 
 
             }else if(level->tilemap[y][x] == 10) {
 
@@ -113,8 +113,8 @@ void Level::Load(String map)
                 colliderTS.size.x = 100;
                 colliderTS.size.y = 64;
                 auto& transformTS = reg.emplace<Transform>(entTS);
-                transformTS.position = { TileToWorld(x, y), 0};
-				spriteTS.position = { TileToWorld(x, y), 0 };
+                transformTS.position = { getPosition(x, y), 0};
+				spriteTS.position = { getPosition(x, y), 0 };
 
 			} else if (level->tilemap[y][x] == 11){
                 auto entS1 = reg.create();
@@ -125,7 +125,7 @@ void Level::Load(String map)
                 colliderS1.size.x = 32;
                 colliderS1.size.y = 32;
                 auto& transformS1 = reg.emplace<Transform>(entS1);
-                transformS1.position = { TileToWorld(x, y), 0 };
+                transformS1.position = { getPosition(x, y), 0 };
 
 			}else if(level->tilemap[y][x] == 12){
                 auto entS1 = reg.create();
@@ -136,117 +136,114 @@ void Level::Load(String map)
                 colliderS1.size.x = 84;
                 colliderS1.size.y = 103;
                 auto& transformS1 = reg.emplace<Transform>(entS1);
-                transformS1.position = { TileToWorld(x, y), 0 };
+                transformS1.position = { getPosition(x, y), 0 };
 
             }else if(level->tilemap[y][x] == 20){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:white_cheese", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:white_cheese", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 21){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:bacon", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:bacon", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 22){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:banana", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:banana", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 23){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:bell_pepper", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:bell_pepper", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 24){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:cabbage", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:cabbage", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 25){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:cereal1", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:cereal1", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 26){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:orange_juice", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:orange_juice", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 27){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:egg_box", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:egg_box", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 28){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:flour", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:flour", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 30){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:bathroom_cleaner", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:bathroom_cleaner", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 31){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:cleaning_gloves", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:cleaning_gloves", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 32){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:detergent", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:detergent", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 33){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:hand_sanitiser", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:hand_sanitiser", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 34){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:water", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:water", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 35){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:wet_wipe", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:wet_wipe", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 36){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:cleaning_brush", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:cleaning_brush", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 37){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:kitchen_soap", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:kitchen_soap", {1, 1, 1}, getPosition(x, y));
 
             }else if(level->tilemap[y][x] == 38){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
-                item.Create(ent, "spritesheets:pixel_mart:shampoo", {1, 1, 1}, TileToWorld(x, y));
+                item.Create(ent, "spritesheets:pixel_mart:shampoo", {1, 1, 1}, getPosition(x, y));
 
             }
 		}
 	}
 }
 
-Vector2 Level::TileToWorld(int x, int y)
+Vector2 Level::getPosition(int x, int y)
 {
-	return {
-		TileToWorldX(x),
-		TileToWorldY(y)
-	};
+	return { getPositionX(x), getPositionY(y)};
 }
 
-float Level::TileToWorldX(int x)
+float Level::getPositionX(int x)
 {
 	return x * TILE_WIDTH + TILE_WIDTH/2 - 350;
 }
 
-float Level::TileToWorldY(int y)
+float Level::getPositionY(int y)
 {
 	return y * TILE_HEIGHT + TILE_HEIGHT/2 - 190;
 }

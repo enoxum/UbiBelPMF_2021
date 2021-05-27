@@ -9,7 +9,7 @@ using namespace dagger;
 
 namespace pandemic {
 
-struct LevelData
+struct LoadedData
 {
 	String name;
 	unsigned mapWidth;
@@ -21,11 +21,11 @@ class LevelSystem : public System
 {
 public:
 	String SystemName() override {
-		return "Level System";
+		return "Level Sys";
 	}
 
 	void LoadDefaultAssets();
-	void OnAssetLoadRequest(AssetLoadRequest<LevelData> request_);
+	void OnAssetLoadRequest(AssetLoadRequest<LoadedData> request_);
 
 	void SpinUp() override;
 	void Run() override;

@@ -19,9 +19,9 @@ namespace pandemic {
 
 		static void Load(String name);
 		
-		static Vector2 TileToWorld(int x, int y);
-		inline static float TileToWorldX(int x);
-		inline static float TileToWorldY(int y);
+		static Vector2 getPosition(int x, int y);
+		inline static float getPositionX(int x);
+		inline static float getPositionY(int y);
 	};
 
 }

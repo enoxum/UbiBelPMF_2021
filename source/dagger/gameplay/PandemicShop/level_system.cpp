@@ -5,7 +5,7 @@ using namespace pandemic;
 
 void LevelSystem::SpinUp()
 {
-	Engine::Dispatcher().sink<AssetLoadRequest<LevelData>>().connect<&LevelSystem::OnAssetLoadRequest>(this);
+	Engine::Dispatcher().sink<AssetLoadRequest<LoadedData>>().connect<&LevelSystem::OnAssetLoadRequest>(this);
 
 	LoadDefaultAssets();
 };
@@ -17,12 +17,12 @@ void LevelSystem::LoadDefaultAssets()
 		auto path = entry.path().string();
 		if (entry.is_regular_file() && entry.path().extension() == ".json")
 		{
-			Engine::Dispatcher().trigger<AssetLoadRequest<LevelData>>(AssetLoadRequest<LevelData>{ path });
+			Engine::Dispatcher().trigger<AssetLoadRequest<LoadedData>>(AssetLoadRequest<LoadedData>{ path });
 		}
 	}
 }
 
-void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
+void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LoadedData> request_)
 {
 	FilePath path(request_.path);
 	Logger::info("Loading '{}'", request_.path);
@@ -46,7 +46,7 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
 	JSON::json json;
 	handle >> json;
 
-	LevelData* levelData = new LevelData();
+	LoadedData* levelData = new LoadedData();
 	assert(json.contains("name"));
 	assert(json.contains("map_width"));
 	assert(json.contains("map_height"));
@@ -70,7 +70,7 @@ void LevelSystem::OnAssetLoadRequest(AssetLoadRequest<LevelData> request_)
 	}
 	levelData->tilemap = std::move(tiles);
 
-	auto& library = Engine::Res<LevelData>();
+	auto& library = Engine::Res<LoadedData>();
 	if (library.contains(levelData->name))
 	{
 		delete library[levelData->name];
@@ -86,5 +86,5 @@ void LevelSystem::Run()
 
 void LevelSystem::WindDown()
 {
-	Engine::Dispatcher().sink<AssetLoadRequest<LevelData>>().disconnect<&LevelSystem::OnAssetLoadRequest>(this);
+	Engine::Dispatcher().sink<AssetLoadRequest<LoadedData>>().disconnect<&LevelSystem::OnAssetLoadRequest>(this);
 };
