@@ -171,7 +171,15 @@ void pandemic_shop::SetupRestartScreen(Engine &engine_,
                   std::to_string((int)number_of_items_)+ " items", {10, 100, 98});
     }
     else{
-      text.Set("pixel-font", "Game Over!", {10, 175, 98});           
+      text.Set("pixel-font", "Game Over!", {10, 175, 98});    
+            auto entityt1 = reg.create();
+      auto &text1 = reg.emplace<Text>(entityt1);
+      text1.spacing = 0.6f;
+      text1.letterSize = {37.0f, 47.0f};
+      text1.Set("pixel-font",
+                "Collected " + std::to_string((int)number_of_collected_items_) +
+                    "/" + std::to_string((int)number_of_items_) + " items",
+                {10, 100, 98});
     }
     
     
