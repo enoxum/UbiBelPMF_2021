@@ -42,7 +42,11 @@ void Level::Load(String map)
 
                 auto entity = reg.create();
                 auto& sprite = reg.emplace<Sprite>(entity);
-                AssignSprite(sprite, "PandemicShop:tile");
+                if(level->name == "default"){
+                    AssignSprite(sprite, "PandemicShop:tile");
+                }else{
+                     AssignSprite(sprite, "PandemicShop:tile4");
+                }
                 sprite.size = scale * TILE_WIDTH;
 
 
@@ -71,10 +75,12 @@ void Level::Load(String map)
             }else if(level->tilemap[y][x] == 1){
                 Character::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
 
-            }else if(level->tilemap[y][x] == 2){
-                KarenCharacter::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
+            }
+            // else if(level->tilemap[y][x] == 2){
+            //     KarenCharacter::Create("Pandemic", {1, 1, 1}, TileToWorld(x, y));
 
-            }else if(level->tilemap[y][x] == 3){
+            // }
+            else if(level->tilemap[y][x] == 3){
                 auto entTR1 = reg.create();
                 auto& spriteTR1 = reg.emplace<Sprite>(entTR1);
                 AssignSprite(spriteTR1, "PandemicShop:tree1");
@@ -121,7 +127,18 @@ void Level::Load(String map)
                 auto& transformS1 = reg.emplace<Transform>(entS1);
                 transformS1.position = { TileToWorld(x, y), 0 };
 
-			}else if(level->tilemap[y][x] == 20){
+			}else if(level->tilemap[y][x] == 12){
+                auto entS1 = reg.create();
+                auto& spriteS1 = reg.emplace<Sprite>(entS1);
+                AssignSprite(spriteS1, "PandemicShop:kasa");
+                auto &colliderS1 = reg.emplace<SimpleCollision>(entS1);
+                reg.emplace<CollisionType::Wall>(entS1);
+                colliderS1.size.x = 84;
+                colliderS1.size.y = 103;
+                auto& transformS1 = reg.emplace<Transform>(entS1);
+                transformS1.position = { TileToWorld(x, y), 0 };
+
+            }else if(level->tilemap[y][x] == 20){
                 auto ent = reg.create();
                 auto item = reg.emplace<Item>(ent);
                 item.Create(ent, "spritesheets:pixel_mart:white_cheese", {1, 1, 1}, TileToWorld(x, y));

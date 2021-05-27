@@ -521,6 +521,6 @@ void pandemic_shop::SetupWorld(Engine& engine_)
 
     }
     
-   Level::Load("default");
+   Level::Load("next");
 
 }
