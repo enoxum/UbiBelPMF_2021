@@ -14,9 +14,6 @@ using namespace dagger;
 float ProjectileCollisionSystem::s_grenadeSquaredRange = 200.0f;
 float ProjectileCollisionSystem::s_c4SquaredRange = 300.0f;
 
-
-
-
 float ProjectileCollisionSystem::getDamageCoeff(const Vector3& playerPosition, const Vector3& projectilePosition, float range)
 {
     float dist = sqrt((playerPosition.x - projectilePosition.x) * (playerPosition.x - projectilePosition.x) + (playerPosition.y - projectilePosition.y) * (playerPosition.y - projectilePosition.y));
@@ -26,7 +23,6 @@ float ProjectileCollisionSystem::getDamageCoeff(const Vector3& playerPosition, c
     return 1/dist;
     
 }
-
 
 bool ProjectileCollisionSystem::explodePlayer(Player& player,
                                               Movable& playerMovable,
@@ -56,6 +52,17 @@ bool ProjectileCollisionSystem::explodePlayer(Player& player,
     return dead;
 }
 
+void ProjectileCollisionSystem::SpinUp()
+{
+    Engine::Dispatcher().sink<NextFrame>().connect<&ProjectileCollisionSystem::OnFrameEnd>(this);
+}
+
+void ProjectileCollisionSystem::WindDown()
+{
+    Engine::Dispatcher().sink<NextFrame>().disconnect<&ProjectileCollisionSystem::OnFrameEnd>(this);
+}
+
+
 void ProjectileCollisionSystem::Run()
 {
     auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision, Animator, Movable, Sprite>();
@@ -77,8 +84,7 @@ void ProjectileCollisionSystem::Run()
 
         // Waiting for merge
         if(animator.currentFrame == 24){
-            Engine::Registry().destroy(bullet);
-            BulletSystem::s_ActiveBullets--;
+            b.shouldDestroy = true;
             continue;
         }
 
@@ -157,4 +163,16 @@ void ProjectileCollisionSystem::Run()
             break;
         }
     }
+}
+
+void ProjectileCollisionSystem::OnFrameEnd()
+{
+    Engine::Registry().view<Bullet>().each([&](Entity entity, const Bullet& b)
+        {
+            if (b.shouldDestroy)
+            {
+                Engine::Registry().destroy(entity);
+                BulletSystem::s_ActiveBullets--;
+            }
+        });
 }

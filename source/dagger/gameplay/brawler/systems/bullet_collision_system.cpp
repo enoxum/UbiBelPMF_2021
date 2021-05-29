@@ -11,6 +11,16 @@
 using namespace brawler;
 using namespace dagger;
 
+void BulletCollisionSystem::SpinUp()
+{
+    Engine::Dispatcher().sink<NextFrame>().connect<&BulletCollisionSystem::OnFrameEnd>(this);
+}
+
+void BulletCollisionSystem::WindDown()
+{
+    Engine::Dispatcher().sink<NextFrame>().disconnect<&BulletCollisionSystem::OnFrameEnd>(this);
+}
+
 void BulletCollisionSystem::Run()
 {
     auto bullets = Engine::Registry().view<Bullet, Transform, SimpleCollision>();
@@ -41,10 +51,13 @@ void BulletCollisionSystem::Run()
                 auto& p = players.get<Player>(player);
                 bool dead = p.dealDamage(b.damage);
                 mov.speed.x += b.direction*b.damage;
-                Engine::Registry().destroy(bullet);
+                b.shouldDestroy = true;
                 break;
             }
         }
+
+        if (b.shouldDestroy)
+            continue;
 
         auto tiles = Engine::Registry().view<SimpleCollision, Tile, Transform>();
 
@@ -55,9 +68,21 @@ void BulletCollisionSystem::Run()
 
             if (collision.IsCollided(transform.position, col, tr.position))
             {
-                Engine::Registry().destroy(bullet);
+                b.shouldDestroy = true;
                 break;
             }
         }
     }
+}
+
+void BulletCollisionSystem::OnFrameEnd()
+{
+    Engine::Registry().view<Bullet>().each([&](Entity entity, const Bullet& b)
+        {
+            if (b.shouldDestroy)
+            {
+                Engine::Registry().destroy(entity);
+                BulletSystem::s_ActiveBullets--;
+            }
+        });
 }

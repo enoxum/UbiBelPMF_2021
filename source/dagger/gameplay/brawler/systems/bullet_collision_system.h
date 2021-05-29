@@ -11,6 +11,10 @@ namespace brawler
     public:
         inline String SystemName() { return "Bullet Collision System"; }
 
+        void SpinUp() override;
+        void WindDown() override;
         void Run() override;
+
+        void OnFrameEnd();
     };
 }

@@ -10,7 +10,7 @@
 		{ "command-name": "down", "trigger": "KeyS" },
 		{ "command-name": "attack", "trigger": "KeyF" , "event": "Released"},
 		{ "command-name": "reload", "trigger": "KeyR" , "event": "Reload"},
-		{ "command-name": "cycle_weapons", "trigger": "KeyH" , "event": "Cycle weapons"},
+		{ "command-name": "cycle_weapons", "trigger": "KeyC" , "event": "Cycle weapons"},
 		{ "command-name": "drop_weapon", "trigger": "KeyG" , "event": "Released"}
 	]
 }

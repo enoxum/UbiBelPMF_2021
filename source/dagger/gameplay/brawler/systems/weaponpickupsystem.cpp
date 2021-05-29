@@ -60,10 +60,13 @@ void WeaponPickupSystem::Run()
                     if (playerWeapons.size() == 1) {
                         player.active_weapon_idx = 0;
 
+                        auto& weaponTransform = Engine::Registry().get<Transform>(player.currentWeapon);
                         auto& weaponSprite = Engine::Registry().get<Sprite>(player.currentWeapon);
                         int dir = weaponSprite.scale.x >= 0.0f ? 1 : -1;
-                        weaponSprite.position.x += pickedUpWeapon.translate().x * dir;
-                        weaponSprite.position.y += pickedUpWeapon.translate().y;
+                        weaponTransform.position.x = playerTransform.position.x + pickedUpWeapon.translate().x * dir;
+                        weaponTransform.position.y = playerTransform.position.y + pickedUpWeapon.translate().y;
+                        weaponSprite.position.x = playerTransform.position.x + pickedUpWeapon.translate().x * dir;
+                        weaponSprite.position.y = playerTransform.position.y + pickedUpWeapon.translate().y;
                         ShootingSystem::editSprite(player.currentWeapon, pickedUpWeapon, 1.0f);
                     }
                 } else {

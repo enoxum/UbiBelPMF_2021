@@ -86,7 +86,7 @@ namespace brawler
             bullet.bullet.damage = damage;
             bullet.sprite.scale.x *= dir;
 
-            bullet.simCol.size = {bullet.sprite.size.x*bullet.sprite.scale.x, bullet.sprite.size.y*bullet.sprite.scale.y};
+            bullet.simCol.size = {bullet.sprite.size.x*std::abs(bullet.sprite.scale.x), bullet.sprite.size.y*std::abs(bullet.sprite.scale.y)};
 
             BulletSystem::s_ActiveBullets++;
 

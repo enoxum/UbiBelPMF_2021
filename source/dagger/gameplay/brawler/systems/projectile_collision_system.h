@@ -31,6 +31,10 @@ namespace brawler
             const Vector3& bulletPosition,
             float bulletSquareRange);
 
+        void SpinUp() override;
+        void WindDown() override;
         void Run() override;
+
+        void OnFrameEnd();
     };
 }
