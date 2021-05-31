@@ -40,7 +40,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
     
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
     {
-
+        tileSize = 80.f;
         if (!fightModeOn)
             return;
 
@@ -93,13 +93,13 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 auto& s = Engine::Registry().get<Sprite>(entity);
 
                 AssignSprite(s, "robot:INVENTORY:SpecialTile2");
-                s.size.x = 80.f;
-                s.size.y = 80.f;
+                s.size.x = tileSize;
+                s.size.y = tileSize;
 
                 x = ctrl_.input.x;
                 y = ctrl_.input.y;
 
-                auto view = Engine::Registry().view<Tile>();
+                auto view = Engine::Registry().view<Tile, Sprite, Transform>();
 
                 for (auto entity2 : view)
                 {
@@ -107,11 +107,11 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         continue;
 
                     auto& s2 = Engine::Registry().get<Sprite>(entity2);
-                    s2.size.x = 80.f;
-                    s2.size.y = 80.f;
+                    s2.size.x = tileSize;
+                    s2.size.y = tileSize;
 
                     auto& t = Engine::Registry().get<Transform>(entity2);
-                    t.position.z = 1.f;
+                    t.position.z = 2.f;
 
                     auto& controller = Engine::Registry().emplace<ControllerMapping>(entity2);
 
@@ -129,6 +129,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     swapX = ctrl_.input.x;
                     swapY = ctrl_.input.y;
 
+                    tileSize = 60.f;
+
                     Inventory* inv = new Inventory();
                     inv->SwapMatrix(x, y, swapX, swapY);
 
@@ -142,8 +144,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         auto& s = Engine::Registry().get<Sprite>(entity);
 
                         AssignSprite(s, "robot:INVENTORY:SelectedTile");
-                        s.size.x = 30.f;
-                        s.size.y = 30.f;
+                        s.size.x = tileSize/2;
+                        s.size.y = tileSize/2;
 
                         auto& t = Engine::Registry().get<Transform>(entity);
                         t.position.z = 4.f;
@@ -168,6 +170,7 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
     auto view = Engine::Registry().view<Transform, Sprite>();
     auto view2 = Engine::Registry().view<Sprite, RoboshipPlayer>();
     Sprite pos;
+    tileSize = 60.f;
 
     for (auto e : view2)
     {
@@ -183,72 +186,72 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 
         if (x - 1 >= 0)
         {
-            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
-            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
+            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + pos.position.x;
+            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
 
-            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == tileSize)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 60.f;
-                s.size.y = 60.f;
+                s.size.x = tileSize;
+                s.size.y = tileSize;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
         if (x + 1 < 4)
         {
-            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
-            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
+            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + pos.position.x;
+            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == tileSize)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 60.f;
-                s.size.y = 60.f;
+                s.size.x = tileSize;
+                s.size.y = tileSize;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
 
         if (y - 1 >= 0)
         {
-            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
-            float posY = (2.5f + y - 1 + (y - 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + pos.position.x;
+            float posY = (2.5f + y - 1 + (y - 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == tileSize)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 60.f;
-                s.size.y = 60.f;
+                s.size.x = tileSize;
+                s.size.y = tileSize;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
 
         if (y + 1 < 4)
         {
-            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
-            float posY = (2.5f + y + 1 + (y + 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + pos.position.x;
+            float posY = (2.5f + y + 1 + (y + 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * tileSize;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == tileSize)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 60.f;
-                s.size.y = 60.f;
+                s.size.x = tileSize;
+                s.size.y = tileSize;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
@@ -258,13 +261,14 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 void SelectedTileInputSystem::UnmarkNeighbors()
 {
     auto view = Engine::Registry().view<Sprite, MarkedTile>();
+    tileSize = 60.f;
 
     for (auto entity : view)
     {
         auto& s = view.get<Sprite>(entity);
         AssignSprite(s, "robot:INVENTORY:Tile");                
-        s.size.x = 60.f;
-        s.size.y = 60.f;
+        s.size.x = tileSize;
+        s.size.y = tileSize;
         Engine::Registry().remove<MarkedTile>(entity);
     }
 }
@@ -283,7 +287,7 @@ void SelectedTileInputSystem::setFightModeOff()
 
 void SelectedTileInputSystem::Run()
 {
-
+    tileSize = 60.f;
     auto view = Engine::Registry().view<Transform, ControllerMapping>();
     auto view2 = Engine::Registry().view<Sprite, RoboshipPlayer>();
     Sprite s;
@@ -302,8 +306,8 @@ void SelectedTileInputSystem::Run()
             auto& ctrl = view.get<ControllerMapping>(entity);
             
 
-            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 60.f + s.position.x;
-            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 60.f;
+            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * Space - static_cast<float>(4 * (1 + Space)) / 2.f) * tileSize + s.position.x;
+            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * Space - static_cast<float>(4 * (1 + Space)) / 2.f) * tileSize;
         }
     
 }

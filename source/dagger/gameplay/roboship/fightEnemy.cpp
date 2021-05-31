@@ -162,11 +162,11 @@ void fightEnemy::changeTiles(int a, int b, int c, int d, int k)
                 auto& t = view.get<Transform>(entity);
                 auto& s = view.get<Sprite>(entity);
 
-                if (abs(t.position.x - posI) < 10 && abs(t.position.y - posB) < 10 && s.size.x == 30.f)
+                if (abs(t.position.x - posI) < 10 && abs(t.position.y - posB) < 10 && s.size.x == tileSize/2)
                 {
                     AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[i][b]));
-                    s.size.x = 30.f;
-                    s.size.y = 30.f;
+                    s.size.x = tileSize/2;
+                    s.size.y = tileSize/2;
                 }
 
             }
@@ -190,11 +190,11 @@ void fightEnemy::changeTiles(int a, int b, int c, int d, int k)
                 auto& t = view.get<Transform>(entity);
                 auto& s = view.get<Sprite>(entity);
 
-                if (abs(t.position.x - posA) < 10 && abs(t.position.y - posI) < 10 && s.size.x == 30.f)
+                if (abs(t.position.x - posA) < 10 && abs(t.position.y - posI) < 10 && s.size.x == tileSize/2)
                 {
                     AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[a][i]));
-                    s.size.x = 30.f;
-                    s.size.y = 30.f;
+                    s.size.x = tileSize/2;
+                    s.size.y = tileSize/2;
                 }
 
             }
@@ -222,13 +222,13 @@ void fightEnemy::addShipPart()
 
     AssignSprite(sprite, "robot:INVENTORY:spaceshipPart_5");
 
-    sprite.size.x = 30.f;
-    sprite.size.y = 30.f;
+    sprite.size.x = tileSize/2;
+    sprite.size.y = tileSize/2;
 
     auto& transform = Engine::Registry().emplace<Transform>(entityNew);
     transform.position.x = t.position.x;
     transform.position.y = t.position.y;
-    transform.position.z = 0.f;
+    transform.position.z = 1.f;
 
     Engine::Registry().emplace<MoveWithRobot>(entityNew);
 
