@@ -46,7 +46,7 @@ void inventory::Inventory::InventoryPositionsSetup()
         }
     }
 
-    tileSize = 40.f;
+    tileSize = 80.f;
 
 
     for (int i = 0; i < 3; i++)
@@ -115,7 +115,7 @@ void inventory::Inventory::SelectedTileSetup()
 
     }
 
-    tileSize = 30.f;
+    tileSize = 60.f;
     
     {
         auto entity = reg.create();
@@ -142,7 +142,7 @@ void inventory::Inventory::SelectedTileSetup()
 
 void inventory::Inventory::FillInventory()
 {
-    tileSize = 30.f;
+    tileSize = 60.f;
 
     auto& reg = Engine::Registry();
 
@@ -159,8 +159,8 @@ void inventory::Inventory::FillInventory()
             
             AssignSprite(sprite, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[i][j]));
 
-            sprite.size.x = 15.f;
-            sprite.size.y = 15.f;
+            sprite.size.x = 30.f;
+            sprite.size.y = 30.f;
 
             auto& transform = reg.emplace<Transform>(entity);
             transform.position.x = (-1.0f + i + i * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize;
@@ -218,7 +218,7 @@ void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
         s = Engine::Registry().get<Sprite>(e);
     }
 
-    tileSize = 30;
+    tileSize = 60.f;
 
 
     float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * tileSize + s.position.x;
@@ -236,18 +236,18 @@ void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
         auto& t = view.get<Transform>(entity);
         auto& s = view.get<Sprite>(entity);
 
-        if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 15.f)
+        if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
         {
             AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[x][y]));
-            s.size.x = 15.f;
-            s.size.y = 15.f;
+            s.size.x = 30.f;
+            s.size.y = 30.f;
         }
 
-        if (abs(t.position.x - posA) <= 6 && t.position.y == posB && s.size.x == 15.f)
+        if (abs(t.position.x - posA) <= 6 && t.position.y == posB && s.size.x == 30.f)
         {
             AssignSprite(s, fmt::format("robot:INVENTORY:part_{}", matrix.matrix[a][b]));
-            s.size.x = 15.f;
-            s.size.y = 15.f;
+            s.size.x = 30.f;
+            s.size.y = 30.f;
         }
     }
 }

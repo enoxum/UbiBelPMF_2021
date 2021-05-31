@@ -44,24 +44,7 @@ void RBackdrop::RoboshipCreateBackdrop(Float32 background_pos_x, Float32 terrain
         auto& matInv = reg.emplace<InventoryMatrix>(entity);
     }
 
-    // Number of moves
-    {
-        auto moves = reg.create();
-        auto& sprite = reg.get_or_emplace<Sprite>(moves);
 
-        AssignSprite(sprite, "robot:INVENTORY:Tile");
-        sprite.size = { 30, 30 };
-
-        auto& numberOfMoves = reg.get_or_emplace<NumberOfMoves>(moves);
-        numberOfMoves.left = 3;
-
-        auto& transform = reg.get_or_emplace<Transform>(moves);
-        transform.position.x = 50;
-        transform.position.y = 50;
-        Engine::Registry().emplace<MoveWithRobot>(moves);
-
-
-    }
 
 
 

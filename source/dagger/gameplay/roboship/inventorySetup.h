@@ -45,7 +45,7 @@ namespace inventory
         
         int height = 4;
         int width = 4;
-        float tileSize = 30.f;//  static_cast<float>(Width);
+        float tileSize = 60.f;//  static_cast<float>(Width);
 
         float zPos = 1.f;
 

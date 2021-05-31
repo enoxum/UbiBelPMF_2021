@@ -27,17 +27,17 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
    Engine::Dispatcher().sink<setfightmodeon>().connect<&SelectedTileInputSystem::setFightModeOn>(this);
     
 
-    auto entity = Engine::Registry().view<NumberOfMoves>()[0];
-    auto& numberOfMoves = Engine::Registry().get<NumberOfMoves>(entity);
-
     auto entity2 = Engine::Registry().create();
-
+     
     auto info = Engine::Registry().view<RFightModeOn>()[0];
 
     auto& fightMode = Engine::Registry().get<RFightModeOn>(info);
 
     auto comb = fightMode.combination;
-    int numOfMoves = fightMode.moves;
+
+    if (fightMode.found)
+        fightModeOn = false;
+    
 
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
     {
@@ -63,7 +63,7 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
         }
         else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed)
         {
-            if (numOfMoves == 0)
+            if (fightMode.moves== 0)
                 return;
             /*
             if (moveFirst)
@@ -95,8 +95,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 auto& s = Engine::Registry().get<Sprite>(entity);
 
                 AssignSprite(s, "robot:INVENTORY:SpecialTile2");
-                s.size.x = 40;
-                s.size.y = 40;
+                s.size.x = 80.f;
+                s.size.y = 80.f;
 
                 x = ctrl_.input.x;
                 y = ctrl_.input.y;
@@ -109,8 +109,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         continue;
 
                     auto& s2 = Engine::Registry().get<Sprite>(entity2);
-                    s2.size.x = 40;
-                    s2.size.y = 40;
+                    s2.size.x = 80.f;
+                    s2.size.y = 80.f;
 
                     auto& t = Engine::Registry().get<Transform>(entity2);
                     t.position.z = 1.f;
@@ -146,8 +146,8 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         auto& s = Engine::Registry().get<Sprite>(entity);
 
                         AssignSprite(s, "robot:INVENTORY:SelectedTile");
-                        s.size.x = 30;
-                        s.size.y = 30;
+                        s.size.x = 30.f;
+                        s.size.y = 30.f;
 
                         auto& t = Engine::Registry().get<Transform>(entity);
                         t.position.z = 4.f;
@@ -157,6 +157,9 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 
                     
                     UnmarkNeighbors();
+                    for (int i = 0; i < comb.size(); i++)
+                    printf("%d", comb[i]);
+                    printf("\n;");
                     findCombination(comb);
                     fightMode.moves--;
                 }
@@ -186,72 +189,72 @@ void SelectedTileInputSystem::MarkNeighbors(int x, int y)
 
         if (x - 1 >= 0)
         {
-            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
-            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x - 1 + (x - 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
+            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
 
-            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 30.f;
-                s.size.y = 30.f;
+                s.size.x = 60.f;
+                s.size.y = 60.f;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
         if (x + 1 < 4)
         {
-            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
-            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x + 1 + (x + 1) * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
+            float posY = (2.5f + y + y * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 30.f;
-                s.size.y = 30.f;
+                s.size.x = 60.f;
+                s.size.y = 60.f;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
 
         if (y - 1 >= 0)
         {
-            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
-            float posY = (2.5f + y - 1 + (y - 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
+            float posY = (2.5f + y - 1 + (y - 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 30.f;
-                s.size.y = 30.f;
+                s.size.x = 60.f;
+                s.size.y = 60.f;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
 
         if (y + 1 < 4)
         {
-            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 30 + pos.position.x;
-            float posY = (2.5f + y + 1 + (y + 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 30;
+            float posX = (-1.0f + x + x * Space - static_cast<float>(width * (1 + Space)) / 2.f) * 60.f + pos.position.x;
+            float posY = (2.5f + y + 1 + (y + 1) * Space - static_cast<float>(height * (1 + Space)) / 2.f) * 60.f;
 
 
             auto& t = view.get<Transform>(entity);
             auto& s = view.get<Sprite>(entity);
 
-            if (abs(t.position.x - posX) <= 6 && t.position.y == posY && s.size.x == 30.f)
+            if (abs(t.position.x - posX) <= 10 && abs(t.position.y - posY) <= 10 && s.size.x == 60.f)
             {
                 AssignSprite(s, "robot:INVENTORY:SpecialTile1");
-                s.size.x = 30.f;
-                s.size.y = 30.f;
+                s.size.x = 60.f;
+                s.size.y = 60.f;
                 Engine::Registry().emplace<MarkedTile>(entity);
             }
         }
@@ -266,8 +269,8 @@ void SelectedTileInputSystem::UnmarkNeighbors()
     {
         auto& s = view.get<Sprite>(entity);
         AssignSprite(s, "robot:INVENTORY:Tile");                
-        s.size.x = 30.f;
-        s.size.y = 30.f;
+        s.size.x = 60.f;
+        s.size.y = 60.f;
         Engine::Registry().remove<MarkedTile>(entity);
     }
 }
@@ -300,8 +303,8 @@ void SelectedTileInputSystem::Run()
             auto& ctrl = view.get<ControllerMapping>(entity);
             
 
-            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f + s.position.x;
-            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 30.f;
+            t.position.x = (-1.0f + ctrl.input.x + ctrl.input.x * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 60.f + s.position.x;
+            t.position.y = (2.5f + ctrl.input.y + ctrl.input.y * 0.3f - static_cast<float>(4 * (1 + 0.3f)) / 2.f) * 60.f;
         }
     
 }

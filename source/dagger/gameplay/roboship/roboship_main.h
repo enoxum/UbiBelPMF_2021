@@ -50,6 +50,7 @@ namespace roboship
         void CurrentSequence();
         void TurnOnSpaceship();
         void GameOn();
+        void GameOff();
     };
 }
 
@@ -73,6 +74,7 @@ struct RFightModeOn
 {
     std::vector<int> combination;
     int moves;
+    bool found = false;
 };
 
 struct RFightModeOff

@@ -40,7 +40,7 @@ namespace robo_game
         bool swap = false;
         int height = 4;
         int width = 4;
-        float tileSize = 40.f;
+        float tileSize = 80.f;
         float Space = 0.3f;
         bool fightModeOn = false;
 

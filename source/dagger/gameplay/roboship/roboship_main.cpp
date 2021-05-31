@@ -186,9 +186,15 @@ void Roboship::WorldSetup()
         auto& data = reg.emplace<RFightModeOn>(entity);
     }
 
+    {
+        auto entity2 = reg.create();
+        auto& data2 = reg.emplace<FightEnded>(entity2);
+    }
+
   
     Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::CurrentSequence>(this);
     Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::GameOn>(this);
+    Engine::Dispatcher().sink<FightEnded>().connect<&Roboship::GameOff>(this);
     //Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
 
 
@@ -287,6 +293,7 @@ void Roboship::CurrentSequence()
                 auto& fightMode = Engine::Registry().get<RFightModeOn>(info);
                 fightMode.combination = this->sequences[enemy_number - 1];
                 fightMode.moves = this->numbersOfTurns[enemy_number - 1];
+                fightMode.found = false;
 
             }
         }
@@ -323,16 +330,11 @@ void Roboship::GameOn()
 {
     Engine::Dispatcher().trigger<setfightmodeon>();
 
-    auto entity = Engine::Registry().create();
+}
 
-    auto view = Engine::Registry().view<RFightModeOn>();
-
-    for (auto entity : view)
-    {
-        auto& fightMode = view.get<RFightModeOn>(entity);
-        auto comb = fightMode.combination;
-        findCombination(comb);
-    }
+void Roboship::GameOff()
+{
+  //  Engine::Dispatcher().trigger<nekanjihovafja>();
 
 }
 
