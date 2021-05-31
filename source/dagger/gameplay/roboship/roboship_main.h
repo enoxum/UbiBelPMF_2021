@@ -42,15 +42,15 @@ namespace roboship
 
         void GameplaySystemsSetup() override;
         void WorldSetup() override;
-        void startFight();
         void TurnRobots();
-        void RobotDie();
+        void EnemyDies();
         void ShowTextPrepareFightMode();
         void ClearTextPrepareFightMode();
         void CurrentSequence();
         void TurnOnSpaceship();
         void GameOn();
         void GameOff();
+        void GameOver();
     };
 }
 
@@ -59,6 +59,10 @@ struct RPrepareFightModeOff
     char _preparefightmodeoff;
 };
 
+struct RGameOver
+{
+    bool _gameover = false;
+};
 
 struct RPrepareFightModeOn
 {
@@ -66,6 +70,16 @@ struct RPrepareFightModeOn
 };
 
 struct RChangeDirection
+{
+    char _placeholder;
+};
+
+struct RBackDrop
+{
+    char _placeholder;
+};
+
+struct REnemyDies
 {
     char _placeholder;
 };
@@ -79,7 +93,7 @@ struct RFightModeOn
 
 struct RFightModeOff
 {
-    char _fightmodeon;
+    char _fightmodeoff;
 };
 
 struct REnemy {

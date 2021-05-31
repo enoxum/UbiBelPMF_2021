@@ -9,6 +9,7 @@ void RBackdrop::RoboshipCreateBackdrop(Float32 background_pos_x, Float32 terrain
 {
     Float32 base_x = 800;
     auto& reg = Engine::Registry();
+    
     auto* camera = Engine::GetDefaultResource<Camera>();
 
     // Create terrain 

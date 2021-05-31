@@ -1,5 +1,6 @@
 #include "roboship_player_move.h"
 #include "gameplay/roboship/roboship_createbackdrop.h"
+#include "gameplay/roboship/fightEnemy.h"
 
 #include "core/engine.h"
 #include "core/game/transforms.h"
@@ -11,8 +12,11 @@
 
 #include <math.h>
 
+const int TERRAIN_HEIGHT = 30;
+
 using namespace dagger;
 using namespace roboship;
+using namespace fightEnemy;
 
 static int count = 0;
 static int iteration = 1;
@@ -23,6 +27,8 @@ static bool jumpAllowed = false;
 static bool atomicJump = false;
 static bool atomicFight = false;
 static bool stop = false;
+static int win = 0;
+static bool winIter = true;
 
 void RoboshipPlayerInputSystem::SpinUp()
 {
@@ -73,145 +79,230 @@ void RoboshipPlayerInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 void RoboshipPlayerInputSystem::Run()
 {
     
-    auto view = Engine::Registry().view<Sprite, ControllerMappingPlayer, Animator, RoboshipPlayer>();
+    auto view = Engine::Registry().view<Sprite, ControllerMappingPlayer, FightEnded, Animator, RoboshipPlayer, RGameOver>();
     auto view2 = Engine::Registry().view<MoveWithRobot,Transform>();
 
     for (auto entity : view)
     {
-
-        auto& animator = view.get<Animator>(entity);
-
+        
         auto& sprite = view.get<Sprite>(entity);
         auto& ctrl = view.get<ControllerMappingPlayer>(entity);
         auto& roboshipPlayer = view.get<RoboshipPlayer>(entity);
+        auto& animator = view.get<Animator>(entity);
+        
+        auto& fightOff = view.get<FightEnded>(entity);
+        auto& gameOver = view.get<RGameOver>(entity);
 
-        if (EPSILON_ZERO(ctrl.input.x) && !atomicJump && !atomicFight)
-        {
-            if(!prepareFightMode)
-                AnimatorPlay(animator, "robot:IDLE");
-            else if(prepareFightMode)
-                AnimatorPlay(animator, "robot:MELEE");
-        }
-        else if (((ctrl.input.x == 2 && jumpAllowed) || atomicJump) && !stop) {
-            AnimatorPlay(animator, "robot:JUMP");
+        if (gameOver._gameover) {
+            auto view3 = Engine::Registry().view<RBackDrop>();
 
-            atomicJump = true;
-
-            if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
-                jumpActive = true;
-            else if (sprite.position.y < -30 && jumpActive) {
-                sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
-                sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
-                for (auto e : view2) {
-                    auto& t = Engine::Registry().get<Transform>(e);
-                    t.position.x +=  roboshipPlayer.speed/1.15 * Engine::DeltaTime();
-                }
-            }
-            else if (sprite.position.y + 30 <= 2 && jumpActive) {
-                jumpActive = false;
-                jumpAllow = false;
-            }
-            else if (sprite.position.y > -223 && !jumpActive) {
-                sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
-                sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
-                for (auto e : view2) {
-                    auto& t = Engine::Registry().get<Transform>(e);
-                    t.position.x += roboshipPlayer.speed/1.15 * Engine::DeltaTime();
-                }
-            }
-            else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
-                ctrl.input.x = 0;
-                prepareFightMode = false;
-                jumpAllowed = false;
-                atomicJump = false;
-                Engine::Dispatcher().trigger<RPrepareFightModeOff>();
-            }
-        }
-        else if (((ctrl.input.x == 3 && jumpAllowed) || atomicFight) && !stop) {
-            Engine::Dispatcher().trigger<RFightModeOn>();
-            AnimatorPlay(animator, "robot:JUMPMELEE");
-
-            atomicFight = true;
-
-            if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
-                jumpActive = true;
-            else if (sprite.position.y < -190 && jumpActive) {
-                sprite.position.y += roboshipPlayer.speed/2.5 * Engine::DeltaTime();
-                sprite.position.x += roboshipPlayer.speed*2 * Engine::DeltaTime();
-                 for (auto e : view2) {
-                   auto& t = Engine::Registry().get<Transform>(e);
-                    t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
-                }
-            }
-            else if (sprite.position.y + 190 <= 2 && jumpActive) {
-                jumpActive = false;
-                jumpAllow = false;
-            }
-            else if (sprite.position.y > -223 && !jumpActive) {
-                sprite.position.y -= roboshipPlayer.speed / 3 * Engine::DeltaTime();
-                sprite.position.x += roboshipPlayer.speed * 2 * Engine::DeltaTime();
-                for (auto e : view2) {
-                    auto& t = Engine::Registry().get<Transform>(e);
-                    t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
-                }
-            }
-            else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
-                ctrl.input.x = 0;
-                prepareFightMode = false;
-                jumpAllowed = false;
-                atomicFight = false;
-                Engine::Dispatcher().trigger<RFightModeOff>();
-            }
-        }
-        else if (((ctrl.input.x == 1 || ctrl.input.x == -1) && !prepareFightMode) && !stop) {
-
-            if (!prepareFightMode) {
-                for (auto e : view2) {
-                    auto& t = Engine::Registry().get<Transform>(e);
-                    t.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
-                }
-                AnimatorPlay(animator, "robot:RUN");
-                sprite.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
-                jumpAllow = true;
-            }
-
-            if (sprite.scale.x * ctrl.input.x < 0 && !prepareFightMode) {
-                
-                sprite.scale.x *= -1;
-                Engine::Dispatcher().trigger<RChangeDirection>();
-
-            }
-
-            if (fmod(sprite.position.x + 160, 800) <= 6 && sprite.position.x + 100 > 6 && !jumpAllowed && !(abs(sprite.position.x+160-800*6) <= 6)) {
-                Engine::Dispatcher().trigger<RPrepareFightModeOn>();
-                prepareFightMode = true;
-                AnimatorPlay(animator, "robot:MELEE");
-                jumpAllowed = true;
-            }
-            else if(abs(sprite.position.x - 800 * 6) <= 6) {
-                AnimatorPlay(animator, "robot:IDLE");
-                stop = true;
+            Engine::Dispatcher().trigger<RFightModeOff>();
+            
+            AnimatorPlay(animator, "robot:IDLE");
+            stop = true;
+            {
                 auto entity = Engine::Registry().create();
                 auto& text = Engine::Registry().emplace<Text>(entity);
                 text.spacing = 0.6f;
 
-                text.Set("pixel-font", "Congratulations!");
+                text.Set("pixel-font", "GAME OVER");
+            }
+            {
+                auto entity = Engine::Registry().create();
+                auto& sprite = Engine::Registry().get_or_emplace<Sprite>(entity);
+
+                AssignSprite(sprite, "robot:BACKGROUND:blackground");
+
+                sprite.scale.x = 2.f;
+                sprite.scale.y = 2.f;
+                sprite.position.x = sprite.position.x + 600;
+                sprite.position.y = 5;
+                sprite.position.z = 0;
+            }
+        }
+        else {
+            if (fightOff._fightmodeoff_true) {
+                if (winIter) {
+                    win++;
+                }
+                winIter = false;
+
+                Engine::Dispatcher().trigger<REnemyDies>();
+                AnimatorPlay(animator, "robot:JUMPMELEE");
+
+                atomicFight = true;
+
+                if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
+                    jumpActive = true;
+                else if (sprite.position.y < -190 && jumpActive) {
+                    sprite.position.y += roboshipPlayer.speed / 2.5 * Engine::DeltaTime();
+                    sprite.position.x += roboshipPlayer.speed * 2 * Engine::DeltaTime();
+                    for (auto e : view2) {
+                        auto& t = Engine::Registry().get<Transform>(e);
+                        t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
+                    }
+                }
+                else if (sprite.position.y + 190 <= 2 && jumpActive) {
+                    jumpActive = false;
+                    jumpAllow = false;
+                }
+                else if (sprite.position.y > -223 && !jumpActive) {
+                    sprite.position.y -= roboshipPlayer.speed / 3 * Engine::DeltaTime();
+                    sprite.position.x += roboshipPlayer.speed * 2 * Engine::DeltaTime();
+                    for (auto e : view2) {
+                        auto& t = Engine::Registry().get<Transform>(e);
+                        t.position.x += 2 * roboshipPlayer.speed * Engine::DeltaTime();
+                    }
+                }
+                else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
+                    ctrl.input.x = 0;
+                    prepareFightMode = false;
+                    jumpAllowed = false;
+                    atomicFight = false;
+                    fightOff._fightmodeoff_true = false;
+                    winIter = true;
+                    Engine::Dispatcher().trigger<RFightModeOff>();
+                }
+            }
+            else if (EPSILON_ZERO(ctrl.input.x) && !atomicJump && !atomicFight)
+            {
+                if (!prepareFightMode)
+                    AnimatorPlay(animator, "robot:IDLE");
+                else if (prepareFightMode)
+                    AnimatorPlay(animator, "robot:MELEE");
+            }
+            else if (((ctrl.input.x == 2 && jumpAllowed) || atomicJump) && !stop) {
+                AnimatorPlay(animator, "robot:JUMP");
+
+                atomicJump = true;
+
+                if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
+                    jumpActive = true;
+                else if (sprite.position.y < -30 && jumpActive) {
+                    sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
+                    sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+                    for (auto e : view2) {
+                        auto& t = Engine::Registry().get<Transform>(e);
+                        t.position.x += roboshipPlayer.speed / 1.15 * Engine::DeltaTime();
+                    }
+                }
+                else if (sprite.position.y + 30 <= 2 && jumpActive) {
+                    jumpActive = false;
+                    jumpAllow = false;
+                }
+                else if (sprite.position.y > -223 && !jumpActive) {
+                    sprite.position.y -= roboshipPlayer.speed * Engine::DeltaTime();
+                    sprite.position.x += (roboshipPlayer.speed / 1.15) * Engine::DeltaTime();
+                    for (auto e : view2) {
+                        auto& t = Engine::Registry().get<Transform>(e);
+                        t.position.x += roboshipPlayer.speed / 1.15 * Engine::DeltaTime();
+                    }
+                }
+                else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
+                    ctrl.input.x = 0;
+                    prepareFightMode = false;
+                    jumpAllowed = false;
+                    atomicJump = false;
+                    Engine::Dispatcher().trigger<RPrepareFightModeOff>();
+                }
+            }
+            else if (((ctrl.input.x == 3 && jumpAllowed) || atomicFight) && !stop) {
+                jumpAllowed = false;
+                Engine::Dispatcher().trigger<RFightModeOn>();
+            }
+            else if (((ctrl.input.x == 1 || ctrl.input.x == -1) && !prepareFightMode) && !stop) {
+
+                if (!prepareFightMode) {
+                    for (auto e : view2) {
+                        auto& t = Engine::Registry().get<Transform>(e);
+                        t.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
+                    }
+                    AnimatorPlay(animator, "robot:RUN");
+                    sprite.position.x += ctrl.input.x * roboshipPlayer.speed * Engine::DeltaTime();
+                    jumpAllow = true;
+                }
+
+                if (sprite.scale.x * ctrl.input.x < 0 && !prepareFightMode) {
+
+                    sprite.scale.x *= -1;
+                    Engine::Dispatcher().trigger<RChangeDirection>();
+
+                }
+
+                if (fmod(sprite.position.x + 160, 800) <= 6 && sprite.position.x + 100 > 6 && !jumpAllowed && !(abs(sprite.position.x + 160 - 800 * 6) <= 6)) {
+                    Engine::Dispatcher().trigger<RPrepareFightModeOn>();
+                    prepareFightMode = true;
+                    AnimatorPlay(animator, "robot:MELEE");
+                    jumpAllowed = true;
+                }
+                else if (abs(sprite.position.x - 800 * 6) <= 6 && win == 3) {
+                    AnimatorPlay(animator, "robot:IDLE");
+                    stop = true;
+                    auto entity = Engine::Registry().create();
+                    auto& text = Engine::Registry().emplace<Text>(entity);
+                    text.spacing = 0.6f;
+
+                    text.Set("pixel-font", "Congratulations!");
+                }
+
             }
 
+            if (abs(sprite.position.x - 800) <= 2 && iteration == 1)
+            {
+                iteration++;
+                count += 1600;
+
+                {
+                    auto entity = Engine::Registry().create();
+                    auto& sprite = Engine::Registry().get_or_emplace<Sprite>(entity);
+
+                    AssignSprite(sprite, "robot:BACKGROUND:background2_infinite");
+
+
+                    sprite.position.x = count;
+                    sprite.position.y = 5;
+                    sprite.position.z = 10;
+                }
+                {
+                    auto entity = Engine::Registry().create();
+                    auto& sprite = Engine::Registry().get_or_emplace<Sprite>(entity);
+
+                    AssignSprite(sprite, "EmptyWhitePixel");
+                    sprite.color = { 0, 0, 0, 1 };
+                    sprite.size = { 2000, TERRAIN_HEIGHT };
+                    sprite.scale = { 10, 1 };
+                    sprite.position = { sprite.position.x, -(600 - TERRAIN_HEIGHT) / 2, 1 };
+                }
+            }
+            else if (abs((sprite.position.x - 800) - (iteration - 1) * 2000) - 400 * (iteration - 1) <= 2 && iteration > 1) {
+                iteration++;
+                count += 1600;
+
+                {
+                    auto entity = Engine::Registry().create();
+                    auto& sprite = Engine::Registry().get_or_emplace<Sprite>(entity);
+
+                    AssignSprite(sprite, "robot:BACKGROUND:background2_infinite");
+
+                    /*sprite.scale.x = 0.5f;
+                    sprite.scale.y = 0.5f;*/
+                    sprite.position.x = count;
+                    sprite.position.y = 5;
+                    sprite.position.z = 10;
+                }
+
+                {
+                    auto entity = Engine::Registry().create();
+                    auto& sprite = Engine::Registry().get_or_emplace<Sprite>(entity);
+
+                    AssignSprite(sprite, "EmptyWhitePixel");
+                    sprite.color = { 0, 0, 0, 1 };
+                    sprite.size = { 2000, TERRAIN_HEIGHT };
+                    sprite.scale = { 10, 1 };
+                    sprite.position = { sprite.position.x, -(600 - TERRAIN_HEIGHT) / 2, 1 };
+                }
+            }
         }
-
-        //if (abs(sprite.position.x - 800) <= 2 && iteration == 1)
-        //{
-        //    iteration++;
-        //    count += 1600;
-        //    RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
-        //}
-        //else if (abs((sprite.position.x - 800) - (iteration - 1) * 2000) - 400 * (iteration - 1) <= 2 && iteration > 1) {
-        //    iteration++;
-        //    count += 1600;
-        //    RBackdrop::RoboshipCreateBackdrop(count, sprite.position.x);
-        //}
-
     
     }
 }

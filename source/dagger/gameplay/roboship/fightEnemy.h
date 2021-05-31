@@ -37,6 +37,7 @@ namespace fightEnemy
 	struct FightEnded
 	{
 		char _fightEnded;
+		bool _fightmodeoff_true = false;
 	};
 
 	void findCombination(std::vector<int> comb);

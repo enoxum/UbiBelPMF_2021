@@ -24,8 +24,8 @@ void SelectedTileInputSystem::WindDown()
 
 void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
 {
-   Engine::Dispatcher().sink<setfightmodeon>().connect<&SelectedTileInputSystem::setFightModeOn>(this);
-    
+    Engine::Dispatcher().sink<RFightModeOn>().connect<&SelectedTileInputSystem::setFightModeOn>(this);
+    Engine::Dispatcher().sink<RFightModeOff>().connect<&SelectedTileInputSystem::setFightModeOff>(this);
 
     auto entity2 = Engine::Registry().create();
      
@@ -38,7 +38,6 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
     if (fightMode.found)
         fightModeOn = false;
     
-
     Engine::Registry().view<ControllerMapping>().each([&](ControllerMapping& ctrl_)
     {
 
@@ -63,8 +62,10 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
         }
         else if (kEvent_.key == ctrl_.spaceKey && kEvent_.action == EDaggerInputState::Pressed)
         {
-            if (fightMode.moves== 0)
+            if (fightMode.moves == 0) {
+                Engine::Dispatcher().trigger<RGameOver>();
                 return;
+            }
             /*
             if (moveFirst)
             {
@@ -72,7 +73,6 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 moveSecond = true;
                 x = ctrl_.input.x;
                 y = ctrl_.input.y;
-                printf("%d %d", x, y);
             }
             else
             {
@@ -80,11 +80,9 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                 moveSecond = false;
                 swapX = ctrl_.input.x;
                 swapY = ctrl_.input.y;
-                printf("%d %d", swapX, swapY);
 
                 Inventory* inv = new Inventory();
                 inv->SwapMatrix(x, y, swapX, swapY);
-                printf("nisam");
             }
 
             */
@@ -141,8 +139,6 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                         if (Engine::Registry().has<ControllerMapping>(entity))
                             continue;
 
-                        printf("Ovde se postavlja selected\n");
-
                         auto& s = Engine::Registry().get<Sprite>(entity);
 
                         AssignSprite(s, "robot:INVENTORY:SelectedTile");
@@ -158,8 +154,6 @@ void SelectedTileInputSystem::OnKeyboardEvent(KeyboardEvent kEvent_)
                     
                     UnmarkNeighbors();
                     for (int i = 0; i < comb.size(); i++)
-                    printf("%d", comb[i]);
-                    printf("\n;");
                     findCombination(comb);
                     fightMode.moves--;
                 }
@@ -280,6 +274,11 @@ void SelectedTileInputSystem::UnmarkNeighbors()
 void SelectedTileInputSystem::setFightModeOn()
 {
     fightModeOn = true;
+}
+
+void SelectedTileInputSystem::setFightModeOff()
+{
+    fightModeOn = false;
 }
 
 void SelectedTileInputSystem::Run()

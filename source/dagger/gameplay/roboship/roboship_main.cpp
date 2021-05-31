@@ -5,6 +5,7 @@
 #include "gameplay/roboship/roboship_player_move.h";
 #include "gameplay/roboship/roboship_camera_focus.h"
 #include "gameplay/roboship/roboship_createbackdrop.h"
+#include "gameplay/roboship/fightEnemy.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -122,7 +123,7 @@ RSpaceship* RSpaceship::Create(
 
     RSpaceship* chr = RSpaceship::Get(entity);
     chr->sprite.scale = { 1.6f, 1.6f };
-    chr->sprite.position = { position_, 0.0f };
+    chr->sprite.position = { position_, 1 };
     //chr.sprite.color = { color_, 1.0f };
 
     AssignSprite(chr->sprite, "robot:SPACESHIP:IDLE:vehicle1");
@@ -172,9 +173,11 @@ void Roboship::WorldSetup()
         AnimatorPlay(animator, "robot:IDLE");
 
         sprite.scale = { 0.2f, 0.2f };
-        sprite.position = { 0.0f, -223.0f, 0.0f };
+        sprite.position = { 0.0f, -223.0f, 1 };
 
         auto& roboshipPlayer = reg.emplace<RoboshipPlayer>(entity);
+        reg.emplace<FightEnded>(entity);
+        reg.emplace<RGameOver>(entity);
         roboshipPlayer.speed = 200;
 
         reg.emplace<ControllerMappingPlayer>(entity);
@@ -192,10 +195,9 @@ void Roboship::WorldSetup()
     }
 
   
+    Engine::Dispatcher().sink<RGameOver>().connect<&Roboship::GameOver>(this);
     Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::CurrentSequence>(this);
-    Engine::Dispatcher().sink<RPrepareFightModeOn>().connect<&Roboship::GameOn>(this);
     Engine::Dispatcher().sink<FightEnded>().connect<&Roboship::GameOff>(this);
-    //Engine::Dispatcher().sink<RPrepareFightModeOff>().connect<&Roboship::ShowTextPrepareFightMode>(this);
 
 
     n_enemies = 5;
@@ -204,13 +206,14 @@ void Roboship::WorldSetup()
     {
         REnemy* enemyChar = REnemy::Create({ 0, 1, 0 }, { (i+1) * 800, -200 });
         enemyChar->sprite.scale = { -0.15f, 0.15f };
+        enemyChar->sprite.position = { (i + 1) * 800, -200, 1 };
          
         enemyChar->setNumberOFTurns();
         enemyChar->fillSequence();
         
         
 
-        Engine::Dispatcher().sink<RFightModeOn>().connect<&Roboship::RobotDie>(this);
+        Engine::Dispatcher().sink<REnemyDies>().connect<&Roboship::EnemyDies>(this);
 
         Engine::Dispatcher().sink<RChangeDirection>().connect<&Roboship::TurnRobots>(this);
         
@@ -226,7 +229,7 @@ void Roboship::WorldSetup()
 
         std::string str = "Turns:" + std::to_string(enemyChar->getNumberOfTurns());
 
-        text.Set("pixel-font", str, { (i + 1) * 800, 0 , 0 }, false);
+        text.Set("pixel-font", str, { (i + 1) * 800, 0 , 1 }, false);
 
         for (int j = 0; j < enemyChar->sequence.size(); j++) {
             auto entity = reg.create();
@@ -251,7 +254,7 @@ void Roboship::WorldSetup()
                 AssignSprite(sprite, "robot:INVENTORY:part_6");
             }
             sprite.scale = { 1.8f, 1.8f };
-            sprite.position = { j*50 + (i + 1) * 800 - 50, -50.0f, 0.0f };
+            sprite.position = { j*50 + (i + 1) * 800 - 50, -50.0f, 1 };
         }
     }
 
@@ -260,18 +263,6 @@ void Roboship::WorldSetup()
 
 void Roboship::ShowTextPrepareFightMode(){
 
-    //enemy_number++;
-
-    /*Engine& engine = Engine::Instance();
-    auto& reg = engine.Registry();
-
-    if (brojac % 2 == 0) {
-        auto ui = reg.create();
-
-        auto& text = reg.emplace<Text>(ui);
-        text.spacing = 0.6f;
-        text.Set("pixel-font", "Fight(F) / Go on(G)");
-    }*/
 }
 
 void Roboship::ClearTextPrepareFightMode(){
@@ -300,7 +291,7 @@ void Roboship::CurrentSequence()
     }
 }
 
-void Roboship::RobotDie()
+void Roboship::EnemyDies()
 {
     Engine::Registry().view<Sprite, Animator, EnemyMarker>().each([](Sprite& sprite_, Animator& animator_, const EnemyMarker&)
         {
@@ -308,7 +299,7 @@ void Roboship::RobotDie()
                 AnimatorPlay(animator_, "robot:ENEMIES:Robot1:02_Death");
 
                 sprite_.position.y -= 0.6;
-                if (sprite_.position.y <= -250)
+                if (sprite_.position.y <= -230)
                     sprite_.position.x = 1000000;
             }
         });
@@ -326,16 +317,20 @@ void Roboship::TurnOnSpaceship() {
     
 }
 
-void Roboship::GameOn()
-{
-    Engine::Dispatcher().trigger<setfightmodeon>();
-
-}
-
 void Roboship::GameOff()
 {
-  //  Engine::Dispatcher().trigger<nekanjihovafja>();
-
+    auto view = Engine::Registry().view<FightEnded>();
+    for (auto entity : view) {
+        auto& fightOff = view.get<FightEnded>(entity);
+        fightOff._fightmodeoff_true = true;
+    }
 }
 
-
+void Roboship::GameOver()
+{
+    auto view = Engine::Registry().view<RGameOver>();
+    for (auto entity : view) {
+        auto& gameOver = view.get<RGameOver>(entity);
+        gameOver._gameover = true;
+    }
+}

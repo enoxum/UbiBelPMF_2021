@@ -22,10 +22,6 @@ namespace robo_game
     {
     };
 
-    struct setfightmodeon {
-        char _sfmo;
-    };
-
     class SelectedTileInputSystem
         : public System
     {
@@ -48,6 +44,7 @@ namespace robo_game
         void WindDown() override;
         void Run() override;
         void setFightModeOn();
+        void setFightModeOff();
         
     private:
 

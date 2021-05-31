@@ -205,7 +205,6 @@ void inventory::Inventory::makeMatrix()
 
 void inventory::Inventory::SwapSprites(int x, int y, int a, int b)
 {
-    printf("swap\n");
     auto view = Engine::Registry().view<Transform, Sprite>();
     auto entityM = Engine::Registry().view<InventoryMatrix>()[0];
     auto& matrix = Engine::Registry().get<InventoryMatrix>(entityM);
