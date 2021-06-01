@@ -74,6 +74,16 @@ struct RChangeDirection
     char _placeholder;
 };
 
+struct RFightModeBack {
+
+    char _placeholder;
+};
+
+struct RSpaceShip
+{
+    char _placeholder;
+};
+
 struct RBackDrop
 {
     char _placeholder;
@@ -83,6 +93,7 @@ struct REnemyDies
 {
     char _placeholder;
 };
+
 
 struct RFightModeOn
 {

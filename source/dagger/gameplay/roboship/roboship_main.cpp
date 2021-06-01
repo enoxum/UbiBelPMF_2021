@@ -120,7 +120,7 @@ RSpaceship* RSpaceship::Create(
 
     auto& reg = Engine::Registry();
     auto entity = reg.create();
-
+    Engine::Registry().emplace<RSpaceShip>(entity);
     RSpaceship* chr = RSpaceship::Get(entity);
     chr->sprite.scale = { 1.6f, 1.6f };
     chr->sprite.position = { position_, 1 };
