@@ -8,6 +8,8 @@ using namespace robo_game;
 using namespace inventory;
 using namespace roboship;
 
+static int numOfComb = 0;
+
 void fightEnemy::findCombination(std::vector<int> comb)
 {
     auto entity = Engine::Registry().view<InventoryMatrix>()[0];
@@ -32,7 +34,9 @@ void fightEnemy::findCombination(std::vector<int> comb)
                 if (end.first != -1)
                 {
                     found = true;
+                    numOfComb++;
                     changeTiles(start_i, start_j, end.first, end.second, 1);
+                    return;
                 }     
             }
 
@@ -50,8 +54,10 @@ void fightEnemy::findCombination(std::vector<int> comb)
                 end = checkNeighborCol(i, j + 1, 1, len, comb);
                 if (end.first != -1)
                 {
+                    numOfComb++;
                     found = true;
                     changeTiles(start_i, start_j, end.first, end.second, 2);
+                    return;
                 }
 
             }
@@ -116,8 +122,9 @@ void fightEnemy::changeTiles(int a, int b, int c, int d, int k)
     if (d == -1)
         return;
 
-
-    addShipPart();
+    if (numOfComb <= 3) {
+        addShipPart();
+    }
 
     Engine::Dispatcher().trigger<FightEnded>();
 

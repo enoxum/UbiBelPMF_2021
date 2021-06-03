@@ -227,7 +227,7 @@ void Roboship::WorldSetup()
         auto& text = reg.emplace<Text>(entity);
         text.spacing = 0.6f;
 
-        std::string str = "Turns:" + std::to_string(enemyChar->getNumberOfTurns());
+        std::string str = std::to_string(enemyChar->getNumberOfTurns());
 
         text.Set("pixel-font", str, { (i + 1) * 800, 0 , 1 }, false);
 

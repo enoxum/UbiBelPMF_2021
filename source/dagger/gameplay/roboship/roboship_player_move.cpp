@@ -189,7 +189,7 @@ void RoboshipPlayerInputSystem::Run()
 
                 atomicJump = true;
 
-                if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
+                if (sprite.position.y + 223 <= 6 && !jumpActive && jumpAllow)
                     jumpActive = true;
                 else if (sprite.position.y < -30 && jumpActive) {
                     sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
@@ -199,7 +199,7 @@ void RoboshipPlayerInputSystem::Run()
                         t.position.x += roboshipPlayer.speed / 1.15 * Engine::DeltaTime();
                     }
                 }
-                else if (sprite.position.y + 30 <= 2 && jumpActive) {
+                else if (sprite.position.y + 30 <= 6 && jumpActive) {
                     jumpActive = false;
                     jumpAllow = false;
                 }
@@ -211,7 +211,7 @@ void RoboshipPlayerInputSystem::Run()
                         t.position.x += roboshipPlayer.speed / 1.15 * Engine::DeltaTime();
                     }
                 }
-                else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
+                else if (sprite.position.y + 223 <= 6 && !jumpActive && !jumpAllow) {
                     ctrl.input.x = 0;
                     prepareFightMode = false;
                     jumpAllowed = false;
@@ -224,7 +224,7 @@ void RoboshipPlayerInputSystem::Run()
 
                 atomicJump = true;
 
-                if (sprite.position.y + 223 <= 2 && !jumpActive && jumpAllow)
+                if (sprite.position.y + 223 <= 6 && !jumpActive && jumpAllow)
                     jumpActive = true;
                 else if (sprite.position.y < -30 && jumpActive) {
                     sprite.position.y += roboshipPlayer.speed * Engine::DeltaTime();
@@ -234,7 +234,7 @@ void RoboshipPlayerInputSystem::Run()
                         t.position.x -= roboshipPlayer.speed / 1.15 * Engine::DeltaTime();
                     }
                 }
-                else if (sprite.position.y + 30 <= 2 && jumpActive) {
+                else if (sprite.position.y + 30 <= 6 && jumpActive) {
                     jumpActive = false;
                     jumpAllow = false;
                 }
@@ -246,7 +246,7 @@ void RoboshipPlayerInputSystem::Run()
                         t.position.x -= roboshipPlayer.speed / 1.15 * Engine::DeltaTime();
                     }
                 }
-                else if (sprite.position.y + 223 <= 2 && !jumpActive && !jumpAllow) {
+                else if (sprite.position.y + 223 <= 6 && !jumpActive && !jumpAllow) {
                     ctrl.input.x = 0;
                     prepareFightMode = false;
                     jumpAllowed = false;
@@ -255,10 +255,16 @@ void RoboshipPlayerInputSystem::Run()
                 }
             }
             else if (((ctrl.input.x == 3 && jumpAllowed) || atomicFight) && !stop) {
-                jumpAllowed = false;
-                Engine::Dispatcher().trigger<RFightModeOn>();
+                if (!backJump) {
+                    jumpAllowed = false;
+                    Engine::Dispatcher().trigger<RFightModeOn>();
+                }
             }
             else if (((ctrl.input.x == 1 || (ctrl.input.x == -1 && sprite.position.x > 0)) && !prepareFightMode) && !stop) {
+                
+            if (abs(sprite.position.x - 800 * 6) <= 6 && win != 3) {
+                ctrl.input.x *= -1;
+            }
 
                 if (!prepareFightMode) {
                     for (auto e : view2) {
@@ -284,7 +290,7 @@ void RoboshipPlayerInputSystem::Run()
                     AnimatorPlay(animator, "robot:MELEE");
                     jumpAllowed = true;
                 }
-                else if (ctrl.input.x == -1 && fmod(sprite.position.x - 160, 800) <= 6 && sprite.position.x + 100 > 6 && !jumpAllowed ) {
+                else if (ctrl.input.x == -1 && fmod(sprite.position.x - 160, 800) <= 6 && sprite.position.x > 800 && !jumpAllowed ) {
                     backJump = true;
                     Engine::Dispatcher().trigger<RPrepareFightModeOn>();
                     prepareFightMode = true;
