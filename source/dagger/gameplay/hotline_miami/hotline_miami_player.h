@@ -15,6 +15,7 @@ namespace hotline_miami
         bool has_key{ false };
         int health{ 3 };
         bool end{ true };
+        bool stop_moving{ false };
     };
 
     class HotlineMiamiPlayerObstacleCollisionSystem

@@ -102,8 +102,11 @@ void HotlineMiamiPlayerInputSystem::Run()
         auto& col = view.get<SimpleCollision>(entity);
         auto& sprite = view.get<Sprite>(entity);
         
-        t.position.y += ctrl.input.y * player.player_speed * Engine::DeltaTime();
-        t.position.x += ctrl.input.x * player.player_speed * Engine::DeltaTime();
+        if (!player.stop_moving) {
+            t.position.y += ctrl.input.y * player.player_speed * Engine::DeltaTime();
+            t.position.x += ctrl.input.x * player.player_speed * Engine::DeltaTime();
+        }
+
         if (player.weapon_type == 0)
         {
             AssignSprite(sprite, "hotline_miami:Player:player_unarmed");
