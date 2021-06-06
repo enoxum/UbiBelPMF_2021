@@ -47,6 +47,7 @@ void HotlineMiamiHealthSystem::Run()
             {
                 if (player.end)
                 {
+                    player.stop_moving = true;
                     player.end = false;
                     auto& engine = Engine::Instance();
                     auto& reg = engine.Registry();
